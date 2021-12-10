@@ -4,11 +4,11 @@ PortSystem              1.0
 PortGroup               github 1.0
 PortGroup               qmake 1.0
 
-github.setup            psemiletov tea-qt 60.3.0
+github.setup            psemiletov tea-qt 60.6.0
 revision                0
-checksums               rmd160  d044096c6d2270c8dc9bce7c07cf75ca4d0b43e6 \
-                        sha256  8121505644dd609a05c2dde70bb3cb750ee52631ac6288418c49a20eee629293 \
-                        size    584127
+checksums               rmd160  7fe14489d6bf90fa97590d543041a4c593359b8a \
+                        sha256  0256789e5aae1e0b68e078ab9d394e886ef01902b686830ae69c179bfa1910cc \
+                        size    622439
 
 name                    tea
 description             TEA is the powerful text editor for GNU/Linux and *BSD.

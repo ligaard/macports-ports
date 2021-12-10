@@ -3,24 +3,23 @@
 PortSystem              1.0
 PortGroup               golang 1.0
 
-go.setup                github.com/git-lfs/git-lfs 2.13.3 v
+go.setup                github.com/git-lfs/git-lfs 3.0.2 v
 revision                0
 maintainers             {raimue @raimue} \
                         openmaintainer
 platforms               darwin
 categories              devel
-supported_archs         noarch
 
 description             Git Large File Storage
 long_description        {*}${description} is an extension for versioning large files
 homepage                https://git-lfs.github.com/
 license                 MIT
 
-checksums               rmd160  9fa6f82ba5e8f9f1470bc933ca6b8328eac73073 \
-                        sha256  e5074b852fdff64c939b7802272c2351d59f35c09cde0184a0efa6d557bd488c \
-                        size    2902168
+checksums               rmd160  c7210df8ad14fb35f64854d91c2e0a05713ffed3 \
+                        sha256  cbe92406f8b92b3821912aa873d8317ef6745f8e82f4c5edbbc11f7647c3bb60 \
+                        size    3126173
 
-depends_build-append    port:rb27-ronn-ng
+depends_build-append    port:rb30-ronn-ng
 depends_run             port:git
 
 if {${os.platform} eq "darwin" && ${os.major} < 16} {
@@ -36,7 +35,7 @@ use_configure no
 
 build.cmd               make
 build.target            bin/git-lfs man
-build.args              RONN=${prefix}/bin/ronn-2.7
+build.args              RONN=${prefix}/bin/ronn-3.0
 
 destroot {
     set bindir ${destroot}${prefix}/bin

@@ -8,8 +8,8 @@ PortGroup muniversal 1.0
 
 #remember to update the -doc and -server as well
 name                postgresql12
-version             12.7
-revision            0
+version             12.9
+revision            1
 
 categories          databases
 platforms           darwin
@@ -27,16 +27,16 @@ master_sites        http://ftp3.de.postgresql.org/pub/Mirrors/ftp.postgresql.org
             postgresql:source/v${version}/
 distname            postgresql-${version}
 
-checksums           rmd160  7a8e2a19b372076498782ae7f8285826d5f5fdc7 \
-                    sha256  8490741f47c88edc8b6624af009ce19fda4dc9b31c4469ce2551d84075d5d995 \
-                    size    20819005
+checksums           rmd160  7bdb6e85259fbb520a93f66fab82fcedee9fee2c \
+                    sha256  89fda2de33ed04a98548e43f3ee5f15b882be17505d631fe0dd1a540a2b56dce \
+                    size    20904260
 
 use_bzip2           yes
 
 # do not build man or html files (use postgresqlXY-doc instead)
 patchfiles-append   patch-no_doc.diff
 
-depends_lib         port:readline path:lib/libssl.dylib:openssl port:zlib port:libxml2 port:libxslt port:icu
+depends_lib         port:readline path:lib/libssl.dylib:openssl port:zlib port:libxml2 port:libxslt port:icu path:lib/libgssapi_krb5.dylib:kerberos5
 depends_build       port:bison port:pkgconfig
 depends_run         port:postgresql_select
 
@@ -135,9 +135,9 @@ variant python27 conflicts python3 description {add support for python 2.7} {
 }
 
 variant python3 conflicts python27 description {add support for python 3.x} {
-    depends_lib-append      port:python38
+    depends_lib-append      port:python39
     configure.args-append   --with-python
-    configure.python        ${prefix}/bin/python3.8
+    configure.python        ${prefix}/bin/python3.9
 }
 
 variant perl description {add Perl support} {

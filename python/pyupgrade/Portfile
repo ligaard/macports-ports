@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                pyupgrade
-version             2.23.0
+version             2.29.1
 revision            0
 
 categories-append   devel
@@ -18,9 +18,9 @@ long_description    ${description}
 
 homepage            https://github.com/asottile/pyupgrade
 
-checksums           rmd160  01f01f3ebb26bb35fefc9b4144ec5cc6fce904ef \
-                    sha256  c22beaf4d4fe5d1cd3b57028ee3de7393e537eeb41a9ba70d2cc531db9fdc244 \
-                    size    39897
+checksums           rmd160  d9a857b0bed6ec10d69050e45886f1129db3e83c \
+                    sha256  737e02bed0de70247df5d2a0c3edba6b4529adf44f5ef588ecda4a69f14bf694 \
+                    size    41093
 
 python.default_version  39
 

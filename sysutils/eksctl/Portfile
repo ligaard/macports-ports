@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/weaveworks/eksctl 0.58.0 v
+go.setup            github.com/weaveworks/eksctl 0.76.0 v
+github.tarball_from archive
 revision            0
 
 homepage            https://eksctl.io
@@ -14,18 +15,17 @@ long_description    eksctl is a simple CLI tool for creating clusters on EKS - A
                     new managed Kubernetes service for EC2. It is written in Go, uses \
                     CloudFormation, was created by Weaveworks.
 
+categories          sysutils
+installs_libs       no
+license             Apache-2
 maintainers         {@szczad gmail.com:szczad} \
                     {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-
-categories          sysutils
 platforms           darwin
-license             Apache-2
-installs_libs       no
 
-checksums           rmd160  777ce0168081fd331d1aed5336d6ac9571c90478 \
-                    sha256  e73c8d0370a84da84ef22b609c30680c4dd07075878bc4771cf56bd4afa73ab3 \
-                    size    9926766
+checksums           rmd160  437274cd18951fc4fc8b3a1588d2882e894ea772 \
+                    sha256  08cd84d766ab9aa9b97127a193d6d8994df0f446b6fc8f5204d78f9c76cd51a4 \
+                    size    9952728
 
 # Allow fetching dependencies
 build.env-delete    GO111MODULE=off GOPROXY=off
@@ -54,4 +54,3 @@ destroot {
 }
 
 github.livecheck.regex  {([0-9.]+)}
-github.tarball_from     archive

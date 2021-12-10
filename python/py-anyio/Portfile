@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-anyio
-version             3.2.1
+version             3.3.4
 revision            0
 categories-append   devel
 platforms           darwin
@@ -20,9 +20,9 @@ long_description    ${description}
 
 homepage            https://github.com/agronholm/anyio
 
-checksums           rmd160  277456c5a17240731da0d30d814e8ae652298612 \
-                    sha256  07968db9fa7c1ca5435a133dc62f988d84ef78e1d9b22814a59d1c62618afbc5 \
-                    size    126277
+checksums           rmd160  ab49f656950fa7811490f60ae7fe3a7122badc71 \
+                    sha256  67da67b5b21f96b9d3d65daa6ea99f5d5282cb09f50eb4456f8fb51dffefc3ff \
+                    size    133608
 
 if {${name} ne ${subport}} {
     depends_build-append \

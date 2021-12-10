@@ -9,14 +9,14 @@ name                legacy-support
 categories          devel
 platforms           darwin
 
-maintainers         {jonesc @cjones051073} {kencu @kencu} openmaintainer
+maintainers         {jonesc @cjones051073} openmaintainer
 license             MIT
 
 description         Installs wrapper headers to add missing functionality to legacy OSX versions.
 long_description    {*}${description}
 
 # Primary release version
-set release_ver     1.0.3
+set release_ver     1.0.4
 
 # Binary compatibility version
 set compat_ver      1.0.0
@@ -25,20 +25,20 @@ subport ${name} {
     conflicts           ${name}-devel
     github.setup        macports macports-legacy-support ${release_ver} v
     revision            0
-    checksums           rmd160  c502c96596151d053d575554012ceb4a916a24c3 \
-                        sha256  86cda7390f9deb5aef8496fbd7853ce7dc146bbaeb66d92d6cca4ebef41c0b92 \
-                        size    48787
+    checksums           rmd160  b5d1b0ab3baf42c519bb62055b4721b4de9c3e85 \
+                        sha256  75c0b80f036e559e9aafd51c609b7638cbfdd1a05a05a183e6c0b604e897798e \
+                        size    50744
 }
 
 subport ${name}-devel {
     conflicts           ${name}
-    github.setup        macports macports-legacy-support 221ec6c352b144a06c28a91e27e82773f8d7a6c1
-    version             20210714
+    github.setup        macports macports-legacy-support 2a6500378e00f10c750193ec5a7e7c0bc8b5713e
+    version             20211111
     revision            0
     livecheck.type      none
-    checksums           rmd160  c502c96596151d053d575554012ceb4a916a24c3 \
-                        sha256  86cda7390f9deb5aef8496fbd7853ce7dc146bbaeb66d92d6cca4ebef41c0b92 \
-                        size    48787
+    checksums           rmd160  691e3ee689f68cac47784b4c3396abfc7f0c97f3 \
+                        sha256  36eda9ad2752894e6f925fbeab9d334484e6de61e8d3c48e8cf7cdf68de597fc \
+                        size    52328
     set v_split         [split ${release_ver} .]
     set release_ver     [lindex ${v_split} 0].[lindex ${v_split} 1].99
 }
@@ -50,6 +50,7 @@ use_configure       no
 use_parallel_build  no
 
 set max_darwin_reexport 19
+set max_darwin_optool   20
 
 build.env-append    CXX=${configure.cxx} \
                     CC=${configure.cc} \
@@ -83,17 +84,25 @@ test.env            {*}${build.env}
 test.run            yes
 test.target         test
 
+proc tiger_copy {from to} {
+    fs-traverse f [glob -directory ${from} *] {
+        if {[file isdirectory ${f}]} {
+            set base_dir [file tail ${f}]
+            xinstall -d ${to}${base_dir}
+            tiger_copy ${f} ${to}${base_dir}
+        } else {
+            ui_debug "Copying ${f} to ${to}"
+            copy ${f} ${to}
+        }
+    }
+}
+
+# install Tiger-specific fixes
 platform darwin 8 {
     post-destroot {
-
-        # install Tiger-specific fixes
-
-        # slightly modified which command to match behaviour of 10.5+
-        copy ${worksrcpath}/tiger_only/bin/which ${destroot}${prefix}/bin/which
-
-        # add suitable Availability*.h headers for Tiger
-        copy ${worksrcpath}/tiger_only/include/Availability.h         ${destroot}${prefix}/include/LegacySupport/
-        copy ${worksrcpath}/tiger_only/include/AvailabilityInternal.h ${destroot}${prefix}/include/LegacySupport/
+        # Copy all tiger specific 'binaries' and includes
+        tiger_copy ${worksrcpath}/tiger_only/bin      ${destroot}${prefix}/bin/
+        tiger_copy ${worksrcpath}/tiger_only/include  ${destroot}${prefix}/include/LegacySupport/
     }
 }
 
@@ -101,7 +110,7 @@ platform darwin 8 {
 # on newer systems as the reexport link option to /usr/lib/libSystem.B.dylib
 # does not work, due to the file system library cache added in macOS11.
 # Fallback to using optool here. Optool also currently not working on arm.
-if { ${build_arch} ne "arm64" && ${os.major} > ${max_darwin_reexport} } {
+if { ${build_arch} ne "arm64" && ${os.major} > ${max_darwin_reexport} && ${os.major} <= ${max_darwin_optool} } {
     depends_build-append port:optool
     post-destroot {
         set legSupp   ${prefix}/lib/libMacportsLegacySupport.dylib

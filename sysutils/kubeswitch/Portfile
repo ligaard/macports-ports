@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/danielfoehrKn/kubeswitch 0.4.5
+go.setup            github.com/danielfoehrKn/kubeswitch 0.5.0
+go.package          github.com/danielfoehrkn/kubeswitch
 revision            0
 
 description         The "kubectx" for operators
@@ -19,7 +20,11 @@ maintainers         {gmail.com:herby.gillot @herbygillot} \
 license             Apache-2
 installs_libs       no
 
-go.package          github.com/danielfoehrkn/kubeswitch
+checksums           rmd160  4327639d995dff71d5a4234c89311e04a89d2c01 \
+                    sha256  f21564f66105a6a7038a46383b49dd4058642026edb45d541f130159b045b8dc \
+                    size    15509245
+
+github.tarball_from archive
 
 build.cmd           make
 build.pre_args-append \
@@ -51,8 +56,6 @@ destroot {
         ${destroot}${ks_hooks_path}
 }
 
-github.tarball_from archive
-
 notes "
     Please add the following to your .bashrc/.zshrc:
 
@@ -60,7 +63,3 @@ notes "
 
     ${name} hooks have been installed to: ${ks_hooks_path}
 "
-
-checksums   rmd160  f5cae426674b2c3e876222761127c58f5c941ae4 \
-            sha256  1542b5b133d194bccc754d1f42ea6547cde893317606807d9f4d99add22ee5be \
-            size    12675331

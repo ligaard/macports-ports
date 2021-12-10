@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/dominikh/go-tools 2021.1
+go.setup            github.com/dominikh/go-tools 2021.1.2
+github.tarball_from archive
 name                staticcheck
 revision            0
 
@@ -26,12 +27,10 @@ long_description    Staticcheck is a state of the art linter for the Go \
                     analysis.
 
 categories          devel
+installs_libs       no
 license             MIT
-
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-
-installs_libs       no
 
 go.package          honnef.co/go/tools
 
@@ -50,12 +49,10 @@ destroot {
     xinstall -m 755 {*}[glob ${_build_path}/*] ${destroot}${prefix}/bin/
 }
 
-github.tarball_from archive
-
 checksums           ${distname}${extract.suffix} \
-                        rmd160  8cd36058a6a729105690ff7be8bde67d071a2213 \
-                        sha256  f06e3edca75bb9d1deb5b3dfa7c4bfd0eb85afa1098702131d291a25362966fb \
-                        size    505212
+                        rmd160  68e1bcb4c51005a105ae6de38d313b1eea748943 \
+                        sha256  c3fcadc203e20bc029abc9fc1d97b789de4e90dd8164e45489ec52f401a2bfd0 \
+                        size    519366
 
 go.vendors          golang.org/x/xerrors \
                         lock    5ec99f83aff1 \

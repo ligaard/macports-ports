@@ -25,7 +25,21 @@ checksums           rmd160  283a2f59f730affc60dde525152bcb405d8ec909 \
                     sha256  198375ce724ab9776953a3d3ed3eb4fa0d1b859fac97360cffa5d9143f8a5bfe \
                     size    176607
 
-python.versions     27 35 36 37 38 39
+python.versions     27 35 36 37 38 39 310
+
+foreach pver {36 37 38 39 310} {
+    subport py${pver}-nmrglue-devel {
+        PortGroup       github 1.0
+
+        github.setup    jjhelmus nmrglue 148a30d4855a78938537a294e76f39ec825e50db
+        version         20211209-[string range ${github.version} 0 7]
+        revision        0
+        checksums       rmd160  0d36a56ae51cf0ae2e083146b8071b5afbdb96c8 \
+                        sha256  013e7d2b189958e0edde31c158d4d51270c2dfb24feb7f65fc85e8f7f96a0466 \
+                        size    14916507
+        conflicts       py${pver}-nmrglue
+    }
+}
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -50,5 +64,10 @@ if {${name} ne ${subport}} {
             README.rst ${destroot}${prefix}/share/doc/${subport}
     }
 
-    livecheck.type  none
+    if {[string last devel ${subport}] == -1} {
+        livecheck.type  none
+        if {${python.version} > 35} {
+            conflicts       py${python.version}-nmrglue-devel
+        }
+    }
 }

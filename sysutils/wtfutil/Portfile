@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/wtfutil/wtf 0.38.0 v
+go.setup            github.com/wtfutil/wtf 0.40.0 v
+github.tarball_from archive
 name                wtfutil
 revision            0
 
@@ -16,20 +17,18 @@ description         A personal terminal-based dashboard utility, designed for \
 long_description    {*}${description}
 
 categories          sysutils
-platforms           darwin
+installs_libs       no
 license             MPL-2
-
-checksums           rmd160  dca59a45a3daf5876a545df09d6bb63bf5303687 \
-                    sha256  f1d73879bf75240d1b0f13232bea3904e11188bc75527ab216bebcbc66f83401 \
-                    size    2267629
-
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+platforms           darwin
 
-set build_date      [exec date +%FT%T%z]
+checksums           rmd160  fbc5d1991c7983172a21a362c6fa4a5be05c821a \
+                    sha256  74e29757fbaa9744e5707f6666195f21515f3abe29da284f833635afe60d12ec \
+                    size    2321983
 
-build.args          -o ${name} -ldflags \
-                        '-X main.version=${version} -X main.date=${build_date}'
+build.args          -o ${name} \
+                    -ldflags '-X main.version=${version} -X main.date='
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
@@ -37,15 +36,13 @@ build.args          -o ${name} -ldflags \
 build.env-delete    GOPROXY=off GO111MODULE=off
 
 destroot {
-    xinstall -m 755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/${name}
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/${name}
     xinstall -d -m 0755 ${destroot}${prefix}/share/${name}
     xinstall -d -m 0755 ${destroot}${prefix}/share/${name}/sample_configs
 
-    xinstall -m 644 {*}[glob ${worksrcpath}/_sample_configs/*] \
+    xinstall -m 0644 {*}[glob ${worksrcpath}/_sample_configs/*] \
                       ${destroot}${prefix}/share/${name}/sample_configs
 }
-
-github.tarball_from archive
 
 notes "
 Examples of configuration for wtfutil can be found in:

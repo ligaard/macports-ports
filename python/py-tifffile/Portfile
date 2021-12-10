@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-tifffile
-version             2021.7.2
+version             2021.11.2
 revision            0
 platforms           darwin
 license             BSD
@@ -17,11 +17,11 @@ long_description    {*}${description} Read image and metadata from TIFF-like fil
 
 homepage            https://www.lfd.uci.edu/~gohlke/
 
-checksums           rmd160  c7a117a442448faf9343e54739b14156320da0de \
-                    sha256  17fc5ca901f7d7b827a16e4695668e6120319324efe6d1333258397d8a71dedb \
-                    size    253302
+checksums           rmd160  91ccc788c3222e77c94f607f1f885a1faa6f00cb \
+                    sha256  153e31fa1d892f482fabb2ae9f2561fa429ee42d01a6f67e58cee13637d9285b \
+                    size    271504
 
-python.versions     37 38 39
+python.versions     37 38 39 310
 
 if {${name} ne ${subport}} {
     depends_build-append \

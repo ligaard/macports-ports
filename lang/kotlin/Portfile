@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           java 1.0
 
-github.setup        JetBrains kotlin 1.5.21 v
+github.setup        JetBrains kotlin 1.6.0 v
 revision            0
 github.tarball_from releases
 distname            ${name}-compiler-${version}
@@ -24,9 +24,9 @@ long_description    Kotlin is a modern but already mature programming \
 
 homepage            https://kotlinlang.org/
 
-checksums           rmd160  a5bbb9087f0429d134f96c74c86b51b04fafcd84 \
-                    sha256  f3313afdd6abf1b8c75c6292f4e41f2dbafefc8f6c72762c7ba9b3daeef5da59 \
-                    size    63018115
+checksums           rmd160  84596baf4eca30892cc487b7d4fdaf384d4d510b \
+                    sha256  174c92e12a54c0901fd9f0badacf1514c28b5197a95654e4dab1775293dde1dc \
+                    size    70690510
 
 java.version        1.8+
 java.fallback       openjdk8

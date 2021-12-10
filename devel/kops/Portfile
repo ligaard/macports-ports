@@ -1,8 +1,10 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
 PortSystem          1.0
+
 PortGroup           golang 1.0
 
-go.setup            github.com/kubernetes/kops 1.21.0 v
+go.setup            github.com/kubernetes/kops 1.22.2 v
 revision            0
 go.package          k8s.io/kops
 
@@ -10,18 +12,17 @@ description         Kubernetes Operations (kops)
 long_description    Production Grade K8s Installation, Upgrades, and Management
 
 categories          devel
-platforms           darwin
-license             Apache-2
 installs_libs       no
-
+license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+platforms           darwin
 
-checksums           rmd160  761e28ecf17bb3c15e27e9b43d3a0a0290eb11ca \
-                    sha256  b6246cc58e5ad2c9566238bbe99ba8ba1e9593b016336ba5dd6320f66040ac40 \
-                    size    27394827
+checksums           rmd160  d48b97f61ddd87db047b5565b0d6eb3f52cfcdc7 \
+                    sha256  b6c80827d9a2562743e6b88e23f5ad21bf80d3650acc6dc6009fcc0b3d42df0a \
+                    size    29012815
 
-depends_run         port:kubectl-1.21
+depends_run         port:kubectl-1.22
 
 build.cmd           make
 build.target        all

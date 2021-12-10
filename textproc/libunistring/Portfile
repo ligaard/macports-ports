@@ -31,10 +31,20 @@ checksums           rmd160  d64da9245ed843c62d69c76498146bc87787c37d \
 depends_build       bin:perl:perl5 \
                     port:texinfo
 
+# use gmake on 10.4, see:
+# https://trac.macports.org/ticket/63790
+platform darwin 8 {
+    depends_build-append \
+                    port:gmake
+    build.cmd       gmake
+}
+
 depends_lib         port:libiconv
 
-patch.pre_args      -p1
-#patchfiles          configure-implicit.patch
+patchfiles          0010-AC_INIT.patch \
+                    0100-float-endian-detection.patch \
+                    0700-multiarch-libc.patch \
+                    implicit.patch
 
 use_autoreconf      yes
 autoreconf.args     -fvi

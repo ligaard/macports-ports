@@ -1,12 +1,13 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           cargo 1.0
-PortGroup           github 1.0
+PortGroup           cargo   1.0
+PortGroup           github  1.0
 
 categories          sysutils
 
-github.setup        cantino mcfly 0.5.7 v
+github.setup        cantino mcfly 0.5.10 v
+github.tarball_from archive
 revision            0
 
 description         An upgraded reverse history for Bash & Zsh.
@@ -25,13 +26,11 @@ maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  0ffdb96b8cbf00dbc9255f1fa1504e246e1c6a3c \
-                    sha256  8132e47b1354fc985c8d5553d5c7fd6e9524aa3dc938ae5ac90c01967a7f61c0 \
-                    size    205712
+                    rmd160  f0f3156333f5892094f9c514e14227968592c2e0 \
+                    sha256  57310e2b0c51a293223b6898b247ebad81da032650201fcf2943ec73e6817026 \
+                    size    207639
 
-github.tarball_from archive
-
-set mf_share_dir    ${prefix}/share/${name}
+set mf_share_dir ${prefix}/share/${name}
 
 destroot {
     xinstall -m 0755 \
@@ -39,42 +38,38 @@ destroot {
         ${destroot}${prefix}/bin/
 
     xinstall -d ${destroot}${mf_share_dir}
-    xinstall -m 0644 ${worksrcpath}/${name}.bash ${destroot}${mf_share_dir}/
-    xinstall -m 0644 ${worksrcpath}/${name}.fish ${destroot}${mf_share_dir}/
-    xinstall -m 0644 ${worksrcpath}/${name}.zsh  ${destroot}${mf_share_dir}/
+    xinstall -m 0644 ${worksrcpath}/${name}.bash \
+        ${destroot}${mf_share_dir}
+    xinstall -m 0644 ${worksrcpath}/${name}.zsh \
+        ${destroot}${mf_share_dir}
+    xinstall -m 0644 ${worksrcpath}/${name}.fish \
+        ${destroot}${mf_share_dir}
 }
 
 notes "
 If you are running bash as your shell, add:
-
     if \[\[ -r \"${mf_share_dir}/mcfly.bash\" \]\]; then
-      source \"${mf_share_dir}/mcfly.bash\"
+        source \"${mf_share_dir}/mcfly.bash\"
     fi
 
 ...to your ~/.bashrc, then run:
-
     $ . ~/.bashrc
 
 If you are running zsh as your shell, add:
-
     if \[\[ -r \"${mf_share_dir}/mcfly.zsh\" \]\]; then
-      source \"${mf_share_dir}/mcfly.zsh\"
+        source \"${mf_share_dir}/mcfly.zsh\"
     fi
 
 ...to your .zshrc, then run:
-
     $ . ~/.zshrc
 
 If you are running fish as your shell, add:
-
     if \[\[ -r \"${mf_share_dir}/mcfly.fish\" \]\]; then
-      source \"${mf_share_dir}/mcfly.fish\"
+        source \"${mf_share_dir}/mcfly.fish\"
     fi
 
 ...to your ~/.config/fish/config.fish, then run:
-
     $ source ~/.config/fish/config.fish
-
 "
 
 cargo.crates \

@@ -5,28 +5,28 @@ PortGroup               github 1.0
 
 # Download distfiles from GitHub mirror because fetching from svn keeps being
 # problematic.
-github.setup            leahneukirchen netpbm-mirror 877641742255c9eeb82438eb54fd772f65e61e84
+github.setup            leahneukirchen netpbm-mirror 3c556d3931167936ef5bfb3ba1ff569049aa1b87
 name                    netpbm
-version                 10.94.02
-svn.revision            4084
+version                 10.96.04
+svn.revision            4199
 set source_branch       advanced
 distname                ${source_branch}-r${svn.revision}
 set source_distfile     ${distfiles}
 
-set userguide_commit    f80c0f70f4ad013f09458728404296f8c814ff6c
-set userguide_revision  4001
+set userguide_commit    913c540e85e33b07c2dbc551ef4092126ab3ed55
+set userguide_revision  4184
 set userguide_branch    userguide
 set userguide_distname  ${userguide_branch}-r${userguide_revision}
 set userguide_distfile  ${userguide_distname}${extract.suffix}
 
 checksums               ${source_distfile} \
-                        rmd160  a5cd14378ae3f569428632295d687d632388274d \
-                        sha256  7d5104abe1046da49fb0aedc4f2bdcc077b559c998992d0e491cec74c742f31d \
-                        size    2921090 \
+                        rmd160  822f8bbc2a9a1bbc1c0ccaad77eea45c19233118 \
+                        sha256  c65fcad80229c8ac2999a6ee10709c8ee4f1f73995e0a4423029250c21233756 \
+                        size    2924439 \
                         ${userguide_distfile} \
-                        rmd160  84fa09ffb46f36cc248766e3d2ed3b01f23c938b \
-                        sha256  01b0128492bf1c7df29c666d3d633041dd1c3dc8299df1aa6798ec5de9df004f \
-                        size    1217601
+                        rmd160  19ca5edcdacc110ba0f4fa4d87106a720701013a \
+                        sha256  74ae5c9df00f1654eea60913cd11e7347df111032afc09b315b0567b54bf0b8f \
+                        size    1805574
 
 categories              graphics
 platforms               darwin freebsd linux
@@ -41,7 +41,7 @@ long_description        A whole bunch of utilities for primitive manipulation \
                         jpeg. Many basic graphics editing tools such as \
                         magnifying and cropping.
 
-homepage                http://netpbm.sourceforge.net/
+homepage                http://netpbm.sourceforge.net
 github.tarball_from     archive
 
 distfiles               ${source_distfile}:source \

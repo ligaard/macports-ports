@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        willthames ansible-lint 5.1.2 v
+github.setup        ansible-community ansible-lint 5.3.1 v
 revision            0
 
 categories          sysutils
@@ -12,24 +12,24 @@ platforms           darwin
 supported_archs     noarch
 license             MIT
 maintainers         artisancomputer.com:zdw \
-                    {outlook.de:judaew @judaew} \
+                    {judaew @judaew} \
                     openmaintainer
 
 description         Best practices checker for Ansible playbooks
 long_description \
     ansible-lint checks playbooks for practices and behaviour that could potentially be improved
 
-checksums           rmd160  00527ed2dd9b19302683205fb6f4a0f5ddd4d8bc \
-                    sha256  cc7f84755a7d3b1b7ae0b36dc26aff95b46d6bedbf85eadd2b48083486e7b2e2 \
-                    size    339831
+checksums           rmd160  5237023757b4bdf9b32b508dbc8178c4c31ad433 \
+                    sha256  e2257ccaf78f17cc63d7286a93b1ca2d99d5e900eaac6a465640ab5c98337c17 \
+                    size    342826
 
 python.default_version      39
 python.link_binaries_suffix
 
 depends_build-append \
-                    port:py${python.version}-setuptools_scm \
-                    port:py${python.version}-setuptools_scm_git_archive \
-                    port:py${python.version}-toml
+                    port:py${python.version}-setuptools \
+                    port:py${python.version}-toml \
+                    port:py${python.version}-wheel
 
 depends_run-append  port:py${python.version}-ansible
 depends_lib-append  port:py${python.version}-enrich \
@@ -39,6 +39,14 @@ depends_lib-append  port:py${python.version}-enrich \
                     port:py${python.version}-tenacity \
                     port:py${python.version}-wcmatch \
                     port:py${python.version}-yaml
+
+# Stop setuptools from using the scm version which doesn't exist in this context
+patchfiles          patch-disable_use_scm_version.diff
+post-patch {
+    reinplace "s|@@VERSION@@|${version}|g" ${worksrcpath}/setup.cfg
+}
+
+python.pep517       yes
 
 github.livecheck.regex  {([^"r-]+)}
 

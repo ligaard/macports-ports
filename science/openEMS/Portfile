@@ -5,12 +5,12 @@ PortGroup           github 1.0
 PortGroup           cmake 1.1
 PortGroup           boost 1.0
 
-github.setup        thliebig openEMS a013077854a13b54ebea8aa87abb0dbfa9c96f58
-version             20210411-[string range ${github.version} 0 7]
-checksums           rmd160  72d1a734b68a37e13e7c1e5591aadd14918ed741 \
-                    sha256  df0577d054923217a4e493e6db59e684b4ed532f82e9cd7fc15a7cc2c118f75d \
-                    size    1726590
-revision            2
+github.setup        thliebig openEMS 46f408455589d30fafa1c4bb8c726f3e1dbf0e8b
+version             20210907-[string range ${github.version} 0 7]
+checksums           rmd160  d25b19dfecc8b6037a1f8c4ca3b560c3f686e2c7 \
+                    sha256  329416fe74cbe6ea3b0772c8ea292dc8d6d6893a0534cd120051c4af1557f964 \
+                    size    1727042
+revision            0
 
 platforms           darwin macosx
 categories          science

@@ -1,10 +1,11 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           github 1.0
-PortGroup           cargo 1.0
+PortGroup           cargo   1.0
+PortGroup           github  1.0
 
-github.setup        kdheepak taskwarrior-tui 0.13.27 v
+github.setup        kdheepak taskwarrior-tui 0.16.0 v
+github.tarball_from archive
 revision            0
 
 description         A terminal user interface for taskwarrior
@@ -12,49 +13,35 @@ description         A terminal user interface for taskwarrior
 long_description    {*}${description}
 
 categories          office
-platforms           darwin
+installs_libs       no
+license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-license             MIT
+platforms           darwin
 
-checksums           rmd160  2d152676c66233cfedd2886059589162d2cba2e6 \
-                    sha256  f23532d099311281b684ace68511c20e8c50718d806924fa42d20d24a8c64579 \
-                    size    63146
+checksums           rmd160  f1ccb847ed9ff9ee94408050dad21ae10952036d \
+                    sha256  57d2b812fd48aa1353352f3fdd659cbcf223fbc00968285f8374201eedb5010c \
+                    size    72601
 
 build.pre_args      --release -v -j${build.jobs}
 
 depends_build-append \
-                    port:git
+                    port:git \
+                    port:go-md2man
 
 depends_run-append  port:task
 
 build.env-append    CARGO_NET_GIT_FETCH_WITH_CLI=true
 
+post-build {
+    system -W ${worksrcpath}/docs "go-md2man -in=${name}.1.md -out=${name}.1"
+}
+
 destroot {
-    xinstall -m 755 \
+    xinstall -m 0755 \
         ${worksrcpath}/target/[cargo.rust_platform]/release/${name} \
         ${destroot}${prefix}/bin/
+
+    xinstall -m 0644 ${worksrcpath}/docs/${name}.1 \
+        ${destroot}${prefix}/share/man/man1
 }
-
-# Build without man-page, because pandoc cannot be built without a stack,
-# which arm64 does not yet support.
-#
-#   Error: Cannot install pandoc for the arch 'arm64' because
-#   Error: its dependency stack only supports the arch 'x86_64'.
-#
-if { !(${configure.build_arch} eq "arm64") } {
-    depends_build-append \
-                    port:pandoc
-
-    post-build {
-        system -W ${worksrcpath}/docs "pandoc ${name}.1.md --standalone \
-        --to=man -o '${name}.1'"
-    }
-
-    post-destroot {
-        xinstall -m 644 ${worksrcpath}/docs/${name}.1 \
-            ${destroot}${prefix}/share/man/man1
-    }
-}
-
-github.tarball_from archive

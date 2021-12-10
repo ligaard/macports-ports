@@ -28,8 +28,6 @@ homepage            https://haskellstack.org
 variant prebuilt \
 	    description {Do not bootstrap stack; install the pre-built binary.} {}
 
-supported_archs     x86_64
-
 distname            ${name}-${github.version}-osx-x86_64
 
 worksrcdir          ${name}-${github.version}
@@ -85,9 +83,6 @@ if { ${os.platform} eq "darwin" && ${os.major} < ${max_darwin} } {
         return -code error "unsupported Mac OS X version"
     }
 }
-
-# Builds fail if ccache is enabled in MacPorts
-configure.ccache    no
 
 # Darwin 16 and older fails to build from source, e.g.
 # Undefined symbols for architecture x86_64:

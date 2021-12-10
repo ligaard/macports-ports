@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/smallstep/cli 0.16.1 v
+go.setup            github.com/smallstep/cli 0.18.0 v
+github.tarball_from archive
 name                step-cli
 revision            0
 
@@ -14,28 +15,33 @@ long_description    step is a toolkit for working with your public key \
                     infrastructure (PKI). It's also the client counterpart \
                     to the step-ca online Certificate Authority (CA).
 
+categories          security
+installs_libs       no
+license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-
-categories          security
-license             Apache-2
 platforms           darwin
-installs_libs       no
 
 # Allow fetching deps at build time
 build.env-delete    GO111MODULE=off GOPROXY=off
 
-checksums           rmd160  9dd0c75087c192e6fecdf9fa022433fbf7d54928 \
-                    sha256  b04281bfe53ec39a4056dd3b199715471ff785e3036e22c49d6197a333ee660c \
-                    size    1794368
+checksums           rmd160  dfac98c814832260ea8518cb663edc4e5821df26 \
+                    sha256  63bb164865f8b61478b4cb64e9bfb7055e9b85845cb9962cfb7de1e55962d24a \
+                    size    1804502
+
+# Mirrors already have a tarball named cli-${version}.  Since the tarball
+# is versioned, then we don't have to version our dist_subdir. We need only
+# create one with the project name just to differentiate from the tarball
+# already present.
+dist_subdir         ${name}
 
 build.cmd           make
 build.target        binary-darwin
 
 destroot {
     xinstall -m 755 \
-        ${worksrcpath}/output/binary/darwin/bin/step ${destroot}${prefix}/bin/
+        ${worksrcpath}/output/binary/darwin/bin/step \
+        ${destroot}${prefix}/bin/
 }
 
 github.livecheck.regex  {([0-9.]+)}
-github.tarball_from     archive

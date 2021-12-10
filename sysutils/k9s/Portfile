@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/derailed/k9s 0.24.14 v
+go.setup            github.com/derailed/k9s 0.25.8 v
+github.tarball_from archive
 revision            0
 
 homepage            https://k9scli.io
@@ -18,33 +19,35 @@ long_description    K9s provides a curses based terminal UI to interact with \
                     interact with observed Kubernetes resources.
 
 categories          sysutils devel
-platforms           darwin
-license             Apache-2
 installs_libs       no
-
+license             Apache-2
 maintainers         {breun.nl:nils @breun} \
                     {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+platforms           darwin
 
-checksums           rmd160  619491fcdd83f126ea9f795dfbad30cb684dc1f3 \
-                    sha256  78e432824adb7ba6300784630f9cf371a379cc809b1cbb66aea0cc4fa07b3cf3 \
-                    size    6207437
-
-set build_date      [exec date +%FT%T%z]
-# Reproduce the "build" target from the upstream Makefile
-set go_ldflags      "-w -s \
-    -X ${go.package}/cmd.version=v${version} \
-    -X ${go.package}/cmd.commit=unknown \
-    -X ${go.package}/cmd.date=${build_date}"
-build.args          -ldflags \"${go_ldflags}\" ${go.package}
+checksums           rmd160  2b562a37fee070e9b13036c363bb988bf017f9ff \
+                    sha256  56a4939b18a1059b55823e3a34b27fef8863473dca6c901659506a79219dba8e \
+                    size    6255844
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
 # https://trac.macports.org/ticket/61192
 build.env-delete    GOPROXY=off GO111MODULE=off
 
+build.cmd           make
+build.pre_args-append \
+                    GIT_REV="" DATE=""
+build.args          build
+
 destroot {
-    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+    xinstall -m 0755 ${worksrcpath}/execs/${name} ${destroot}${prefix}/bin/
+
+    xinstall -d ${destroot}${prefix}/share/${name}
+    copy ${worksrcpath}/skins   ${destroot}${prefix}/share/${name}/
+    copy ${worksrcpath}/plugins ${destroot}${prefix}/share/${name}/
 }
 
-github.tarball_from archive
+notes "
+  ${name} skins and plugins can be found in ${prefix}/share/${name}
+"

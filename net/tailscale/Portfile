@@ -3,8 +3,9 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/tailscale/tailscale 1.10.2 v
+go.setup            github.com/tailscale/tailscale 1.18.1 v
 go.package          tailscale.com
+github.tarball_from archive
 revision            0
 
 homepage            https://tailscale.com
@@ -16,16 +17,14 @@ long_description    {*}${description}. A secure network that just works. \
                     manages firewall rules for you, and works from anywhere.
 
 categories          net
+installs_libs       no
+license             BSD
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-license             BSD
-installs_libs       no
 
-checksums           rmd160  9c70767047691026301c0710808fa1efade4d915 \
-                    sha256  f4cd66efa1c0cbb758d8e89528b82d1c0472d7d23bcec2affc7554abb4e8f926 \
-                    size    727707
-
-github.tarball_from archive
+checksums           rmd160  b21e9d4e423c31bbfbff779db77def63376d2be3 \
+                    sha256  a8630d66ee1d475ba4ec97f389bae87d2777e9a33422726c052be1a6bbd2330c \
+                    size    891341
 
 set ts_build_sh     ${worksrcpath}/_build.sh
 

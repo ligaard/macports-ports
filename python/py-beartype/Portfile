@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-beartype
-version             0.7.1
+version             0.9.1
 platforms           darwin
 license             MIT
 supported_archs     noarch
@@ -19,11 +19,11 @@ long_description    Beartype is an open-source pure-Python PEP-compliant \
 
 homepage            https://github.com/beartype/beartype
 
-checksums           rmd160 bd90c94f40f8a24c063310c588c41e9be6dfe323 \
-                    sha256 0ea3b0b7983e4bdabb47ad299a4ba11cc48beaedabaf89752eea27cb6152e5c1 \
-                    size   601444
+checksums           rmd160 527b6c0d257ef2b1ff24ded2a2f01b8084c71ef0 \
+                    sha256 623630dc243b0da5a84f0fa414e6aaaf2613e567ad19abfe6a81c17ea5ab62f1 \
+                    size   711976
 
-python.versions     38 39
+python.versions     38 39 310
 
 if {${name} ne ${subport}} {
 

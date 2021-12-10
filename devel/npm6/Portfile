@@ -3,8 +3,8 @@
 PortSystem          1.0
 
 name                npm6
-version             6.14.13
-revision            1
+version             6.14.15
+revision            0
 categories          devel
 platforms           darwin
 supported_archs     noarch
@@ -15,7 +15,7 @@ long_description    npm is a package manager for node. \
                     You can use it to install and publish your node programs. \
                     It manages dependencies and does other cool stuff.
 
-conflicts           npm3 npm4 npm5 npm7
+conflicts           npm3 npm4 npm5 npm7 npm8
 
 homepage            https://www.npmjs.com/
 
@@ -27,10 +27,10 @@ extract.suffix      .tgz
 
 # Please keep the sha1 - users can use it to validate sha values
 # published on npmjs.org for the package
-checksums           sha1    e88bcb6c48209869c40b5cedad8a1508e58e6f30 \
-                    rmd160  029ad30ceb83ba144d7c3599dfcc903abcdc010e \
-                    sha256  29f58763d9bc29291ff513bcef1c1a2d75e09f8ff882010c43b4b7dcdb56ab9c \
-                    size    5758507
+checksums           sha1    97dd51af5b5d6225b611b40c5cb4d31da1d467fe \
+                    rmd160  f10de3d2fdd6092e454e3eb50d1566dd5662ae6d \
+                    sha256  de62fb2f02eb28966229d6566a33d9219d0e84bd070127ec83758ea4134958c5 \
+                    size    5771639
 
 worksrcdir          "package"
 

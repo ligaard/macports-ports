@@ -15,13 +15,20 @@ maintainers             {emcrisostomo @emcrisostomo} \
                         openmaintainer
 
 # *NOTE* Remember to update `latestVersion` on a version upgrade.
-set latestVersion       terraform-1.0
+set latestVersion       terraform-1.1
+
+subport terraform-1.1 {
+    set patchNumber     0
+    checksums           rmd160  e016636dad69f4bf72ae21f93180f8d78d2426d1 \
+                        sha256  6fb2af160879d807291980642efa93cc9a97ddf662b17cc3753065c974a5296d \
+                        size    20089311
+}
 
 subport terraform-1.0 {
-    set patchNumber     3
-    checksums           rmd160  0f2a91fb439749430c91d2f5f3743aa8579c5a9e \
-                        sha256  1de66203cf7f62ad990b6d8b583bc2caaadf8594150323f4d632a869448b85b9 \
-                        size    32741149
+    set patchNumber     11
+    checksums           rmd160  a8ea8e4ec4087d753801f19c5f5625204cfcc098 \
+                        sha256  92f2e7eebb9699e23800f8accd519775a02bd25fe79e1fe4530eca123f178202 \
+                        size    19340098
 }
 
 subport terraform-0.15 {
@@ -65,7 +72,7 @@ if {${subport} eq ${name}} {
     PortGroup           obsolete 1.0
 
     replaced_by         ${latestVersion}
-    version             1.0.3
+    version             1.1.0
     revision            0
 
 } elseif {${subport} eq "terraform_select"} {

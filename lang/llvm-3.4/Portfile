@@ -9,8 +9,8 @@ PortGroup compiler_blacklist_versions 1.0
 set llvm_version        3.4
 set llvm_version_no_dot 34
 name                    llvm-${llvm_version}
-revision                14
-subport                 clang-${llvm_version} { revision 15 }
+revision                15
+subport                 clang-${llvm_version} { revision 16 }
 set suffix              mp-${llvm_version}
 set sub_prefix          ${prefix}/libexec/llvm-${llvm_version}
 # prefix for deps using libstdc++ on a libc++ system
@@ -19,7 +19,7 @@ dist_subdir             llvm
 categories              lang
 platforms               darwin
 license                 NCSA
-maintainers             {jeremyhu @jeremyhu} {larryv @larryv} {kencu @kencu}
+maintainers             {jeremyhu @jeremyhu} {larryv @larryv}
 
 #see https://trac.macports.org/ticket/59677
 #see https://trac.macports.org/ticket/58779
@@ -268,6 +268,18 @@ platform darwin {
 
     if {${subport} eq "clang-${llvm_version}" && ${os.major} <= 9} {
         patchfiles-append leopard-no-asan.patch leopard-no-blocks.patch
+    }
+
+    # fix build on a G3 #63304 -- absence of Altivec is not automatically detected
+    if {${subport} eq "clang-${llvm_version}" && ${os.major} < 9 && ${build_arch} eq "ppc"} {
+        if {[catch {sysctl hw.vectorunit} result] || $result == 0} {
+
+            # if this machine is a G3, force a local build so we don't download a buildbot-built
+            # version possibly built on a G4+ or cross-compiled from an Intel system
+            archive_sites
+
+            patchfiles-append 1013-clang-lib-lex-dont-assume-altivec.diff
+        }
     }
 
     # TODO: The llvm build system sets a 10.1 deployment target on Yosemite

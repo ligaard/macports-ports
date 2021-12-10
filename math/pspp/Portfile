@@ -6,6 +6,8 @@ PortGroup               active_variants 1.1
 
 name                    pspp
 version                 1.4.1
+revision                1
+
 categories              math
 license                 GPL-3+
 maintainers             {snc @nerdling}
@@ -56,6 +58,7 @@ post-extract {
     }
 }
 
+patchfiles          patch-src-output-ascii.c.diff
 post-patch {
     if {[variant_isset gui]} {
         reinplace s|@@PREFIX@@|${prefix}|g ${worksrcpath}/PSPP

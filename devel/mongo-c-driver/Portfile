@@ -4,10 +4,10 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           github 1.0
 
-github.setup        mongodb mongo-c-driver 1.17.7
-checksums           rmd160  475474002dfc6859ac868032ceb5ce5726051b1d \
-                    sha256  5f5d9a5c16053dd134eb7d9ecf10b1c839fd60f8cb5dbf8e6f95be41b1e5143c \
-                    size    7092885
+github.setup        mongodb mongo-c-driver 1.20.0
+checksums           rmd160  681ff6d30e41eec39b486b47641756e70cb52ea1 \
+                    sha256  a97242866212bdcf9dfb8030b31a32eef9ff83082b34e1027339c805a3c50b0d \
+                    size    7355546
 
 categories          devel
 platforms           darwin
@@ -78,7 +78,7 @@ if {${subport} eq ${name}} {
 }
 
 subport libbson {
-    revision        0
+    revision        1
 
     homepage        http://mongoc.org/${subport}/${version}/
 
@@ -89,9 +89,15 @@ subport libbson {
                     to building, parsing, and iterating BSON documents.
 
     patchfiles-append \
+                    arc4random_buf.patch \
                     libbson.patch
 
     configure.args-append \
                     -DENABLE_BSON=ON \
                     -DENABLE_MONGOC=OFF
+
+    # error: implicit declaration of function 'arc4random_buf' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+    # https://jira.mongodb.org/browse/CDRIVER-4233
+    configure.cflags-append \
+                    -D_DARWIN_C_SOURCE
 }

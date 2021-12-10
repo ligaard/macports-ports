@@ -9,7 +9,8 @@ PortGroup           compiler_blacklist_versions 1.0
 # clock_gettime
 legacysupport.newest_darwin_requires_legacy 15
 
-github.setup        skyjake lagrange 1.5.2 v
+github.setup        skyjake lagrange 1.9.2 v
+revision            0
 github.tarball_from releases
 categories          net gemini
 platforms           darwin
@@ -19,21 +20,28 @@ maintainers         {@sikmir gmail.com:sikmir} openmaintainer
 description         A Beautiful Gemini Client
 long_description    ${description}
 
-checksums           rmd160  ec6fc9ee4543b7f47b62dac101e16c6186554698 \
-                    sha256  3be4d5b383726f725301bf757e06dcd2d30de1aa50431943387c9aa0df8d0a3f \
-                    size    20409523
+checksums           rmd160  53523f6dfb74b2250f2db380c274027bb23c8695 \
+                    sha256  cdb8f38a0ffe2bdac1b60838a8d25a6e12313412503a129c100cbbe40c1399c8 \
+                    size    8563431
 
 depends_build-append \
-                    port:pkgconfig
-depends_lib-append  port:libsdl2 \
+                    port:pkgconfig \
+                    port:zip
+depends_lib-append  port:fribidi \
+                    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+                    port:libsdl2 \
                     port:libunistring \
                     path:lib/libssl.dylib:openssl \
                     port:mpg123 \
                     port:pcre \
+                    port:webp \
                     port:zlib
 
 compiler.c_standard 2011
 compiler.blacklist-append {clang < 800}
+
+# OpenSSL 3.0 deprecations, see https://codeberg.org/skyjake/the_Foundation/issues/9
+configure.cppflags-append -Wno-deprecated-declarations
 
 destroot {
     copy ${build.dir}/Lagrange.app ${destroot}${applications_dir}

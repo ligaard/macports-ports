@@ -3,8 +3,10 @@
 PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
+PortGroup           boost 1.0
 
 github.setup        schrodinger pymol-open-source 2.5.0 v
+revision            1
 name                pymol
 conflicts           pymol-devel
 
@@ -26,20 +28,21 @@ checksums           rmd160  6432d47616aee1e5d9d40cc2a74425b33159d7a0 \
                     size    10471287
 
 subport pymol-devel {
-    github.setup    schrodinger pymol-open-source 49d4a936aa4e2f4b62357e19d4eff1cf60e567dc
-    version         20210708-[string range ${github.version} 0 7]
+    github.setup    schrodinger pymol-open-source a1ff1459f5b2d74c51477c6a7cb8998e8c89daa7
+    version         20211110-[string range ${github.version} 0 7]
     conflicts       pymol
     revision        0
     maintainers     {reneeotten @reneeotten} openmaintainer
-    checksums       rmd160  46dfe5578330ff8cfbeb5b0b798c637bd03f24f3 \
-                    sha256  77f9a126e40b55b52677706fdc863b4f109054d7b039172b99babc1c157ecf20 \
-                    size    10475474
+    checksums       rmd160  871c4a54bee18c6aa754d4c9a63c53217b3cc8f4 \
+                    sha256  720b4272bd34fdbcfb9cd4b6826c08d3ace1928dded5455b8c1a0f96212e5166 \
+                    size    10479063
 }
 
-variant python36 conflicts python37 python38 python39 description {Use Python 3.6} {}
-variant python37 conflicts python36 python38 python39 description {Use Python 3.7} {}
-variant python38 conflicts python36 python37 python39 description {Use Python 3.8} {}
-variant python39 conflicts python36 python37 python38 description {Use Python 3.9} {}
+variant python36 conflicts python37 python38 python39 python310 description {Use Python 3.6} {}
+variant python37 conflicts python36 python38 python39 python310 description {Use Python 3.7} {}
+variant python38 conflicts python36 python37 python39 python310 description {Use Python 3.8} {}
+variant python39 conflicts python36 python37 python38 python310 description {Use Python 3.9} {}
+variant python310 conflicts python36 python37 python38 python39 description {Use Python 3.10} {}
 
 if {[variant_isset python36]} {
     python.default_version 36
@@ -47,11 +50,15 @@ if {[variant_isset python36]} {
     python.default_version 37
 } elseif {[variant_isset python38]} {
     python.default_version 38
+} elseif {[variant_isset python310]} {
+    python.default_version 310
 } else {
     default_variants +python39
     python.default_version 39
 }
 python.link_binaries no
+
+boost.depends_type build
 
 compiler.cxx_standard 2011
 
@@ -66,17 +73,29 @@ depends_lib-append  port:freetype \
                     port:libpng \
                     port:libGLU \
                     port:libxml2 \
-                    port:msgpack \
+                    port:msgpack-cpp \
                     port:mmtf-cpp \
                     port:netcdf \
-                    port:py${python.version}-numpy \
-                    port:py${python.version}-pyqt5
+                    port:py${python.version}-numpy
+
+depends_run-append  port:py${python.version}-pyqt5
 
 patchfiles          pymol_shell.diff \
-                    setup.py.diff
+                    setup.py.diff \
+                    patch-boost-include.diff
+
+# two fixes for PyMOL v2.5.0 (can be removed upon next update):
+# 1. fix for build on 10.13 and below;
+# see: https://github.com/schrodinger/pymol-open-source/issues/193
+# 2. fix for build with VTK-M 1.6
+if {${subport} != "pymol-devel"} {
+    patchfiles-append   patch-layer1_Wizard.cpp.diff \
+                        patch-vtkm.diff
+}
 
 post-patch {
     reinplace  "s|@PREFIX@|${prefix}|g" ${worksrcpath}/setup.py
+    reinplace  "s|@@BOOST_INC_DIR@@|[boost::include_dir]|g" ${worksrcpath}/setup.py
     reinplace  "s|@@PYTHON_PKGDIR@@|${python.pkgd}|g" ${worksrcpath}/setup/pymol_macports
     reinplace  "s|@@PYTHON_BINARY@@|${python.bin}|g" ${worksrcpath}/setup/pymol_macports
     reinplace  "s|cxx + ' ' + cxxflags|'${configure.cxx} ' + cxxflags|g" ${worksrcpath}/monkeypatch_distutils.py
@@ -86,8 +105,3 @@ post-destroot {
      file copy ${worksrcpath}/setup/pymol_macports ${destroot}${prefix}/bin/pymol
      file attributes ${destroot}${prefix}/bin/pymol -permissions a+x
 }
-
-test.run            yes
-test.dir            ${worksrcpath}/test
-test.cmd            ${python.bin}
-test.target         run

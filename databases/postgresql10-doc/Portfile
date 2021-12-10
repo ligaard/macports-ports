@@ -5,7 +5,7 @@ PortSystem 1.0
 name                postgresql10-doc
 conflicts           postgresql96-doc postgresql11-doc postgresql12-doc \
     postgresql13-doc
-version             10.17
+version             10.19
 categories          databases
 platforms           darwin
 maintainers         {jwa @jyrkiwahlstedt}
@@ -22,9 +22,9 @@ master_sites        postgresql:source/v${version}
 distname            postgresql-${version}
 set rname           postgresql10
 
-checksums           rmd160  eb2c2dd55f6515b5a2d27f36f9c87625a7d6c2f5 \
-                    sha256  5af28071606c9cd82212c19ba584657a9d240e1c4c2da28fc1f3998a2754b26c \
-                    size    19153278
+checksums           rmd160  8e1fd79ea6ddd5388cca8b3a54397ced66458cce \
+                    sha256  6eb830b428b60e84ae87e20436bce679c4d9d0202be7aec0e41b0c67d9134239 \
+                    size    19261478
 
 use_bzip2           yes
 dist_subdir         ${rname}

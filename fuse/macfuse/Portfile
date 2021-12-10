@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        osxfuse osxfuse 4.2.0 macfuse-
+github.setup        osxfuse osxfuse 4.2.3 macfuse-
 revision            0
 name                macfuse
 conflicts           osxfuse
@@ -24,9 +24,9 @@ github.tarball_from releases
 distname            ${name}-${version}
 use_dmg             yes
 
-checksums           rmd160  ba5890bccb55afc402b2d5c1a17c1e21056d8a58 \
-                    sha256  bf413e3aae887b6e8e8f8ad46152eb34575b7ff7f90d6cc55735ad00c5a4c7a6 \
-                    size    5975938
+checksums           rmd160  74f09d7108cb24d264fd8d864bb959fde6e7db27 \
+                    sha256  800d9113c61ff1708b46a970e8c398f85563adab217ff82287bd00ac3da27283 \
+                    size    5980309
 
 if {${os.platform} eq "darwin" && ${os.major} < 16} {
     known_fail yes
@@ -70,10 +70,12 @@ destroot {
     copy {*}[glob ${pkg}/usr/local/include/*] ${destroot}${prefix}/include
     copy {*}[glob ${pkg}/usr/local/lib/pkgconfig/*] ${destroot}${prefix}/lib/pkgconfig
     copy {*}[glob -type f ${pkg}/usr/local/lib/*] ${destroot}${prefix}/lib
+    # remove unwanted files like ._uninstall_macfuse.app
+    system "find  ${destroot}${prefix} -type f -iname '._*' -delete"
 }
 
 notes  "
     Run the following before using macFUSE:
 
-        sudo ln -sn ${prefix}${dir} ${dir}
+        sudo ln -fsn ${prefix}${dir} ${dir}
 "

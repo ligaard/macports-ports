@@ -4,27 +4,29 @@ PortSystem              1.0
 PortGroup               github 1.0
 PortGroup               java 1.0
 
-github.setup            plantuml plantuml 1.2021.9 v
+github.setup            plantuml plantuml 1.2021.16 v
+github.tarball_from     archive
 revision                0
+
 categories              java editors
 platforms               darwin
 supported_archs         noarch
 license                 GPL-3+
-maintainers             {outlook.de:judaew @judaew} openmaintainer
-description             PlantUML is a tool for generating UML diagrams from textual \
-                        description.
+maintainers             {judaew @judaew} openmaintainer
+description             PlantUML is a tool for generating UML diagrams from \
+                        textual description.
 long_description        ${description}
 homepage                https://plantuml.com/
 
-checksums               rmd160  1cd2aae49166a0c51f5d161eae4351101ee45b9f \
-                        sha256  f90a694c9dee0c2218bd020dbca2ef9c94473e6602d94edd019883aa3c1ab244 \
-                        size    4688405
+checksums               rmd160  562e09ba23d4af8e73b1003de8c2823532998563 \
+                        sha256  5b9fad6628103db385b8bc6eab7c98f71f6c89427bd70277b068245c3119be68 \
+                        size    5509750
 
 depends_build           bin:ant:apache-ant \
                         port:jlatexmath
 
 java.version            1.7+
-java.fallback           openjdk11
+java.fallback           openjdk17
 
 use_configure           no
 

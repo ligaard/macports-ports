@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           boost 1.0
 
 name                libreoffice
-version             7.2.0.1
+version             7.2.4.1
 revision            0
 categories          office aqua
 license             {LGPL-3 MPL-1.1}
@@ -35,25 +35,27 @@ master_sites        ${main_uri}:main \
                     ${extern_uri}:opens \
                     ${addons_uri}:dtoa \
                     ${main_uri}:dicts \
-                    ${main_uri}:translations
+                    ${main_uri}:translations \
+                    ${addons_uri}:libcmis
 distfiles           ${main_distfile}:main \
                     ${name}-dictionaries-${version}.tar.xz:dicts \
                     ${name}-translations-${version}.tar.xz:translations \
                     dtoa-20180411.tgz:dtoa \
-                    f543e6e2d7275557a839a164941c0a86e5f2c3f2a0042bfc434c88c6dde9e140-opens___.ttf:opens
+                    f543e6e2d7275557a839a164941c0a86e5f2c3f2a0042bfc434c88c6dde9e140-opens___.ttf:opens \
+                    libcmis-0.5.2.tar.xz:libcmis
 
 checksums           libreoffice-${version}.tar.xz \
-                    rmd160  28e3885248196947a0ef23729431b8eb2e6e3cc4 \
-                    sha256  218c22ac991ac2ac071ef26c2dc3b4a0153d49d2f8ca97cee836e5ffe92f7396 \
-                    size    251660180 \
+                    rmd160  6800f73d5bfd05f268dc3fffe87d618676bab90a \
+                    sha256  6268b9066a60586cf0a5f5ed9960cdf86a5ff586fe6699bf4d296d580de08f21 \
+                    size    252734952 \
                     libreoffice-dictionaries-${version}.tar.xz \
-                    rmd160  062c7af147455d546e7191ccf48d6696481b1074 \
-                    sha256  f50cd9ef0e2a534645eb9c214c509b1546e04e8918f939a3923250e25abba617 \
-                    size    49552296 \
+                    rmd160  07019866816a63290e2092b8a367b1b9911d32c6 \
+                    sha256  dfe1c6fdf3f14b2c00e70b45bb6c2e1d1da91c8f86b44a184c638be55d8df36a \
+                    size    49519976 \
                     libreoffice-translations-${version}.tar.xz \
-                    rmd160  e83a5863d32d7fc36d4423c7f1e6efd6d7dd0ec7 \
-                    sha256  d8934769d42a69008702231e69a288d29546b39b60b7826ab1977989167f1998 \
-                    size    192024608 \
+                    rmd160  f110844ff70b3e778c8ff24d124880f47b4b491c \
+                    sha256  f27cc2b7bfc9ee0a893ed1cead5bbb513a27270d69c6ee1f9cb589c963941daf \
+                    size    192631680 \
                     dtoa-20180411.tgz \
                     rmd160  8d1bba737d8b58c3fb09533f35af2a03e05d9849 \
                     sha256  0082d0684f7db6f62361b76c4b7faba19e0c7ce5cb8e36c4b65fea8281e711b4 \
@@ -61,7 +63,11 @@ checksums           libreoffice-${version}.tar.xz \
                     f543e6e2d7275557a839a164941c0a86e5f2c3f2a0042bfc434c88c6dde9e140-opens___.ttf \
                     rmd160  b9e2cc0c836faa59eca3bfc0f24e1b790646b112 \
                     sha256  f543e6e2d7275557a839a164941c0a86e5f2c3f2a0042bfc434c88c6dde9e140 \
-                    size    207992
+                    size    207992 \
+                    libcmis-0.5.2.tar.xz \
+                    rmd160  cb17ab0d699ab56faae46ebaaabca618f3cf8b28 \
+                    sha256  d7b18d9602190e10d437f8a964a32e983afd57e2db316a07d87477a79f5000a2 \
+                    size    484404
 
 depends_build-append \
     port:autoconf \
@@ -86,8 +92,8 @@ depends_lib-append  \
     port:gdbm \
     port:gettext \
     port:graphite2 \
-    port:harfbuzz \
-    port:harfbuzz-icu \
+    path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
+    path:lib/pkgconfig/harfbuzz-icu.pc:harfbuzz-icu \
     port:hunspell \
     port:hyphen \
     port:icu \
@@ -95,7 +101,6 @@ depends_lib-append  \
     port:lcms2 \
     port:libabw \
     port:libcdr-0.1 \
-    port:libcmis \
     port:libe-book \
     port:libepoxy \
     port:libepubgen \
@@ -217,7 +222,6 @@ configure.args-append  \
     --with-system-hunspell \
     --with-system-jars \
     --with-system-libabw \
-    --with-system-libcmis \
     --with-system-libebook \
     --with-system-libepubgen \
     --with-system-libexttextcat \
@@ -241,6 +245,7 @@ configure.args-append  \
     --without-java \
     --without-package-format \
     --without-system-dicts \
+    --without-system-libcmis \
     --without-system-sane \
     \"--with-lang=bg br ca ca-valencia cy cs da de el en-US en-GB es et eu fi fr ga gd gl hr hu id is it ja km lt lv nb nl nn pl pt pt-BR ro ru sk sl sv ta tr uk zh-CN zh-TW\"
 

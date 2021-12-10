@@ -4,8 +4,7 @@ PortSystem      1.0
 PortGroup       python 1.0
 
 name            py-game
-version         2.0.1
-revision        1
+version         2.0.3
 categories-append     devel multimedia graphics
 platforms       darwin
 license         LGPL-2.1+
@@ -20,11 +19,11 @@ long_description    Pygame is a set of Python modules designed for \
 homepage        http://www.pygame.org/
 
 python.rootname pygame
-checksums       md5 6353c0eb2367f70b8c8d07d3decc1e46 \
-                rmd160 3943e514f86be98f31a098582d43886b20f22a16 \
-                sha256 8b1e7b63f47aafcdd8849933b206778747ef1802bd3d526aca45ed77141e4001
+checksums       md5 04e082d216b3b771b8d52769597b2fb2 \
+                rmd160 03970781db89e80b3378119247e6e1ea7b69924a \
+                sha256 d097f2802a9d0d7fb40c49c789af2984b202baa8fd32701082598755f5973f51
 
-python.versions 27 35 36 37 38 39
+python.versions 27 35 36 37 38 39 310
 
 if {$subport ne $name} {
     patchfiles  patch-config_darwin.py.diff \
@@ -65,6 +64,7 @@ if {$subport ne $name} {
                             port:libsdl2_image \
                             port:libsdl2_ttf
     } else {
+        configure.args-append   -sdl1
         depends_lib-append  port:libsdl_mixer \
                             port:libsdl_image \
                             port:libsdl_ttf

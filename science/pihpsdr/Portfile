@@ -16,11 +16,11 @@ maintainers         {ra1nb0w @ra1nb0w} openmaintainer
 description         piHPSDR is an HPSDR application designed for low power boards, like Raspberry.
 long_description    ${description}
 
-github.setup        dl1ycf pihpsdr 5eef8dc91921e89cf20e0b738d9f23199de755f1
-version             20210610-[string range ${github.version} 0 7]
-checksums           rmd160  4f3ad6eb5663cb5aa119623198bdeb8140d65031 \
-                    sha256  aa36ab20aba793aa2ec5a55a00eb9eac6382c2b685a2b28fd68f4b551bd1e0ef \
-                    size    114592625
+github.setup        dl1ycf pihpsdr d3be68fdd34be27a10da93ed1da240d05006fedd
+version             20211206-[string range ${github.version} 0 7]
+checksums           rmd160  65f0adfe109fcf383eac7bb0a280adf43624cb4c \
+                    sha256  4148f65a270337a14a589382c26c5f1814e1d1261c4e9c32c94fe2b2abe99287 \
+                    size    114581324
 revision            0
 
 patchfiles-append \
@@ -32,7 +32,7 @@ depends_build-append \
     port:pkgconfig
 
 depends_lib-append \
-    port:gtk3 \
+    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
     path:lib/pkgconfig/pango.pc:pango \
     port:atk \
     port:gdk-pixbuf2 \

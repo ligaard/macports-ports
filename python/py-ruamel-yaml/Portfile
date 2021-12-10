@@ -5,10 +5,10 @@ PortGroup           python 1.0
 
 name                py-ruamel-yaml
 
-version             0.17.10
-checksums           rmd160  540534aad59ae8467e92013dbff7a83ec92f3e40 \
-                    sha256  106bc8d6dc6a0ff7c9196a47570432036f41d556b779c6b4e618085f57e39e67 \
-                    size    126760
+version             0.17.17
+checksums           rmd160  37a831c82c8845740dc533f0945e88c526b5fabe \
+                    sha256  9751de4cbb57d4bfbf8fc394e125ed4a2f170fbff3dc3d78abf50be85924f8be \
+                    size    127486
 revision            0
 
 license             MIT
@@ -21,7 +21,7 @@ long_description    ${description}. \
 
 homepage            https://yaml.readthedocs.io/
 
-python.versions     27 36 37 38 39
+python.versions     27 36 37 38 39 310
 
 if {${name} ne ${subport}} {
     depends_build-append    port:py${python.version}-setuptools

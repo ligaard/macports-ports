@@ -4,14 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-fsspec
-version             2021.7.0
+version             2021.11.0
 revision            0
 categories-append   devel
 platforms           darwin
 license             BSD
 supported_archs     noarch
 
-python.versions     35 36 37 38 39
+python.versions     35 36 37 38 39 310
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -20,9 +20,9 @@ long_description    ${description}
 
 homepage            https://github.com/intake/filesystem_spec
 
-checksums           rmd160  bc346c3be83496ea5db03ec9c0d79891db98b950 \
-                    sha256  792ebd3b54de0b30f1ce73f0ba0a8bcc864724f2d9f248cb8d0ece47db0cbde8 \
-                    size    120284
+checksums           rmd160  6ac266b7602cdeb6faedd1fe24dba94d22c98d1a \
+                    sha256  cbb7bafd59aa33684a92e843877f4adc0109fb0722b1a26e7d08f5a6e2500904 \
+                    size    134371
 
 if {${name} ne ${subport}} {
     depends_build-append \

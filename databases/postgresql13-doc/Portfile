@@ -4,8 +4,8 @@ PortSystem 1.0
 
 name                postgresql13-doc
 conflicts           postgresql96-doc postgresql10-doc postgresql11-doc \
-    postgresql12-doc
-version             13.3
+    postgresql12-doc postgresql14-doc
+version             13.5
 categories          databases
 platforms           darwin
 maintainers         {jwa @jyrkiwahlstedt}
@@ -22,9 +22,9 @@ master_sites        postgresql:source/v${version}
 distname            postgresql-${version}
 set rname           postgresql13
 
-checksums           rmd160  40e9645e8c1cd2776daaa70fa54ea62024d34527 \
-                    sha256  3cd9454fa8c7a6255b6743b767700925ead1b9ab0d7a0f9dcb1151010f8eb4a1 \
-                    size    21119109
+checksums           rmd160  f57c343c5144d8504657e6dabddf1ec06e9359a7 \
+                    sha256  9b81067a55edbaabc418aacef457dd8477642827499560b00615a6ea6c13f6b3 \
+                    size    21186674
 
 use_bzip2           yes
 dist_subdir         ${rname}

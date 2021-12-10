@@ -6,9 +6,9 @@ PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
-github.setup        plumed plumed2 2.7.1 v
+github.setup        plumed plumed2 2.7.3 v
 name                plumed
-revision            1
+revision            0
 
 categories          science
 
@@ -26,9 +26,9 @@ platforms           darwin
 
 homepage            http://www.plumed.org/
 
-checksums           rmd160  2137586dbc890732d0e632c8b4ec483aa0c00598 \
-                    sha256  c5ecc6c13eb45a9e009c1fedf07d91f5a02f2600ff29f1cd481f4a0d17e12908 \
-                    size    106402240
+checksums           rmd160  25b9e84980d08583c782780281b241f5eca47e55 \
+                    sha256  5d7f052697b05d0a2c3b934606d8890b2655b68070fa3a22009d83f8aea5a73f \
+                    size    106492582
 
 # Enable optional features.
 # --enable-asmjit:        Compile internal asmjit. Notice that internal asmjit is protected in
@@ -120,14 +120,18 @@ pre-configure {
 # plumed-devel subport
 # This subport installs the developer version
 subport plumed-devel {
-    github.setup        plumed plumed2 834465597679194d662f5eb1734041c3c4fcaf43
-    version             2.8-20210416
+    github.setup        plumed plumed2 ef90a2cd5e5c2ccd51dc48c3462c37967ef73910
+    version             2.8-20211201
+    revision            0
     description         ${description} (development version)
     long_description    ${long_description} (development version)
     conflicts plumed
-    checksums           rmd160  f8e7676713a1920565e1b793abfb90499a01aeac \
-                        sha256  12ced9b250623e3d5b0442934a0169051fed85827ef9ceddfc758f346f318d0c \
-                        size    107085872
+    checksums           rmd160  c5b0dbcb7ab6cf26092a57fd91d2eb739dc91bea \
+                        sha256  f689ddb2b4931de6ded67061d7e7d4501e3dd5d6d40785b107a675d17cf545ec \
+                        size    107893701
+    configure.ldflags-delete -lxdrfile
+    depends_lib-delete       port:xdrfile
+    configure.args-delete    --enable-asmjit
 }
 
 # Allow running tests from MacPorts

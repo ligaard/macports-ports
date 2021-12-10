@@ -25,11 +25,11 @@ boost.version       1.71
 
 if {${subport} eq ${name}} {
 
-    github.setup    gnuradio gnuradio 3.8.3.1 v
-    checksums       rmd160  9535c42de62cded61c9a07c2bce5e6c53d18d8ca \
-                    sha256  ac4ed9989d9139f9dc6b0d6b9c0cdb7da3a0130b9ccdfb09ef9addf6c7d40bda \
-                    size    3394045
-    revision        2
+    github.setup    gnuradio gnuradio 3.8.4.0 v
+    checksums       rmd160  bd9b6388ca9073bde4bfa21af6f6918c56d68a1d \
+                    sha256  df6797c8f0258b77c577e75ad12b901586a17f37bfea0894e895d346810dbdac \
+                    size    3395273
+    revision        1
 
     long_description    ${description}: \
         This port is kept up with the GNU Radio release, \
@@ -50,7 +50,6 @@ if {${subport} eq ${name}} {
     # fix Quartz behaviour
     # TODO verify https://github.com/gnuradio/gnuradio/issues/2726
     patchfiles-append \
-        patch-quartz_drag_n_drop.38.diff \
         patch-quartz_drop_crash.38.diff
     # fix https://github.com/gnuradio/gnuradio/pull/3981
     patchfiles-append \
@@ -68,7 +67,7 @@ subport gnuradio37 {
     checksums       rmd160  0165a52a4770a02b4843544e4ba6bc59d84fa7d1 \
                     sha256  3d895e29417efd4ef8ab4053bed2ea9117b4476c0ae729f065088242f0f61f9f \
                     size    4460817
-    revision        5
+    revision        6
 
     long_description    ${description}: \
         This port is kept up with the GNU Radio 3.7 release, \
@@ -118,7 +117,7 @@ subport gnuradio-next {
     checksums       rmd160  0a9e1294036e786116c96d68f9116e3f2798d325 \
                     sha256  bb2dab14e159a4b58ccf317ece3b4132959739f4b5b217d8e0add3c5ce581f5f \
                     size    3950832
-    revision        6
+    revision        7
 
     long_description    ${description}: \
         This port is kept up with the GNU Radio GIT 'master' \
@@ -146,17 +145,6 @@ subport gnuradio-next {
     # set the version override string
     set GR_VERSION_INFO "next-git-[string range ${github.version} 0 7](${version})"
 
-}
-
-# obsolete 20191016
-subport gnuradio-devel {
-    replaced_by     gnuradio
-    version         20180824
-    revision        9
-    PortGroup       obsolete 1.0
-    set python_versions { 2.7 }
-    set default_python_variant +python27
-    set GR_VERSION_INFO ""
 }
 
 # Define the available variants
@@ -357,7 +345,7 @@ variant grc requires swig description "Install GNU Radio Companion" {
             port:py${active_python_version_no_dot}-mako \
             port:py${active_python_version_no_dot}-lxml \
             port:py${active_python_version_no_dot}-yaml \
-            port:gtk3 \
+            path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
             path:lib/pkgconfig/cairo.pc:cairo \
             path:lib/pkgconfig/pango.pc:pango
 

@@ -4,7 +4,7 @@ PortSystem              1.0
 PortGroup               python 1.0
 
 name                    jc
-version                 1.16.0
+version                 1.17.4
 revision                0
 
 homepage                https://pypi.org/project/jc
@@ -17,15 +17,15 @@ long_description        {*}${description} This allows for piping the output \
                         scripts.
 
 categories              sysutils textproc python
-platforms               darwin
 license                 MIT
-
-checksums               rmd160  5b54f7903803e8ef58fb24d6b62219af3e491a23 \
-                        sha256  8582c921abf5390d58cea2b751a5f277764a3c3be4f8d59ca887174c4d413ce2 \
-                        size    145150
-
 maintainers             {gmail.com:herby.gillot @herbygillot} \
                         openmaintainer
+platforms               darwin
+supported_archs         noarch
+
+checksums               rmd160  75464fb07c6150b07e31e3e770077a9b3f1dc1cd \
+                        sha256  f8c662eec683717e91226b9ea1331549fdfdef125cf61a6a5f9c59b37e7407c2 \
+                        size    164548
 
 python.default_version  39
 

@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        denoland deno 1.12.2 v
+github.setup        denoland deno 1.16.4 v
+github.tarball_from releases
 revision            0
 
 homepage            https://deno.land
@@ -12,7 +13,7 @@ description         Deno is a simple, modern and secure runtime for \
                     JavaScript and TypeScript that uses V8 and is built in \
                     Rust.
 
-long_description    Deno is a a secure runtime for JavaScript and TypeScript. \
+long_description    Deno is a secure runtime for JavaScript and TypeScript. \
                     It is secure by default, performs no file, network, or \
                     environment access, unless explicitly enabled, and \
                     supports TypeScript out of the box. Deno has built-in \
@@ -23,20 +24,19 @@ long_description    Deno is a a secure runtime for JavaScript and TypeScript. \
 
 categories          devel
 license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
 platforms           darwin
 supported_archs     arm64 x86_64
 
-maintainers         {gmail.com:herby.gillot @herbygillot} \
-                    openmaintainer
-
 checksums           ${name}-x86_64-apple-darwin.zip \
-                    rmd160  ea51954ecb3fd5f0d1c8bbfe7fdb5f0c68550de9 \
-                    sha256  854f85a6b3d126eaa30648bc374e2f938d368cf5b5d3607a8ec845630ef62f33 \
-                    size    29529088 \
+                    rmd160  4c8a2f6f787759708f6aaca1f32f13431014c7e8 \
+                    sha256  0b0508e24602dcca347afc8663a00c6d4a80c2883c2a44184648f2e6b52ee459 \
+                    size    29998741 \
                     ${name}-aarch64-apple-darwin.zip \
-                    rmd160  7d6b01384c4f74170206c2864a0ad232c5f14f28 \
-                    sha256  fe3844fa4d064b85bbff65c3ccbc96254838f5bd90c6becf39fb1b3fe4097b85 \
-                    size    28682715
+                    rmd160  a71da2f2a2fe623fb9f896625f4dec9b174cff9f \
+                    sha256  a7024301b5713da84445126fe1f5d096c4608121dae1fffdc7a307743db41b37 \
+                    size    29682496
 
 if {${build_arch} eq "arm64"} {
     set release_arch aarch64
@@ -44,7 +44,6 @@ if {${build_arch} eq "arm64"} {
     set release_arch x86_64
 }
 
-github.tarball_from releases
 distname            ${name}-${release_arch}-apple-darwin
 dist_subdir         ${name}/${version}
 extract.mkdir       yes

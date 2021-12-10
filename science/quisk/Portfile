@@ -5,7 +5,7 @@ PortGroup           python 1.0
 PortGroup           app 1.0
 
 name                quisk
-version             4.1.83
+version             4.1.92
 revision            0
 categories          science comms
 platforms           darwin
@@ -16,13 +16,12 @@ long_description    ${description}
 
 homepage            http://james.ahlstrom.name/quisk/
 
-checksums           rmd160  60d6906109944563820241e20fd3185002611977 \
-                    sha256  a6f06aee593da20c4ec4c619d366b95b21ce0ed7d76628edfcd44b91d6d50f1f \
-                    size    3444055
+checksums           rmd160  af975e2ba362944e302dbcd7b0655e7f224ddb8b \
+                    sha256  2c83e0f5c3e4eb4d4bdad2e9d9065f90dc6fc8dd1526a626c61e9f07e7b155c8 \
+                    size    3461522
 
 python.versions     36 37 38 39
-# keep in sync with gnuradio and other SDRs software
-python.default_version 37
+python.default_version 39
 
 patchfiles-append \
     codec2_fix_freedv.c.patch

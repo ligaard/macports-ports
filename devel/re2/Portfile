@@ -5,8 +5,13 @@ PortGroup           cmake 1.1
 PortGroup           github 1.0
 
 epoch               1
-github.setup        google re2 2021-06-01
+github.setup        google re2 2021-11-01
 revision            0
+
+checksums           rmd160  e821ad726d2ee886d67ba9152b18ad4c0b088bd3 \
+                    sha256  1d10b5cf7ad4cde7f085ca02a0f78296beb43bb02efe79b2dd6f796677a933be \
+                    size    408960
+
 categories          devel textproc
 maintainers         nomaintainer
 
@@ -18,10 +23,6 @@ long_description    RE2 is a fast, safe, thread-friendly alternative to \
 
 platforms           darwin
 license             BSD
-
-checksums           rmd160  ce791cc108ee0afb8153fb070d1dd57c3a8034f0 \
-                    sha256  3dfd986eeeaeeeec5d39851ef89829ce3a2619c012dad831d05488d7403ae765 \
-                    size    403754
 
 compiler.cxx_standard   2011
 

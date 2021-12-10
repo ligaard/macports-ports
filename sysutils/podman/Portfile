@@ -3,7 +3,11 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/containers/podman 3.2.3 v
+# After the upgrade, it is highly recommended to test the `podman machine`.
+# This port has problems with this command from time to time.
+# See https://gist.github.com/judaew/85c6e8a62bf0e7f5be5188e020492e21
+go.setup            github.com/containers/podman 3.4.4 v
+github.tarball_from archive
 revision            0
 
 categories          sysutils
@@ -17,15 +21,29 @@ long_description    Podman is a tool for running Linux containers. \
                     either running inside of a VM on the host, or available via the network. \
                     You need to install the remote client and then setup ssh connection information.
 
-maintainers         {outlook.de:judaew @judaew} openmaintainer
+maintainers         {judaew @judaew} openmaintainer
 
 checksums           ${distname}${extract.suffix} \
-                        rmd160  a9419bdd044af9ebcf1861aa993694b749af31d7 \
-                        sha256  3e049f70a2d8676db11ca6b231f4dbfbab68a18a924aeb3a3c93aad2bed8d80d \
-                        size    10764212
+                        rmd160  695711f70b93fa1160752613d6e928f48fedc996 \
+                        sha256  718c9e1e734c2d374fcf3c59e4cc7c1755acb954fc7565093e1d636c04b72e3a \
+                        size    10945990
+
+depends_run         port:gvisor-tap-vsock port:qemu
 
 post-extract {
     reinplace "s|-mod=vendor||g" ${worksrcpath}/Makefile
+}
+
+patchfiles          patch-defaultHelperBinariesDir-for-MacPorts.diff \
+                    patch-getEdk2CodeFd-for-MacPorts.diff
+
+# See https://trac.macports.org/ticket/64131#comment:3
+patchfiles-append   patch-remove-hvf-accel-option-for-qemu.diff
+
+post-patch {
+    reinplace "s|@@PREFIX@@|${prefix}|g" \
+        ${worksrcpath}/vendor/github.com/containers/common/pkg/config/config_darwin.go \
+        ${worksrcpath}/pkg/machine/qemu/options_darwin_arm64.go
 }
 
 build.cmd           make
@@ -53,4 +71,3 @@ destroot {
 }
 
 github.livecheck.regex  {([^"r-]+)}
-

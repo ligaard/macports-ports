@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/aws/copilot-cli 1.8.3 v
+go.setup            github.com/aws/copilot-cli 1.11.0 v
 name                copilot
 revision            0
 
@@ -21,15 +21,15 @@ long_description    The AWS Copilot CLI is a tool for developers to create, \
                     your app development.
 
 categories          devel
+installs_libs       no
 license             Apache-2
-platforms           darwin
-
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
+platforms           darwin
 
 depends_build-append \
                     port:go-mockgen \
-                    port:npm6       \
+                    port:npm7       \
                     port:packr
 
 # allow Go to fetch deps at run-time
@@ -42,9 +42,9 @@ build.args          release
 installs_libs       no
 use_parallel_build  no
 
-checksums           rmd160  bd1dfc0a8132bf6faf09e83890012c5d577b8f92 \
-                    sha256  9cb43e56a7ff893ae067eef90369d49daaf3a9fe9136792bf5a733e3fc83dd9b \
-                    size    7911773
+checksums           rmd160  086a671bdfe6e5dc5cfc9d9853e777d366b8598d \
+                    sha256  98f22a545e016733a43b8cc3a548c0df75c443ae50edb3644e709e8df079598d \
+                    size    8022135
 
 github.tarball_from archive
 
@@ -62,5 +62,7 @@ patch {
 }
 
 destroot {
-    xinstall -m 755 ${worksrcpath}/bin/local/${name} ${destroot}${prefix}/bin/
+    xinstall -m 755 \
+        ${worksrcpath}/bin/local/${name}-${goos}-${goarch} \
+        ${destroot}${prefix}/bin/${name}
 }

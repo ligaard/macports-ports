@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           python 1.0
 
-github.setup        certbot certbot 1.17.0 v
+github.setup        certbot certbot 1.22.0 v
 revision            0
 categories          security
 license             Apache-2
@@ -15,20 +15,20 @@ long_description    {*}${description}
 platforms           darwin
 homepage            https://certbot.eff.org/
 
-checksums           rmd160  dda55a43fe6983677091a66913f12ef005b97278 \
-                    sha256  745c87d23941857a701af81730adff27e1148efd9352c649dac115877eed1cff \
-                    size    1386529
+checksums           rmd160  ac8b753333a4db28d4aa754cb8f2d7e9df17ec9c \
+                    sha256  bbe06dcc234b833f3d430e537d84ee54233b279129b6ac4247fffb7152c55331 \
+                    size    1352568
 
-variant python36 conflicts python37 python38 python39 description {Use Python 3.6} {}
-variant python37 conflicts python36 python38 python39 description {Use Python 3.7} {}
-variant python38 conflicts python36 python37 python39 description {Use Python 3.8} {}
-variant python39 conflicts python36 python37 python38 description {Use Python 3.9} {}
+variant python37 conflicts python38 python39 python310 description {Use Python 3.7} {}
+variant python38 conflicts python37 python39 python310 description {Use Python 3.8} {}
+variant python39 conflicts python37 python38 python310 description {Use Python 3.9} {}
+variant python310 conflicts python37 python38 python39 description {Use Python 3.10} {}
 
-if {![variant_isset python36] && ![variant_isset python37] && ![variant_isset python38]} {
+if {![variant_isset python37] && ![variant_isset python38]&& ![variant_isset python310]} {
     default_variants +python39
 }
 
-foreach pv {39 38 37 36} {
+foreach pv {310 39 38 37} {
     if {[variant_isset python${pv}]} {
         python.default_version ${pv}
         break
