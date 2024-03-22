@@ -4,10 +4,9 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           xcode 1.0
 
-github.setup        vslavik poedit 3.0 v -oss
+github.setup        vslavik poedit 3.4.1 v -oss
 revision            0
 categories          editors
-platforms           darwin
 # bundles gettext
 license             MIT GPL-3+
 maintainers         {l2dy @l2dy} openmaintainer
@@ -17,6 +16,7 @@ long_description    This program is GUI frontend to GNU gettext utilities \
 homepage            https://poedit.net/
 
 depends_build       port:bison \
+                    port:curl \
                     port:gsed \
                     port:ninja
 
@@ -35,7 +35,6 @@ post-fetch {
 }
 
 patchfiles          patch-deps-tool-path.diff \
-                    patch-xcode12-fix.diff \
                     patch-remove-sparkle.diff
 
 if {${configure.sdkroot} eq ""} {
@@ -44,13 +43,13 @@ if {${configure.sdkroot} eq ""} {
 
 post-patch {
     reinplace -W "${worksrcpath}" "s|@@PREFIX@@|${prefix}|g" \
-        deps/build.vars.ninja deps/build_deps.sh
+        deps/build_deps.sh
 }
 
 xcode.configuration     "Release"
 xcode.scheme            "Poedit"
 
-build.pre_args          -workspace Poedit2.xcworkspace \
+build.pre_args          -workspace Poedit.xcworkspace \
                         -derivedDataPath ./DerivedData
 
 destroot {

@@ -3,11 +3,11 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         Business-ISBN-Data 20210112.006
-maintainers         nomaintainer
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Business-ISBN-Data 20240313.001 ../../authors/id/B/BR/BRIANDFOY
+revision            0
 license             Artistic-2
-
+maintainers         nomaintainer
 description         ISBN data required for use of Business::ISBN
 long_description    This package provides ISBN data used by the \
                     Business::ISBN family of Perl modules to associate \
@@ -15,9 +15,9 @@ long_description    This package provides ISBN data used by the \
                     module so that it can be updated independently of the \
                     Business::ISBN code.
 
-checksums           rmd160  c56ecf26fcadadb0007f76f997a8fd106f100c66 \
-                    sha256  98c2cfb266b5fdd016989abaa471d9dd4c1d593c508a6f01f66d184d5fee8bae \
-                    size    29035
-
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
+
+checksums           rmd160  d1d0ac9949802f1fb1be84990b26feb3f47944b5 \
+                    sha256  b41c1edf6c1a3034febae26de2d115c4cc117fe9f95aa460bec08f1343030996 \
+                    size    34064

@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran gilbert.ritschard TraMineR 2.2-9
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2+
+description         Trajectory miner – a toolbox for exploring and rendering sequences
+long_description    {*}${description}
+homepage            http://traminer.unige.ch
+checksums           rmd160  9a9df1134447fbd3f47b4fcb645fcf41c8296b51 \
+                    sha256  705f5c0bcd476485202200adc8c2266f804bb0907ddf8d6983bd4f38daadc4be \
+                    size    1257188
+
+depends_lib-append  port:R-colorspace \
+                    port:R-RColorBrewer \
+                    port:R-vegan
+
+depends_test-append port:R-TraMineRextras \
+                    port:R-xtable
+
+test.run            yes

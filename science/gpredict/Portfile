@@ -22,24 +22,25 @@ long_description    Gpredict is a real-time satellite tracking and orbit \
 
 homepage            http://gpredict.oz9aec.net/
 
-github.setup        csete gpredict a0a563684702ad4d1de6e128ca9219d6ee9daa47
-version             20210509-[string range ${github.version} 0 7]
-checksums           rmd160  691c040622f62c966b6a4af83ebbbcd90a8af69b \
-                    sha256  824a2943fe9ea22ea9ff9f262407dc8c4320738aee171618903b55efdab832cf \
-                    size    7715873
+github.setup        csete gpredict 098e3768240c7f5a169930a2660a23c9f42b37d6
+# Note version is date and approximate hour (UTC)
+version             2023122422-[string range ${github.version} 0 7]
+checksums           rmd160  de739e0a782b962463d1975ef64f50852cd24ac7 \
+                    sha256  27bb4b2d2021fda8e1826cbfdcb757167844f615c84f5aac89ea36738b80bbb1 \
+                    size    7718445
 revision            0
-
 
 use_autoreconf      yes
 use_configure       yes
 
 depends_build-append \
+                    port:gettext \
                     port:intltool \
                     port:pkgconfig
 
-depends_lib         port:goocanvas2 \
-                    path:lib/pkgconfig/librsvg-2.0.pc:librsvg \
-                    port:curl
+depends_lib         port:curl \
+                    port:goocanvas2 \
+                    path:lib/pkgconfig/librsvg-2.0.pc:librsvg
 
 depends_run         path:lib/libhamlib.dylib:hamlib
 

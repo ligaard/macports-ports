@@ -4,15 +4,14 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           makefile 1.0
 
-github.setup        auriamg macdylibbundler 1.0.2
+github.setup        auriamg macdylibbundler 1.0.5
 revision            0
-checksums           rmd160  769417f577e6e4ee42cf5c8e3d9e389d72e0194a \
-                    sha256  6aed5e11078e597e3609cc5a02dfacb4218c12acc87066f6ae9e2dfb3b7c0b35 \
-                    size    12946
+checksums           rmd160  3c5b9db4e8d71ba4d8ed18a9ebf1f1815f28aa0c \
+                    sha256  13384ebe7ca841ec392ac49dc5e50b1470190466623fa0e5cd30f1c634858530 \
+                    size    13101
 
 name                dylibbundler
 categories          devel
-platforms           darwin
 maintainers         {ryandesign @ryandesign} openmaintainer
 license             MIT
 
@@ -36,8 +35,6 @@ pre-fetch {
         return -code error "incompatible platform"
     }
 }
-
-patchfiles          patch-src-main.cpp.diff
 
 compiler.cxx_standard 2011
 

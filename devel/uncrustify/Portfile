@@ -2,11 +2,11 @@
 
 PortSystem          1.0
 PortGroup           cmake 1.1
+PortGroup           muniversal 1.0
 
 name                uncrustify
-version             0.74.0
+version             0.77.1
 categories          devel
-platforms           darwin
 maintainers         nomaintainer
 license             GPL-2
 
@@ -14,23 +14,24 @@ description         Source code beautifier
 
 long_description    Banish crusty code with the Uncrustify \
                     C/C++/C#/D/Java/Pawn source code beautifier. It indents, \
-                    adds newlines, aligns, etc, and is highly configurable.
+                    adds newlines, aligns etc., and is highly configurable.
 
-homepage            http://uncrustify.sourceforge.net/
-master_sites        sourceforge:project/uncrustify/uncrustify-${version}
+homepage            https://uncrustify.sourceforge.net
+# Not a typo here, upstream forgot a dot:
+master_sites        sourceforge:project/uncrustify/uncrustify-077.1
 
-checksums           rmd160  035dab714488941ca0dc35e73d10b37380036a94 \
-                    sha256  c0fd4583561788bf57abe45f7583ad10b703b7c6bd284cfa194920a5c30ce0b6 \
-                    size    1564466
+checksums           rmd160  a40612e339046073d0a577c746777e15afe1b327 \
+                    sha256  939d50c8206a5e016a09947d51bb64b8a4275d89181efc484f44d5e5c3e66666 \
+                    size    1687101
 
+set py_ver          3.11
+set py_ver_nodot    [string map {. {}} ${py_ver}]
 depends_build-append \
-                    port:python310
-
-extract.mkdir       yes
+                    port:python${py_ver_nodot}
 
 compiler.cxx_standard   2011
 
-configure.python    ${prefix}/bin/python3.10
+configure.python    ${prefix}/bin/python${py_ver}
 
 configure.args      -DPYTHON_EXECUTABLE=${configure.python}
 

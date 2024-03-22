@@ -4,11 +4,10 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-lxml
-version             4.6.3
+version             4.9.3
 revision            0
 
 categories-append   devel
-platforms           darwin
 license             BSD
 maintainers         {petr @petrrr} openmaintainer
 
@@ -22,14 +21,11 @@ long_description    lxml is a Pythonic binding for the libxml2 and \
 
 homepage            https://lxml.de/
 
-checksums           rmd160  4b54125427221bb6e74c11cc58d560b78e32c35f \
-                    sha256  39b78571b3b30645ac77b95f7c69d1bffc4cf8c3b157c435a34da72e78c82468 \
-                    size    3191113
+checksums           rmd160  e298e965c9786ddcd2bbc428cccbb9bcde25858c \
+                    sha256  48628bd53a426c9eb9bc066a923acaa0878d1e86129fd5359aee99285f4eed9c \
+                    size    3572158
 
-python.versions     27 35 36 37 38 39 310
-
-# https://trac.macports.org/ticket/56666
-patchfiles-append   patch-setupinfo-remove-xcrun-call.diff
+python.versions     27 35 36 37 38 39 310 311 312
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -40,13 +36,16 @@ if {${name} ne ${subport}} {
                     port:libxml2 \
                     port:libxslt
 
-    pre-test {
-        test.env    PYTHONPATH=[glob -nocomplain ${worksrcpath}/build/lib*]
+    # https://trac.macports.org/ticket/56666
+    patchfiles-append   patch-setupinfo-remove-xcrun-call.diff
+
+    # https://trac.macports.org/ticket/69386
+    if {[string match {*gcc-[34].*} ${configure.compiler}]} {
+        python.add_cflags   yes
+        configure.cflags    -std=gnu99
     }
 
     test.run        yes
+    python.test_framework
     test.cmd        ${python.bin} src/lxml/tests/selftest.py
-    test.target
-
-    livecheck.type  none
 }

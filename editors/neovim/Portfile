@@ -1,18 +1,19 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
-PortSystem 1.0
-PortGroup github 1.0
-# use cmake 1.0 for CMAKE_BUILD_TYPE=Release
-PortGroup cmake 1.0
+PortSystem              1.0
+PortGroup               github 1.0
+PortGroup               cmake 1.1
 
-github.setup            neovim neovim 0.6.0 v
+github.setup            neovim neovim 0.9.5 v
 revision                0
 categories              editors
-platforms               darwin
 maintainers             {raimue @raimue} \
                         {l2dy @l2dy} \
+                        {judaew @judaew} \
                         openmaintainer
 license                 Apache-2 Vim GPL-2+
+
+conflicts               neovim-devel
 
 description             Neovim is a aggressively refactored fork of Vim
 
@@ -22,9 +23,10 @@ long_description \
 
 homepage                https://neovim.io
 
-checksums               rmd160  ef32e586845e6ec9636094a06fc59ef90aef62fb \
-                        sha256  9557f0c9a33cfe5b5c68c8ec2c0e57e0c6cf88eca626493cccfc9456eea32d1d \
-                        size    10594025
+github.tarball_from     archive
+checksums               rmd160  419fefb665764a319a93b27d4c8b838a90c79081 \
+                        sha256  fe74369fc30a32ec7a086b1013acd0eacd674e7570eb1acc520a66180c9e9719 \
+                        size    11590180
 
 depends_build-append    port:pkgconfig
 
@@ -41,10 +43,25 @@ depends_lib             port:gettext \
                         port:libiconv \
                         port:tree-sitter
 
-cmake.out_of_source     yes
+cmake.build_type        Release
 
 configure.args-append   -DUSE_BUNDLED=OFF \
                         -DLUA_PRG=${prefix}/bin/luajit
+
+subport neovim-devel {
+    github.setup    neovim neovim 848fc8ede84b9cfc4e651e0e3b449060a8a8d70c
+    version         20240217-[string range ${github.version} 0 6]
+    revision        0
+
+    github.tarball_from tarball
+    checksums       rmd160  6f5d9f4dfc9e9204ee8a68fa9fdfca75ccc5e1f9 \
+                    sha256  36a4145c97cf46e99f2630843c440d3f13a707b8d36ff3cb895bef4e5a5a82b6 \
+                    size    12674085
+
+    conflicts       neovim
+
+    livecheck.url   ${github.homepage}/commits/nightly.atom
+}
 
 notes {
     If you want to share your existing Vim configuration with Neovim, you can add these symlinks:

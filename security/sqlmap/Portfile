@@ -4,13 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                sqlmap
-version             1.5.12
+version             1.8.3
 revision            0
 
 categories          security databases python
 maintainers         {judaew @judaew} openmaintainer
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             GPL-2+
 
 description         Automatic SQL injection and database takeover tool
@@ -24,11 +24,9 @@ long_description    \
     the operating system via out-of-band connections.
 homepage            https://sqlmap.org/
 
-checksums           rmd160  22e26f6a3a35d7f32521aeb68df4fe27b7526bfd \
-                    sha256  f45a654e851de02224619f3cf8b6adfa3a27899cd164339f89f1f9cf8b07f113 \
-                    size    7245141
-
-worksrcdir          ${name}
+checksums           rmd160  ee7f7039eb020f7f8c52569cb89c92d31749abf9 \
+                    sha256  5f7c73dae72ec6be3cabd812f4ad7d65dee0624442a54f972d6312af0890308a \
+                    size    7208723
 
 patchfiles          patch-cmd-usage-string.diff
 
@@ -42,43 +40,47 @@ post-patch {
     }
 }
 
-variant python27 conflicts python37 python38 python310 \
+variant python27 conflicts python38 python39 python310 python311 python312 \
     description {Build for Python 2.7} {
     python.default_version 27
-    depends_build-append \
-                    port:py${python.version}-setuptools
 }
 
-variant python37 conflicts python27 python38 python310 \
-    description {Build for Python 3.7} {
-    python.default_version 37
-    depends_build-append \
-                    port:py${python.version}-setuptools
-}
-
-variant python38 conflicts python27 python37 python310 \
+variant python38 conflicts python27 python39 python310 python311 python312 \
     description {Build for Python 3.8} {
     python.default_version 38
-    depends_build-append \
-                    port:py${python.version}-setuptools
 }
 
-variant python39 conflicts python27 python37 python38 python310 \
+variant python39 conflicts python27 python38 python310 python311 python312 \
     description {Build for Python 3.9} {
     python.default_version 39
-    depends_build-append \
-                    port:py${python.version}-setuptools
 }
 
-variant python310 conflicts python27 python37 python38 python39 \
+variant python310 conflicts python27 python38 python39 python311 python312 \
     description {Build for Python 3.10} {
-    python.default_version 39
-    depends_build-append \
-                    port:py${python.version}-setuptools
+    python.default_version 310
 }
 
-if {![variant_isset python27] && ![variant_isset python37] && \
+variant python311 conflicts python27 python38 python39 python310 python312 \
+    description {Build for Python 3.11} {
+    python.default_version 311
+}
+
+variant python312 conflicts python27 python38 python39 python310 python311 \
+    description {Build for Python 3.12} {
+    python.default_version 312
+}
+
+depends_build-append \
+                    port:py${python.version}-setuptools
+
+if {![variant_isset python27] && \
     ![variant_isset python38] && ![variant_isset python39] && \
-    ![variant_isset python310]} {
-    default_variants +python310
+    ![variant_isset python310] && ![variant_isset python311] && \
+    ![variant_isset python312]} {
+    default_variants +python312
+}
+
+post-destroot {
+    ln -s ${frameworks_dir}/Python.framework/Versions/[string index ${python.version} 0].[string range ${python.version} 1 end]/bin/${name} \
+        ${destroot}${prefix}/bin/${name}
 }

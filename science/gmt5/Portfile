@@ -8,15 +8,15 @@ name                gmt5
 github.setup        GenericMappingTools gmt 5.4.5
 github.tarball_from releases
 distname            ${github.project}-${github.version}-src
-revision            9
+revision            17
 subport gmt6 {
-    github.setup    GenericMappingTools gmt 6.3.0
+    github.setup    GenericMappingTools gmt 6.5.0
     revision        0
     epoch           1
 }
 categories          science
 platforms           darwin
-maintainers         {takeshi @tenomoto} openmaintainer
+maintainers         {me.com:remko.scharroo @remkos} openmaintainer
 license             GPL-3
 description         The Generic Mapping Tools
 long_description GMT is an open source collection of ~120 tools \
@@ -43,9 +43,9 @@ if {${subport} eq "gmt5"} {
                         sha256  078d4997507cb15344c74a874568985e45bdbd6d3a72d330c74c47f4c0359bb1 \
                         size    59175704
 } else {
-    checksums           rmd160  5888661c856804e296a6f388f5218914f4f1e4c3 \
-                        sha256  69e29b62ee802a3a64260d6a1e023f1350e3bf4070221aa1307bf8a9e56c1ee5 \
-                        size    55396792
+    checksums           rmd160  3e47113d134bde756b98906a4704b3151902c4d1 \
+                        sha256  4022adb44033f9c1d5a4d275b69506449e4d486efe2218313f3ff7a6c6c3141e \
+                        size    58696516
 }
 
 depends_lib         port:curl \

@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           texlive 1.0
 
 name                texlive-latex
-version             58684
+version             70501
 revision            0
 
 categories          tex
@@ -13,18 +13,18 @@ license             Copyleft Permissive
 description         TeX Live: LaTeX fundamental packages
 long_description    These packages are either mandated by the core LaTeX team, or very widely used and strongly recommended in practice.
 
-checksums           texlive-latex-58684-run.tar.xz \
-                    rmd160  d2759e0f6c91eddf0571f73f8bc1d278d4ead866 \
-                    sha256  c5ef6b8084b667c0493c0e1c16e0e135cde4bbe86641b75d195d9ad0f07eaac1 \
-                    size    76257784 \
-                    texlive-latex-58684-doc.tar.xz \
-                    rmd160  26ce0e5b6a80371310f1bf9156a4c8d24ae31558 \
-                    sha256  aacf9ca0569eb1603cc085d368185b69435e3e3c29cad8b0b965fe4caebe3ba0 \
-                    size    71833844 \
-                    texlive-latex-58684-src.tar.xz \
-                    rmd160  39722768623c95aaa913647b04c2a64778879fa5 \
-                    sha256  a1460248fa7313488201e42ef97f94f509e7e5f9a808c080c8fe01b310c7ddf4 \
-                    size    3436756
+checksums           texlive-latex-70501-run.tar.xz \
+                    rmd160  c2bce6639564d633702e7b05306099e9e747199b \
+                    sha256  f2e873df5e411ce98ce70a4a44284dfe5ae4a75057d7e43b7de3e50f00f9654c \
+                    size    99282096 \
+                    texlive-latex-70501-doc.tar.xz \
+                    rmd160  17189cdceaa74656aa0dddf47040d6aedb249713 \
+                    sha256  7beaa9b07e8ca32d18e16177976a8eb215962ed597f68516cba0a2a7e2c812e4 \
+                    size    94510216 \
+                    texlive-latex-70501-src.tar.xz \
+                    rmd160  a35a5ef35f516ed926ad51108b50349b1f0f3d64 \
+                    sha256  7706d7f1f4bba71065d3d129aaec11beda7f90da8c28720d6bc34f41994041a2 \
+                    size    3908564
 
 depends_lib         port:texlive-basic
 
@@ -44,9 +44,9 @@ texlive.maps      \
 texlive.binaries    dvilualatex latex lualatex mptopdf pdflatex
 
 pre-activate {
-    # Handle conflicts for TL2021 upgrade
+    # Handle conflicts for TL2024 upgrade
     if { ![catch {set vers [lindex [registry_active texlive-latex-recommended] 0]}]
-         && ([vercmp [lindex $vers 1] 58666] < 0) } {
+         && ([vercmp [lindex $vers 1] 70491] < 0) } {
         registry_deactivate_composite texlive-latex-recommended "" [list ports_nodepcheck 1]
     }
 }

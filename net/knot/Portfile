@@ -7,44 +7,39 @@ PortGroup           legacysupport 1.1
 legacysupport.newest_darwin_requires_legacy 15
 
 name                knot
-version             3.1.4
+version             3.3.5
 revision            0
 categories          net
 license             GPL-3+
-maintainers         {mps @Schamschula} openmaintainer
+maintainers         {mps @Schamschula} {@catap korins.ky:kirill} openmaintainer
 description         Knot DNS is a high-performance authoritative-only DNS server which \
                     supports all key features of the modern domain name system.
 long_description    {*}${description}
-platforms           darwin
 homepage            https://www.knot-dns.cz
 master_sites        https://secure.nic.cz/files/knot-dns/ \
                     https://sources.openwrt.org
 
 use_xz              yes
 
-checksums           rmd160  78d1c9922e3d95994aa6d5009b48c655a2e61a14 \
-                    sha256  05ebca053b4ce62205a095b6885ed1a1167c629ccac2b3c8dcc431bd2deedf70 \
-                    size    1408656
+checksums           rmd160  4816abf055b2edce34a5449342d315db4ae5f949 \
+                    sha256  0e0bf04319581280660e8e62ab04be64a7d632331e40fc9c87e76861305db3ad \
+                    size    1558484
 
 depends_build       port:pkgconfig
 
 depends_lib         port:fstrm \
-                    port:gnutls \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
                     port:libidn2 \
                     port:lmdb \
                     port:nghttp2 \
+                    port:ngtcp2 \
                     port:protobuf-c \
                     port:userspace-rcu
 
-if {${os.platform} eq "darwin" && ${os.major} < 15} {
-    known_fail          yes
-    pre-fetch {
-        ui_error "${name} ${version} requires macOS 10.11 or greater."
-        return -code error "incompatible macOS version"
-    }
-}
+# Should match knot-resolver port
+platforms {darwin >= 15}
 
-configure.args      --disable-silent-rules
+patchfiles          patch-src-knot-server-quic-handler.c.diff
 
 post-patch {
     reinplace "s|task_t|k_task_t|g" \
@@ -57,11 +52,25 @@ post-patch {
         ${worksrcpath}/tests/knot/test_worker_queue.c
 }
 
-startupitem.create      yes
-startupitem.netchange   yes
-startupitem.executable  ${prefix}/sbin/knotd -c ${prefix}/etc/knot/knot.conf
+configure.args      --disable-silent-rules
 
-notes "
+subport libknot {
+    conflicts       ${name}
+
+    configure.args-append \
+                    --disable-daemon \
+                    --disable-modules \
+                    --disable-utilities 
+} 
+
+if {${name} eq ${subport}} {
+    conflicts       libknot
+
+    startupitem.create      yes
+    startupitem.netchange   yes
+    startupitem.executable  ${prefix}/sbin/knotd -c ${prefix}/etc/knot/knot.conf
+
+    notes "
 To complete the installation, run:
 
 sudo cp ${prefix}/etc/knot/knot.sample.conf ${prefix}/etc/knot/knot.conf
@@ -70,3 +79,4 @@ Edit as necessary. (See the knot.conf manpage for additional information.)
 
 You will also need to created *.zone files. See ${prefix}/etc/knot/example.com.zone.
 "
+}

@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran kaifenglu lrstat 0.2.4
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2+
+description         Power and sample size calculation for non-proportional hazards
+long_description    {*}${description}
+checksums           rmd160  7770b820b760d0848716cf7f7264e1cf9069c9c9 \
+                    sha256  57d2d5a02e86329f8551c6a431fcf35f09506ce4cf58fff2c95c70f3dab99ee3 \
+                    size    523781
+
+depends_lib-append  port:R-lpSolve \
+                    port:R-mvtnorm \
+                    port:R-Rcpp \
+                    port:R-shiny
+
+depends_test-append port:R-dplyr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat \
+                    port:R-tidyr
+
+# FIXME: one test fails on powerpc [ FAIL 1 | WARN 0 | SKIP 0 | PASS 13 ]
+# Error ('test-f_lrpower.R:83:3'): power for stratified analysis
+# <Rcpp::exception/C++Error/error/condition>
+# Error: stratumFraction must sum to 1
+test.run            yes

@@ -4,12 +4,12 @@ PortSystem                  1.0
 PortGroup                   java 1.0
 
 name                        dbvis
-version                     12.1.4
+version                     23.2.2
 categories                  databases
 platforms                   darwin
 supported_archs             x86_64
 license                     Restrictive
-maintainers                 {@lhaeger} openmaintainer
+maintainers                 nomaintainer
 
 description                 DbVisualizer is the universal database tool for developers, DBAs and analysts
 long_description            DbVisualizer is a feature rich, intuitive multi-database tool for developers \
@@ -22,11 +22,11 @@ master_sites                ${homepage}/product_download/dbvis-${version}/media/
 distname                    dbvis_macos_[strsed $version g/\\./_/]
 extract.suffix              .tgz
 
-checksums                   rmd160  799e2618e6240b749a607dff29bee1a428edb96a \
-                            sha256  da1b0a9847421236b085ef3d4d949ea394557dcbfefbad192a468424677fb5ae \
-                            size    103828150
+checksums                   rmd160  4d2319b9d5764df0c88be8b052469eab50fc6cf6 \
+                            sha256  66ac3623f8f370dac521d3a6fad5dc9f2abd194905a6261d868e3c8742af9320 \
+                            size    169177170
 
-java.version                1.8+
+java.version                11+
 java.fallback               openjdk11
 
 extract.mkdir               yes
@@ -40,5 +40,5 @@ destroot {
 }
 
 livecheck.type              regex
-livecheck.url               ${homepage}/CheckForUpdate/?dbvisVersion=12.0.0&dbvisEdition=Free&channels=feature&channels=maintenance
-livecheck.regex             {dbvis.com/download/([0-9.]+)}
+livecheck.url               ${homepage}/download/
+livecheck.regex             {/product_download/dbvis-([0-9.]+)/media/dbvis_macos_}

@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/hairyhenderson/gomplate 3.11.7 v
+go.package          github.com/hairyhenderson/gomplate/v3
+github.tarball_from archive
+revision            0
+
+description         \
+    A flexible commandline tool for template rendering. Supports lots of \
+    local and remote datasources.
+
+long_description    \
+    ${name} is a template renderer which supports a growing list of \
+    datasources, such as: JSON (including EJSON - encrypted JSON), YAML, AWS \
+    EC2 metadata, BoltDB, Hashicorp Consul and Hashicorp Vault secrets.
+
+categories          textproc
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  181a54374efed170b7df883cab63bbd0399d95b2 \
+                    sha256  1cae3270759babb959564b74f7e2538992751ca73f74c33f838c50168ac7caf3 \
+                    size    562135
+
+go.offline_build no
+
+build.cmd           make
+build.pre_args-append \
+                    VERSION=${version}
+build.args          build
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/bin/${name} ${destroot}${prefix}/bin/
+}
+
+github.livecheck.regex \
+                    {([0-9.]+)}

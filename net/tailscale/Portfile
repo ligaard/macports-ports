@@ -3,8 +3,9 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/tailscale/tailscale 1.18.1 v
+go.setup            github.com/tailscale/tailscale 1.62.0 v
 go.package          tailscale.com
+go.offline_build    no
 github.tarball_from archive
 revision            0
 
@@ -22,34 +23,30 @@ license             BSD
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  b21e9d4e423c31bbfbff779db77def63376d2be3 \
-                    sha256  a8630d66ee1d475ba4ec97f389bae87d2777e9a33422726c052be1a6bbd2330c \
-                    size    891341
-
-set ts_build_sh     ${worksrcpath}/_build.sh
+checksums           rmd160  42ef2e5f82c5ade5eddfdb83964df1d17b547f9f \
+                    sha256  19d91f208a7337b8f2caad030936112c641533d7c1d932a2a8732731e2e80ae5 \
+                    size    2477355
 
 startupitem.create  yes
 startupitem.executable \
                     ${prefix}/bin/${name}d
 
-# Allow Go to fetch deps at build time
-build.env-delete    GO111MODULE=off GOPROXY=off
+build.pre_args-append \
+    -ldflags \" \
+        -X tailscale.com/version.Long=${version}    \
+        -X tailscale.com/version.Short=${version}   \
+        -X tailscale.com/version.GitCommit=non-git  \
+    \"
 
-build.cmd           ${ts_build_sh}
+build.args-append   -o _build ./cmd/${name} ./cmd/${name}d
 
 post-extract {
-    set build_script [open "${ts_build_sh}" w+]
-    puts ${build_script} "#!/bin/sh"
-    puts ${build_script} "${go.bin} build -ldflags \"-X tailscale.com/version.Long=${version} -X tailscale.com/version.Short=${version} -X tailscale.com/version.GitCommit=non-git\" ${go.package}/cmd/${name}"
-    puts ${build_script} "${go.bin} build -ldflags \"-X tailscale.com/version.Long=${version} -X tailscale.com/version.Short=${version} -X tailscale.com/version.GitCommit=non-git\" ${go.package}/cmd/${name}d"
-    close ${build_script}
-
-    file attributes ${ts_build_sh} -permissions 0755
+    file mkdir ${worksrcpath}/_build
 }
 
 destroot {
-    xinstall -m 0755 ${worksrcpath}/${name}     ${destroot}${prefix}/bin/
-    xinstall -m 0755 ${worksrcpath}/${name}d    ${destroot}${prefix}/bin/
+    xinstall -m 0755 \
+        {*}[glob ${worksrcpath}/_build/*] ${destroot}${prefix}/bin/
 }
 
 notes "
@@ -57,3 +54,5 @@ After launching the Tailscale service for the first time using the steps below (
 
     ${name} up
 "
+
+github.livecheck.regex {([0-9.]+)}

@@ -3,14 +3,15 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        elixir-lang elixir 1.12.3 v
+github.setup        elixir-lang elixir 1.15.7 v
 github.tarball_from archive
+revision            0
 epoch               1
 categories          lang
-platforms           darwin
 supported_archs     noarch
+platforms           any
 license             Apache-2
-maintainers         {@milmazz milmazz.uno:me} {ciserlohn @ci42}
+maintainers         {@milmazz milmazz.uno:me} {ciserlohn @ci42} {gmail.com:secsaba @secsaba} openmaintainer
 
 description         The Elixir Programming language
 
@@ -20,13 +21,13 @@ long_description    Elixir is a functional, meta-programming aware language \
                     build concurrent, distributed and fault-tolerant \
                     applications with hot code upgrades.
 
-homepage            http://elixir-lang.org/
+homepage            https://elixir-lang.org/
 
 depends_lib         port:erlang
 
-checksums           rmd160 8ac7467e844136f38c2d4124f0c083a6eab5d15f \
-                    sha256 c5affa97defafa1fd89c81656464d61da8f76ccfec2ea80c8a528decd5cb04ad \
-                    size   2461828
+checksums           rmd160  006fca16abb5200d934522fc3347429c433e0b17 \
+                    sha256  78bde2786b395515ae1eaa7d26faa7edfdd6632bfcfcd75bccb6341a18e8798f \
+                    size    3151775
 
 # bin/mix
 conflicts           arb
@@ -37,5 +38,6 @@ build.target        compile
 
 destroot.args       PREFIX=${prefix}
 
-# various tests have been removed using above patch
 test.run            yes
+
+github.livecheck.regex  {([0-9.]+)}

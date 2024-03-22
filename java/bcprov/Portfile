@@ -4,27 +4,37 @@ PortSystem          1.0
 PortGroup           java 1.0
 
 name                bcprov
-version             1.69
+# See https://trac.macports.org/ticket/68455
+# This port is currently only needed by pdftk-java.
+# Please wait until https://gitlab.com/pdftk-java/pdftk/-/issues/155
+# is resolved before updating to bcprov ≥ 1.75.
+version             1.74
+epoch               1
+revision            0
+
+checksums           rmd160  d12042ab8de08b6913e816a46eccacedb4d9bbb7 \
+                    sha256  56ede1472d78dc47b8a16fc5e90c02b9eeb970b55d8b5b8bfe760311907821e9 \
+                    size    8353376
 
 categories          java devel security
 license             MIT
 maintainers         nomaintainer
-platforms           darwin
+platforms           any
 supported_archs     noarch
 
 description         A Java implementation of cryptographic algorithms
-long_description    ${description}
+long_description    {*}${description}
 homepage            https://www.bouncycastle.org/java.html
 
-master_sites        https://search.maven.org/remotecontent?filepath=org/bouncycastle/${name}-jdk15on/${version}/
+master_sites        https://search.maven.org/remotecontent?filepath=org/bouncycastle/${name}-jdk18on/${version}/
 
-distname            ${name}-jdk15on-${version}
+distname            ${name}-jdk18on-${version}
 distfiles           ${distname}.jar
 worksrcdir          ${distname}
 
-checksums           rmd160  b0b7df38e422a555af8726cd8370276977209a43 \
-                    sha256  e469bd39f936999f256002631003ff022a22951da9d5bd9789c7abfa9763a292 \
-                    size    5743920
+java.version        1.8+
+java.fallback       openjdk11
+java.deptypes       run
 
 extract {
     file copy ${distpath}/${distname}.jar ${workpath}
@@ -41,5 +51,5 @@ destroot {
 }
 
 livecheck.type      regex
-livecheck.url       https://repo1.maven.org/maven2/org/bouncycastle/${name}-jdk15on/maven-metadata.xml
+livecheck.url       https://repo1.maven.org/maven2/org/bouncycastle/${name}-jdk18on/maven-metadata.xml
 livecheck.regex     >(\\d+\\.\\d+(\\.\\d+)*)</

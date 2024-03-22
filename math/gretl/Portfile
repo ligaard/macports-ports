@@ -4,7 +4,8 @@ PortSystem          1.0
 PortGroup           active_variants 1.1
 
 name                gretl
-version             2021d
+version             2023c
+revision            0
 categories          math
 license             GPL-3
 maintainers         nomaintainer
@@ -15,24 +16,14 @@ long_description    gretl is an open-source statistical package, mainly for \
                     Econometrics and Time-series Library. It has both a graphical \
                     user interface and a command-line interface.
 
-homepage            http://gretl.sourceforge.net/
-platforms           darwin
+homepage            https://gretl.sourceforge.net/
 
 master_sites        sourceforge
 use_xz              yes
 
-checksums           rmd160  0df4dbb09b6ffb8d403d5b7fe67d8834a88b1e9b \
-                    sha256  ce28f7dfb3ff31e982c2f31a8766d4137a1dbf429ffca5ba7d49763a03338ee2 \
-                    size    13256260
-
-# https://sourceforge.net/p/gretl/bugs/254/
-patchfiles-append   patch-gretl_mt.diff
-
-# https://sourceforge.net/p/gretl/bugs/255/
-patchfiles-append   patch-gretl-use-carbon.diff
-
-# https://sourceforge.net/p/gretl/bugs/256/
-patchfiles-append   patch-gretl-cxxflags.diff
+checksums           rmd160  4cf4f6fe4323debb48b2545f884843ffcb26b7a8 \
+                    sha256  bd3c42987ad3a584e8f4220fa2eb140a7a5c6a54ba70dd6ef1b45a389caee8c2 \
+                    size    14359624
 
 depends_build       port:pkgconfig \
                     port:gmake
@@ -40,7 +31,7 @@ depends_build       port:pkgconfig \
 depends_lib         port:curl \
                     port:fftw-3 \
                     port:gettext \
-                    port:glib2 \
+                    path:lib/pkgconfig/glib-2.0.pc:glib2 \
                     port:gmp \
                     port:json-glib \
                     port:libgsf \
@@ -74,13 +65,13 @@ build.target        ""
 variant gui description {Build the Graphical User Interface} {
     configure.args-replace --disable-gui --enable-gui
     depends_lib-append \
-                    port:gdk-pixbuf2 \
+                    path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
                     path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+                    port:gnuplot \
                     port:gtksourceview4
 
     depends_run-append \
-                    port:adwaita-icon-theme \
-                    port:gnuplot
+                    port:adwaita-icon-theme
 
     require_active_variants gnuplot pangocairo
 }

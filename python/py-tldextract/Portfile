@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-tldextract
-version             3.1.2
+version             5.1.2
 revision            0
 categories-append   net
 license             BSD
@@ -14,17 +14,19 @@ description         tldextract accurately separates the gTLD or ccTLD (generic o
                     subdomains of a URL.
 long_description    {*}${description}
 homepage            https://github.com/john-kurkowski/tldextract
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     36 37 38 39 310
+python.versions     38 39 310 311 312
 
-checksums           rmd160  ce71f52ed315e3d97f76d939b330bbe52476e38c \
-                    sha256  d2034c3558651f7d8fdadea83fb681050b2d662dc67a00d950326dc902029444 \
-                    size    103248
+checksums           rmd160  d66d45be2387db474ffa6c38b324883bb1399345 \
+                    sha256  c9e17f756f05afb5abac04fe8f766e7e70f9fe387adb1859f0f52408ee060200 \
+                    size    116825
 
 if {${name} ne ${subport}} {
+    python.pep517   yes
+
     depends_build-append \
-                    port:py${python.version}-setuptools \
                     port:py${python.version}-setuptools_scm
 
     depends_lib-append  \
@@ -32,6 +34,4 @@ if {${name} ne ${subport}} {
                     port:py${python.version}-idna \
                     port:py${python.version}-requests \
                     port:py${python.version}-requests-file
-
-    livecheck.type  none
 }

@@ -4,44 +4,26 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-cytoolz
-version             0.11.2
+version             0.12.3
 revision            0
 categories-append   devel
-platforms           darwin
 license             BSD
 
-python.versions     27 35 36 37 38 39 310
+python.versions     38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
 description         Cython implementation of Toolz.
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://github.com/pytoolz/cytoolz/
 
-checksums           rmd160  e88b21776da9de46e66d0b90c550989c6111f88d \
-                    sha256  ea23663153806edddce7e4153d1d407d62357c05120a4e8485bddf1bd5ab22b4 \
-                    size    481044
+checksums           rmd160  7fa0e0769b1a56ce8998bddb258b831128b1741e \
+                    sha256  4503dc59f4ced53a54643272c61dc305d1dbbfbd7d6bdf296948de9f34c3a282 \
+                    size    625899
 
 if {${name} ne ${subport}} {
     depends_build-append \
-                        port:py${python.version}-setuptools \
                         port:py${python.version}-cython
     depends_lib-append  port:py${python.version}-toolz
-
-    if {${python.version} <= 35} {
-        version             0.10.1
-        revision            0
-        distname            ${python.rootname}-${version}
-        checksums           rmd160  1093edea2b7306f75f46d7ce04268320ed9fa09c \
-                            sha256  82f5bba81d73a5a6b06f2a3553ff9003d865952fcb32e1df192378dd944d8a5c \
-                            size    475647
-    }
-
-    build.args-append   --with-cython
-
-    destroot.args-append \
-                        --with-cython
-
-    livecheck.type      none
 }

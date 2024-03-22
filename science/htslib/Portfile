@@ -3,14 +3,13 @@
 PortSystem              1.0
 PortGroup               github 1.0
 
-github.setup            samtools htslib 1.14
+github.setup            samtools htslib 1.19.1
 revision                0
-checksums               rmd160  0f32a2e42d7acc403d501edb7469bffad4c9dc00 \
-                        sha256  ed221b8f52f4812f810eebe0cc56cd8355a5c9d21c62d142ac05ad0da147935f \
-                        size    4136564
+checksums               rmd160  987c04219c4f36a1253b76487a1e2888ed44ca05 \
+                        sha256  222d74d3574fb67b158c6988c980eeaaba8a0656f5e4ffb76b5fa57f035933ec \
+                        size    4775086
 
 categories              science
-platforms               darwin
 maintainers             {ryandesign @ryandesign} openmaintainer
 license                 MIT BSD
 
@@ -28,10 +27,15 @@ use_bzip2               yes
 
 depends_lib             port:bzip2 \
                         port:curl \
+                        port:libdeflate \
                         port:xz \
                         port:zlib
 
+# https://trac.macports.org/wiki/WimplicitFunctionDeclaration#strchr
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
 configure.args          --enable-bz2 \
+                        --with-libdeflate \
                         --enable-gcs \
                         --enable-libcurl \
                         --enable-lzma

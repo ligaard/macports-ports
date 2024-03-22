@@ -32,7 +32,7 @@ depends_build-append \
 
 depends_lib         path:lib/libssl.dylib:openssl \
                     port:libgeoip \
-                    port:libnet11 \
+                    port:libnet \
                     port:libpcap \
                     port:ncurses \
                     port:pcre \
@@ -116,6 +116,7 @@ variant plugins description {Enable plugins} {
                             port:libtool
 
     configure.args-replace  -DENABLE_PLUGINS=OFF -DENABLE_PLUGINS=ON
+    patchfiles-append       patch-libcurl.diff
 }
 
 default_variants    +gtk +plugins

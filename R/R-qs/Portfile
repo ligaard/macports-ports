@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran traversc qs 0.26.1
+revision            0
+categories-append   devel
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3
+description         Quick Serialization of R objects
+long_description    {*}${description}
+homepage            https://github.com/traversc/qs
+checksums           rmd160  143eb7943f74b7115e8103fa97dc03b897516fe1 \
+                    sha256  466f3026269e0da38d359aed1980431096f3497c0c8c9ad59715f91709b3af62 \
+                    size    2150826
+
+depends_build-append \
+                    port:pkgconfig
+depends_lib-append  port:lz4 \
+                    port:R-BH \
+                    port:R-RApiSerialize \
+                    port:R-Rcpp \
+                    port:R-stringfish \
+                    port:zstd
+
+depends_test-append port:R-data.table \
+                    port:R-dplyr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

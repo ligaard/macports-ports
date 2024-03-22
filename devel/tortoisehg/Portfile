@@ -6,14 +6,17 @@ PortGroup           python 1.0
 PortGroup           app 1.0
 PortGroup           gitlab 1.0
 
+# NB: only update non-patch releases when updating Mercurial as well, as
+# TortoiseHg generally does not retain compatibility
 gitlab.instance     https://foss.heptapod.net
-gitlab.setup        mercurial/tortoisehg thg 5.9.3
+gitlab.setup        mercurial/tortoisehg thg 6.6.3
 revision            0
+checksums           rmd160  329aa1b36c1524388cf8c757d6bf048c1571c545 \
+                    sha256  d7aa32036a17fc64573ef10ee4463eaa8d64696232e90e5e893a02482bacba58 \
+                    size    7660989
 
 name                tortoisehg
-
 categories          devel python
-platforms           darwin
 license             GPL-2+
 maintainers         nomaintainer
 supported_archs     noarch
@@ -23,15 +26,12 @@ description         A set of graphical tools for Mercurial
 long_description    A set of graphical tools for the Mercurial distributed \
                     source control management system.
 
-checksums           rmd160  bae9cb4d57af9100a6c5a7a6592b84071c1b06f0 \
-                    sha256  2cfed9643b8e7b64acecbda6cf3b3077299bffc7a50f1f2cd3ea27825adee405 \
-                    size    7520035
-
-python.default_version 39
+# must be same as Mercurial
+python.default_version 311
 
 # we use qt5 only if macOS is 10.12 or later
 # as defined on qt5 port
-if { ${os.major} < 16 } {
+if {${os.platform} eq "darwin" && ${os.major} < 16} {
     set qt_version 4
 } else {
     set qt_version 5
@@ -39,7 +39,7 @@ if { ${os.major} < 16 } {
 
 depends_lib-append  port:mercurial \
                     port:py${python.version}-iniparse \
-                    port:py${python.version}-pyqt${qt_version} \
+                    port:py${python.version}-pyqt${qt_version}
 
 if {${qt_version} == 4} {
     depends_lib-append \

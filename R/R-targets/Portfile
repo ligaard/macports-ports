@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ropensci targets 1.6.0
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Dynamic function-oriented make-like declarative workflows
+long_description    {*}${description}
+homepage            https://docs.ropensci.org/targets
+checksums           rmd160  7d64f0bd12e24989d27adcbcea928fa6baa0f7ad \
+                    sha256  3e3d7598b98772c96bb43c3107fdb66d13f6340e0eef1f4fc6442c1b05993f04 \
+                    size    781840
+supported_archs     noarch
+
+depends_lib-append  port:R-base64url \
+                    port:R-callr \
+                    port:R-cli \
+                    port:R-data.table \
+                    port:R-digest \
+                    port:R-igraph \
+                    port:R-knitr \
+                    port:R-ps \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-secretbase \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-vctrs \
+                    port:R-yaml

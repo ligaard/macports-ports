@@ -5,16 +5,14 @@ PortGroup           python 1.0
 
 name                py-parsing
 python.rootname     pyparsing
-# 3.0.5 is broken
-# See: https://github.com/pyparsing/pyparsing/issues/329
-version             3.0.4
+version             3.1.2
 revision            0
 epoch               2
 
 categories-append   lang
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
-maintainers         {snc @nerdling} openmaintainer
+maintainers         {reneeotten @reneeotten} openmaintainer
 license             MIT
 
 description         alternative approach to creating parsers in python
@@ -27,24 +25,26 @@ long_description    The parsing module is an alternative approach to creating \
 
 homepage            https://github.com/pyparsing/pyparsing/
 
-checksums           rmd160  5ae07df408ef57ec36e213d815a5c7fa1a3030f8 \
-                    sha256  e0df773d7fa2240322daae7805626dfc5f2d5effb34e1a7be2702c99cfb9f6b1 \
-                    size    879722
+checksums           rmd160  582e08deb5f7ef2a4c94544c33c6fbdb3bfa4230 \
+                    sha256  a1bac0ce561155ecc3ed78ca94d3c9378656ad4c94c1270de543f621420f94ad \
+                    size    889571
 
-python.versions     27 35 36 37 38 39 310
+python.versions     27 35 36 37 38 39 310 311 312
 
 if {${name} ne ${subport}} {
-    depends_build-append \
-                    port:py${python.version}-setuptools
-
     if {${python.version} <= 35} {
         version     2.4.7
         checksums   rmd160  2dbbca645985bb7f4b4d7a36b6ba3958302adfb9 \
                     sha256  c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
                     size    649718
+        depends_build-append \
+                    port:py${python.version}-setuptools
     } else {
         python.pep517   yes
-        # break circular dependency with py-build
+        python.pep517_backend   flit
+    }
+    if {${python.version} == 36} {
+        # break circular dependency with py36-build
         python.add_dependencies no
         depends_build-append   port:py-bootstrap-modules
         depends_lib-append     port:python${python.version}
@@ -54,9 +54,7 @@ if {${name} ne ${subport}} {
     }
 
     test.run        yes
-    test.cmd        ${python.bin} -m unittest
-    test.target
-    test.env        PYTHONPATH=${worksrcpath}/build/lib
+    python.test_framework unittest
 
     livecheck.type  none
 }

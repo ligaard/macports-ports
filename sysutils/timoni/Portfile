@@ -1,0 +1,42 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/stefanprodan/timoni 0.20.0 v
+github.tarball_from archive
+revision            0
+
+homepage            https://timoni.sh
+
+description         \
+    Timoni is a package manager for Kubernetes, powered by CUE and inspired \
+    by Helm.
+
+long_description    \
+    {*}${description} The Timoni project strives to improve the UX of \
+    authoring Kubernetes configs. Instead of mingling Go templates with YAML \
+    like Helm, or layering YAML on top of each-other like Kustomize, Timoni \
+    relies on cuelang's type safety, code generation and data validation \
+    features to offer a better experience of creating, packaging and \
+    delivering apps to Kubernetes.
+
+categories          sysutils
+installs_libs       no
+license             Apache-2
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  36ab52e9d71b8d4a872a5e8bbb031ee533e384a6 \
+                    sha256  ef8fc731d551e952c2a18bbedd5dee714e0971cbb1ef61926a005f393c0887b4 \
+                    size    1047752
+
+go.offline_build no
+
+build.cmd           make
+build.pre_args      DEV_VERSION=${github.tag_prefix}${version}
+build.args          build
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/bin/${name} ${destroot}${prefix}/bin/
+}

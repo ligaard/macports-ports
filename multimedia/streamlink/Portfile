@@ -4,12 +4,15 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                streamlink
-version             1.6.0
+version             6.5.1
 revision            0
+checksums           rmd160  47679c55b5776d87ffdb803ddd00ff0218c390c6 \
+                    sha256  207fb4ce99c35bfeb1b8f7c76b96cfcb4076ad6881c61eaea553c2ec13d97c57 \
+                    size    717297
 
-categories-append   multimedia net
-platforms           darwin
+categories          multimedia net
 supported_archs     noarch
+platforms           {darwin any}
 license             BSD
 maintainers         nomaintainer
 
@@ -19,23 +22,20 @@ long_description    ${name} is a CLI utility which pipes video streams from vari
                     ${name} is to avoid resource-heavy and unoptimized websites,\
                     while still allowing the user to enjoy various streamed content.
 
-homepage            https://github.com/streamlink/streamlink/
+homepage            https://streamlink.github.io
 
-checksums           rmd160  35f5d40aaff41574a94c98534777e1188014bfae \
-                    sha256  f7857a54ec55e32d6e90ebd770c9d5d1318791d8ecd8270e104a8b1968a308ab \
-                    size    724753
+python.default_version  312
 
-python.versions     38
-
-depends_build-append \
-                    port:py${python.version}-setuptools
-
-depends_lib-append  port:py${python.version}-iso3166 \
-                    port:py${python.version}-iso639 \
+depends_lib-append  port:py${python.version}-certifi \
                     port:py${python.version}-isodate \
-                    port:py${python.version}-requests \
+                    port:py${python.version}-lxml \
+                    port:py${python.version}-country \
                     port:py${python.version}-pycryptodome \
                     port:py${python.version}-socks \
+                    port:py${python.version}-requests \
+                    port:py${python.version}-trio \
+                    port:py${python.version}-trio-websocket \
+                    port:py${python.version}-urllib3 \
                     port:py${python.version}-websocket-client
 
 variant ffmpeg description "Play streams that are made up of separate audio and video streams" {
@@ -49,5 +49,3 @@ variant rtmp description "Play RTMP streams" {
 if {![variant_isset ffmpeg]} {
     default_variants +ffmpeg
 }
-
-livecheck.type      pypi

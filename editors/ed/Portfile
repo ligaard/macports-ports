@@ -1,12 +1,11 @@
 PortSystem      1.0
 
 name            ed
-version         1.17
+version         1.20.1
 revision        0
 categories      editors
 license         GPL-3+
 maintainers     nomaintainer
-platforms       darwin
 description     ed is a line-oriented text editor.
 
 long_description \
@@ -23,9 +22,9 @@ master_sites    gnu
 
 use_lzip        yes
 
-checksums       rmd160  ed9898a1ee5dee80e577d85f11fcc086ef083938 \
-                sha256  71de39883c25b6fab44add80635382a10c9bf154515b94729f4a6529ddcc5e54 \
-                size    67914
+checksums       rmd160  29f7b2f03fab2f704d16fa9da97e0fbfc6c715e2 \
+                sha256  b1a463b297a141f9876c4b1fcd01477f645cded92168090e9a35db2af4babbca \
+                size    69062
 
 configure.args-append       \
     CC=\"\$CC\"             \

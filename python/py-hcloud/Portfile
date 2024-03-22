@@ -4,11 +4,11 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-hcloud
-version             1.16.0
+version             1.33.2
 revision            0
 
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             MIT
 maintainers         {judaew @judaew} openmaintainer
 
@@ -16,11 +16,11 @@ description         ${name} is a library for the Hetzner Cloud API.
 long_description    {*}${description}
 homepage            https://github.com/hetznercloud/hcloud-python
 
-checksums           rmd160  0128a9763400240f311f167c0850caa88a6893f5 \
-                    sha256  c8b94557d93bcfe437f20a8176693ea4f54358b74986cc19d94ebc23f48e40cc \
-                    size    93682
+checksums           rmd160  e45b2e395bfecaec00d7054173fc6485d244b6c2 \
+                    sha256  1828b0f876cdff49dad9f8804b5e8e9fbda78f4f5547435ac3ac30088438ce5f \
+                    size    114779
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311
 
 if {${name} ne ${subport}} {
     depends_run-append \
@@ -29,13 +29,7 @@ if {${name} ne ${subport}} {
                     port:py${python.version}-requests
 
     depends_test-append \
-                    port:py${python.version}-mock \
-                    port:py${python.version}-pytest
+                    port:py${python.version}-mock
 
     test.run        yes
-    test.cmd        py.test-${python.branch}
-    test.target
-    test.env        PYTHONPATH=${worksrcpath}/build/lib
-
-    livecheck.type  none
 }

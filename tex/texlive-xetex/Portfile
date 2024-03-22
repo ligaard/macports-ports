@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           texlive 1.0
 
 name                texlive-xetex
-version             58633
+version             70315
 revision            0
 
 categories          tex
@@ -13,18 +13,18 @@ license             Copyleft Permissive
 description         TeX Live: XeTeX and packages
 long_description    Packages for XeTeX, the Unicode/OpenType-enabled TeX by Jonathan Kew, http://tug.org/xetex.
 
-checksums           texlive-xetex-58633-run.tar.xz \
-                    rmd160  47f3174e1fbaeab7d7a6713e7ac5612d9fce7352 \
-                    sha256  852ff774fb7751c18291c9b08d88cad9f1b32999a7be7f5ac5ba63898479a869 \
-                    size    12766200 \
-                    texlive-xetex-58633-doc.tar.xz \
-                    rmd160  6db8cfeb35e2e8ec0fe417bd4c33d28dbc2095fc \
-                    sha256  329a54e130d67311214c9f3be2b1e5c3739f61f11eac532aa2ad0ae67c0d27b1 \
-                    size    11808712 \
-                    texlive-xetex-58633-src.tar.xz \
-                    rmd160  7758bdbc417fbb8a621d388bee45847fd10f7e6c \
-                    sha256  3aca06c475e93f8a0864eb6c6cd5f349efc267aceca9ecbf915de55554bb7f0a \
-                    size    140592
+checksums           texlive-xetex-70315-run.tar.xz \
+                    rmd160  fa0ee5e05f017ec99d8eac9e52a8b204909224b3 \
+                    sha256  e3c467b89709024450bfe719e5b9fb597c528ba2263e732a2553fb9b9bdb02cc \
+                    size    11293052 \
+                    texlive-xetex-70315-doc.tar.xz \
+                    rmd160  84057c5f732f2b33eacadd4528fc0ce8c224eba5 \
+                    sha256  605aadf0d8d1dcc445a23adbf99bc1650c9d419ce241261db22a7c1c0b5c3d1e \
+                    size    10595404 \
+                    texlive-xetex-70315-src.tar.xz \
+                    rmd160  114fefc69910c27d5a147c36bfd1c7fae6308d34 \
+                    sha256  5df093e4efa6321d377a133a77983073f09d7de9517ad46d5beabb2d7f3d3ac5 \
+                    size    53052
 
 depends_lib         port:texlive-basic
 
@@ -33,7 +33,7 @@ texlive.formats      \
     {1 xelatex xetex language.dat {-etex xelatex.ini}} \
     {1 xetex xetex language.def {-etex xetex.ini}}
 
-texlive.binaries    teckit_compile xelatex xelatex-dev xetex
+texlive.binaries    teckit_compile xelatex xelatex-dev xelatex-unsafe xetex xetex-unsafe
 
 texlive.exclude     tlpkg/tlpostcode/xetex.pl
 

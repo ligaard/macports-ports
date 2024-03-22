@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github easystats see 0.8.2
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3
+description         Model visualisation toolbox for easystats and ggplot2
+long_description    {*}${description}
+homepage            https://easystats.github.io/see
+checksums           rmd160  7148957670162538b019359fb927209b67f84957 \
+                    sha256  92b8a0838c8cce7e1c81b919c37ca76d62240b79c1c820326164979ca89e3caf \
+                    size    1845472
+supported_archs     noarch
+
+depends_lib-append  port:R-bayestestR \
+                    port:R-correlation \
+                    port:R-datawizard \
+                    port:R-effectsize \
+                    port:R-ggplot2 \
+                    port:R-insight \
+                    port:R-modelbased \
+                    port:R-parameters \
+                    port:R-performance

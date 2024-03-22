@@ -10,8 +10,9 @@ version             20200513
 revision            0
 categories          janet devel
 license             MIT
-maintainers         nomaintainer
-platforms           darwin
+maintainers         {@tsujp wz.ht:jc+macports} openmaintainer
+platforms           any
+supported_archs     noarch
 description         Dotenv for janet
 long_description    {*}${description}
 

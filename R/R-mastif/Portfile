@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran jimclark mastif 2.2
+revision            0
+maintainers         nomaintainer
+license             GPL-2+
+description         Analyze production and dispersal of seeds \
+                    dispersed from trees and recovered in seed traps
+long_description    {*}${description}
+checksums           rmd160  e1292b38138d08c614fa1dd0cbac5932fd5bd6fe \
+                    sha256  e906da84604c0b339353196b64f90f3bb374747a5375935ffa1e6ac3f88526a6 \
+                    size    262041
+
+depends_lib-append  port:R-corrplot \
+                    port:R-RANN \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-repmis \
+                    port:R-robustbase \
+                    port:R-stringi \
+                    port:R-stringr \
+                    port:R-xtable
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

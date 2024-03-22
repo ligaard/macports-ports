@@ -28,66 +28,49 @@ long_description        KeePassXC is a community fork of KeePassX with the \
                         cross-platform and modern open-source password manager.
 platforms               darwin
 license                 GPL-2+
-license_noconflict      openssl
+license_noconflict      openssl openssl10 openssl11 openssl3
 
 if {${subport} eq ${name}} {
     # stable
-    github.setup        keepassxreboot keepassxc 2.6.6
-    revision            6
+    github.setup        keepassxreboot keepassxc 2.7.6
+    revision            1
     github.tarball_from releases
     distname            keepassxc-${version}-src
     use_xz              yes
     distfiles-append    ${distname}${extract.suffix}.sig
+    worksrcdir          keepassxc-${version}
 
     conflicts           KeePassXC-devel
 
     # See keepassxc-${version}-src.tar.xz.DIGEST on upstream GitHub releases page for SHA256 sums
     checksums           ${distname}${extract.suffix} \
-                        rmd160  c3933aadf16a103f3ae4a5c2150a4c298e15dbe0 \
-                        sha256  3603b11ac39b289c47fac77fa150e05fd64b393d8cfdf5732dc3ef106650a4e2 \
-                        size    7640532 \
+                        rmd160  a939976cff7273f9243f9c3aae39269e11047e6d \
+                        sha256  a58074509fa8e90f152c6247f73e75e126303081f55eedb4ea0cbb6fa980d670 \
+                        size    8474624 \
                         ${distname}${extract.suffix}.sig \
-                        rmd160  e1e03a47d09e8caea290cba591ee4b15e33fa286 \
-                        sha256  162e577f790bd254aa73db388dd91c0f34e57dac5b83ae831bc72c3c12ad00e3 \
+                        rmd160  693cbc4a5648735cd4a53afdb9617bca9702bf45 \
+                        sha256  af439d1954101c1b140f759cf0f42efdfe19d066f90412e325b806f8d3774eb4 \
                         size    488
 
     gpg_verify.use_gpg_verification \
                         yes
 
-    compiler.cxx_standard   2011
-
-    patchfiles          patch-no-deployqt.diff \
-                        patch-no-findpackage-path.diff \
-                        patch-quazip.diff \
-                        patch-old-mac.diff
 } else {
     # devel subport
-    github.setup        keepassxreboot keepassxc a0a063b57f6f577bed505ccd652763eeadd1b876
+    github.setup        keepassxreboot keepassxc 37dabd2561c33d7c0e66bba6ab0883bb55e90cf1
     set githash         [string range ${github.version} 0 6]
-    version             20211208+git${githash}
-    revision            0
+    version             20230514.git${githash}
+    revision            1
 
     conflicts           KeePassXC
 
-    checksums           rmd160  18aa88707b3886cf85eb55c886db2f952f46d791 \
-                        sha256  78ee1c2cbfd3560d576d343c6ad931f225e2e7a95af8b7009d86eae720013692 \
-                        size    10076145
+    checksums           rmd160  16d79aa775a0dc6d8cf32015a3dc7131a2e13163 \
+                        sha256  05fb0c84e426f33bacd41f6809d52c5bc758dace52b41c58001385a26bed89c3 \
+                        size    10967053
 
     gpg_verify.use_gpg_verification \
                         no
 
-    depends_lib-append  port:botan
-
-    patchfiles          devel/patch-no-deployqt.diff \
-                        devel/patch-no-findpackage-path.diff \
-                        devel/patch-quazip.diff
-
-    compiler.cxx_standard   2017
-
-    post-destroot {
-        ln -s ${applications_dir}/KeePassXC.app/Contents/MacOS/keepassxc-proxy \
-        ${destroot}${prefix}/bin/keepassxc-proxy
-    }
 }
 
 if {[option gpg_verify.use_gpg_verification]} {
@@ -110,13 +93,19 @@ qt5.depends_build_component \
                         qttools
 
 depends_lib-append      port:argon2 \
+                        port:botan \
                         port:libgcrypt \
                         port:libsodium \
+                        port:minizip \
                         port:readline \
                         port:qrencode \
-                        port:quazip1 \
                         port:ykpers \
                         port:zlib
+
+patchfiles-append       patch-no-deployqt.diff \
+                        patch-no-findpackage-path.diff \
+                        add_support_for_old_macos.diff \
+                        add_support_for_old_macos-2.diff
 
 # KeePassXC uses -fstack-protector-strong on Clang [1]. That flag is not
 # available until clang 602 [2] or upstream clang 3.5 [3]
@@ -127,36 +116,48 @@ depends_lib-append      port:argon2 \
 #     https://github.com/llvm-project/clang/blob/release_35/lib/CodeGen/CodeGenModule.cpp
 compiler.blacklist-append {clang < 602}
 
+compiler.cxx_standard   2017
+
 configure.pre_args-append \
     -DCMAKE_INSTALL_PREFIX=${applications_dir} \
     -DCMAKE_INSTALL_MANDIR=${prefix}/share/man \
+    -DCMAKE_PREFIX_PATH=${qt_cmake_module_dir} \
     -DKEEPASSXC_BUILD_TYPE=Release \
     -DWITH_XC_BROWSER=ON \
     -DWITH_XC_KEESHARE=ON \
-    -DWITH_XC_KEESHARE_SECURE=ON \
     -DWITH_XC_NETWORKING=ON \
     -DWITH_XC_SSHAGENT=ON \
     -DWITH_XC_YUBIKEY=ON \
     -DWITH_XC_UPDATECHECK=OFF \
     -DWITH_XC_DOCS=OFF
 
-# In the future the Touch ID feature may require Darwin 17 (10.13)
-# https://github.com/keepassxreboot/keepassxc/issues/2484
-if {${os.major} >= 16} {
-    configure.pre_args-append   -DWITH_XC_TOUCHID=ON
+# QTest::addRow was introduced in Qt 5.9
+# Don't build tests in that case
+if {[vercmp ${qt5.version} 5.9] < 0} {
+    configure.pre_args-append -DWITH_TESTS=OFF
 }
 
 post-destroot {
-    xinstall -d ${destroot}${prefix}/share/doc/${name}
+    set kp_doc_path ${destroot}${prefix}/share/doc/${name}
+
+    xinstall -d ${kp_doc_path}
     xinstall -W ${worksrcpath} COPYING LICENSE.BSD LICENSE.CC0 \
              LICENSE.GPL-2 LICENSE.GPL-3 LICENSE.LGPL-2.1 LICENSE.LGPL-3 \
              LICENSE.MIT LICENSE.NOKIA-LGPL-EXCEPTION LICENSE.OFL \
-             ${destroot}${prefix}/share/doc/${name}
+             ${kp_doc_path}
 
-    ln -s ${applications_dir}/KeePassXC.app/Contents/MacOS/keepassxc-cli \
-        ${destroot}${prefix}/bin/keepassxc-cli
+    set kp_app_path ${applications_dir}/KeePassXC.app/Contents/MacOS
+    set kp_bin_path ${destroot}${prefix}/bin
+
+    ln -s ${kp_app_path}/keepassxc-cli \
+        ${kp_bin_path}/keepassxc-cli
+    ln -s ${kp_app_path}/keepassxc-proxy \
+        ${kp_bin_path}/keepassxc-proxy
 }
 
 test.run        yes
-test.target     test ARGS="-V"
+test.target     test ARGS="-V -E testautotype"
 test.env        TMPDIR=/tmp
+
+# Ignore betas, RCs, etc. - See: https://trac.macports.org/ticket/64956
+github.livecheck.regex  {([0-9.]+)}

@@ -20,7 +20,7 @@ PortGroup           mpiutil 1.0
 #===============================================================================
 
 name                openmpi
-version             4.1.1
+version             4.1.6
 revision            0
 
 license             BSD
@@ -42,15 +42,14 @@ set branch          [join [lrange [split ${version} .] 0 1] .]
 set subdir          ompi/v${branch}/downloads/
 master_sites        https://www.open-mpi.org/software/${subdir}
 
-checksums           rmd160  60fff94c4c7a4bfaaa11285f35d76265516ed8b0 \
-                    sha256  e24f7a778bd11a71ad0c14587a7f5b00e68a71aa5623e2157bafee3d44c07cda \
-                    size    10052770
+checksums           rmd160  5857d47842ba5136807d359a94e3e3226624c06b \
+                    sha256  f740994485516deb63b5311af122c265179f5328a0d857a567b85db00b11e415 \
+                    size    10017002
 
 use_bzip2           yes
 
-livecheck.type      regex
-livecheck.url       https://www.open-mpi.org/
-livecheck.regex     Open MPI v(\[0-9\.\]+) released
+# Disable livecheck for all subports; only enabled for main port, at end of portfile
+livecheck.type      none
 
 #-------------------------------------------------------------------------------
 # Target Compiler Logic
@@ -61,7 +60,7 @@ livecheck.regex     Open MPI v(\[0-9\.\]+) released
 
 # Please update the mpi portgroup whenever clist is changed.
 
-# Sub-ports names and corresponding configure.compiler value
+# Subport names and corresponding configure.compiler value
 set clist [dict create]
 set clist_unsupported [list]
 set clist_obsolete [list]
@@ -69,6 +68,17 @@ set clist_obsolete [list]
 # Compilers supported across-the-board
 dict set clist default {}
 dict set clist gcc7    {macports-gcc-7}
+dict set clist gcc10   {macports-gcc-10}
+dict set clist gcc11   {macports-gcc-11}
+dict set clist gcc12   {macports-gcc-12}
+dict set clist gcc13   {macports-gcc-13}
+dict set clist clang11 {macports-clang-11}
+dict set clist clang12 {macports-clang-12}
+dict set clist clang13 {macports-clang-13}
+dict set clist clang14 {macports-clang-14}
+dict set clist clang15 {macports-clang-15}
+dict set clist clang16 {macports-clang-16}
+dict set clist clang17 {macports-clang-17}
 
 # Only enable Xcode clang builds for MacOS 10.7 and later
 if { ${os.major} >= 11 } {
@@ -78,30 +88,21 @@ if { ${os.major} >= 11 } {
         clang
 }
 
+# Clang 9 and 10 not supported on ARM
 if { ${os.arch} eq "arm" } {
-    # disable unreliable clang versions for ARM
-    dict set clist clang11 {macports-clang-11}
     lappend clist_unsupported \
         clang90 clang10
 } else {
     dict set clist clang90 {macports-clang-9.0}
     dict set clist clang10 {macports-clang-10}
-    dict set clist clang11 {macports-clang-11}
 }
 
-# gcc 9+ only available on macOS10.7 (Darwin11) and newer
-# However, gcc9+ builds fail on MacOS 10.7, so only enable for MacOS 10.8+.
-if { ${os.arch} eq "arm" } {
-    dict set clist gcc11 {macports-gcc-11}
-    lappend clist_unsupported \
-        gcc9 gcc10
-} elseif { ${os.major} >= 12 } {
+# GCC 9 only supported for macOS 10.6 through 10.10
+if { ${os.major} >= 10 && ${os.major} <= 14 } {
     dict set clist gcc9  {macports-gcc-9}
-    dict set clist gcc10 {macports-gcc-10}
-    dict set clist gcc11 {macports-gcc-11}
 } else {
     lappend clist_unsupported \
-        gcc9 gcc10 gcc11
+        gcc9
 }
 
 #-------------------------------------------------------------------------------
@@ -185,7 +186,6 @@ if {${subport_enabled}} {
 
     select.group                mpi
     select.file                 ${filespath}/portselect/${name}-${cname}
-    livecheck.type              none
 
     if {${cname} ne "mp"} {
         set compiler            [dict get ${clist} ${cname}]
@@ -380,15 +380,11 @@ if {${subport_enabled}} {
         ${name} ${subport} ${cname} ${select.file}
 
 } elseif {${subport} eq ${name}} {
+    PortGroup               stub 1.0
+
     depends_lib-append      port:${name}-default
-    distfiles
-    patchfiles
-    supported_archs         noarch
-    use_configure           no
-    build {}
-    destroot {
-        set docdir          ${destroot}${prefix}/share/doc/${subport}
-        xinstall -d ${docdir}
-        system "echo $subport is a stub port > ${docdir}/README"
-    }
+
+    livecheck.type          regex
+    livecheck.url           https://www.open-mpi.org/
+    livecheck.regex         Open MPI v(\[0-9\.\]+) released
 }

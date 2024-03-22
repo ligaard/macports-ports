@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github yihui servr 0.29 v
+revision            0
+categories-append   www
+maintainers         nomaintainer
+license             GPL
+description         Simple HTTP server to serve static files or dynamic documents
+long_description    {*}${description}
+checksums           rmd160  8943271809c06d0ff3d114b54819f6abc59be51b \
+                    sha256  a8163c6e0b35c99219d91c8fbcfd611c6d3baa959bbcbe0b8c488967c2b6a812 \
+                    size    30999
+supported_archs     noarch
+
+depends_lib-append  port:R-httpuv \
+                    port:R-jsonlite \
+                    port:R-mime \
+                    port:R-xfun
+
+depends_test-append port:R-knitr \
+                    port:R-later \
+                    port:R-rmarkdown \
+                    port:R-rstudioapi
+
+test.run            yes

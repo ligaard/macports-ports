@@ -4,44 +4,42 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        Unidata cftime 1.5.1 v rel
+github.setup        Unidata cftime 1.6.3 v rel
 github.tarball_from archive
 name                py-cftime
 revision            0
 
 categories-append   devel
-platforms           darwin
 license             MIT
 maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         Time-handling functionality from netcdf4-python
-long_description    ${description}
+long_description    {*}${description}
 
-checksums           rmd160  2ff979154fd446ba6969e54e1754015d1f332e84 \
-                    sha256  b42acd1017242e2885377ed39be7c16100ddcde35dfab88d5db8bd79cb78aa0f \
-                    size    575570
+checksums           rmd160  877b2836d5f55d2869aea64162fcf005b9def28f \
+                    sha256  38a20e2c088abe814a5e5ccf365d994dac925f29b7b4b9b57ee4f55e13a017a2 \
+                    size    60665
 
-python.versions     27 35 36 37 38 39 310
+python.versions     27 37 38 39 310 311 312
+python.pep517       no
 
 if {${name} ne ${subport}} {
+    if {${python.version} < 37} {
+        github.setup    Unidata cftime 1.5.2 v rel
+        revision        0
+        epoch           1
+        checksums       rmd160  acd812fb21765ecf044d68c186ac39e83ffe0a92 \
+                        sha256  86e1ec04135828f0c8a4e4ac4b9baff08f8b57d0b1f31662dbf0209fdcc63a2d \
+                        size    580452
+    }
+
     depends_build-append \
-                    port:py${python.version}-cython \
-                    port:py${python.version}-setuptools
+                    port:py${python.version}-cython
 
     depends_lib-append \
                     port:py${python.version}-numpy
 
-    pre-test {
-        test.env    PYTHONPATH=[glob -nocomplain ${worksrcpath}/build/lib*]
-    }
-
-    depends_test-append \
-                    port:py${python.version}-pytest
-
     test.run        yes
-    test.cmd        py.test-${python.branch}
-    test.args       -o addopts=''
-    test.target
 
     post-destroot {
         set docdir ${prefix}/share/doc/${subport}

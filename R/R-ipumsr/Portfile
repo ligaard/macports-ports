@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github ipums ipumsr 0.7.2 v
+revision            0
+maintainers         nomaintainer
+license             MPL-2
+description         Read IPUMS extract files
+long_description    {*}${description}
+checksums           rmd160  fcd6fd2e6e9c7836888fe4a2be07bd66f8df0f0b \
+                    sha256  8a8d34ac800f69efdb4b49369dd52fd53420fc21c538cd6a7087465fb073c659 \
+                    size    4100606
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-haven \
+                    port:R-hipread \
+                    port:R-httr \
+                    port:R-jsonlite \
+                    port:R-lifecycle \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-readr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyselect \
+                    port:R-xml2 \
+                    port:R-zeallot

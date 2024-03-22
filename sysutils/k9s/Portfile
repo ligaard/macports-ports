@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/derailed/k9s 0.25.8 v
+go.setup            github.com/derailed/k9s 0.32.4 v
 github.tarball_from archive
 revision            0
 
@@ -24,20 +24,19 @@ license             Apache-2
 maintainers         {breun.nl:nils @breun} \
                     {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-platforms           darwin
 
-checksums           rmd160  2b562a37fee070e9b13036c363bb988bf017f9ff \
-                    sha256  56a4939b18a1059b55823e3a34b27fef8863473dca6c901659506a79219dba8e \
-                    size    6255844
+checksums           rmd160  e47d42b65fef814384000c774e075266719598f9 \
+                    sha256  597fa2c547437070a8993d1fb6fce91d696bd3731d37230feace3a2d3bfdb198 \
+                    size    6748167
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
 # https://trac.macports.org/ticket/61192
-build.env-delete    GOPROXY=off GO111MODULE=off
+go.offline_build no
 
 build.cmd           make
 build.pre_args-append \
-                    GIT_REV="" DATE=""
+                    VERSION="${github.tag_prefix}${version}" GIT_REV="" DATE=""
 build.args          build
 
 destroot {
@@ -46,6 +45,21 @@ destroot {
     xinstall -d ${destroot}${prefix}/share/${name}
     copy ${worksrcpath}/skins   ${destroot}${prefix}/share/${name}/
     copy ${worksrcpath}/plugins ${destroot}${prefix}/share/${name}/
+
+    set bash_completion ${prefix}/share/bash-completion/completions
+    xinstall -d ${destroot}${bash_completion}
+    exec ${destroot}${prefix}/bin/${name} completion bash > \
+        ${destroot}${bash_completion}/${name}
+
+    set zsh_completion ${prefix}/share/zsh/site-functions
+    xinstall -d ${destroot}${zsh_completion}
+    exec ${destroot}${prefix}/bin/${name} completion zsh > \
+        ${destroot}${zsh_completion}/_${name}
+
+    set fish_completion ${prefix}/share/fish/vendor_completions.d
+    xinstall -d ${destroot}${fish_completion}
+    exec ${destroot}${prefix}/bin/${name} completion fish > \
+        ${destroot}${fish_completion}/${name}.fish
 }
 
 notes "

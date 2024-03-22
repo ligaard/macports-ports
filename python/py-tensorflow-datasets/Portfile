@@ -4,11 +4,12 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           python 1.0
 
-github.setup        tensorflow datasets 4.3.0 v
+github.setup        tensorflow datasets 4.9.2 v
 revision            0
 name                py-${github.author}-${github.project}
 
-platforms           darwin
+platforms           {darwin any}
+supported_archs     noarch
 license             Apache-2
 maintainers         nomaintainer
 
@@ -19,16 +20,13 @@ long_description    TensorFlow Datasets provides many public datasets \
 
 homepage            https://github.com/tensorflow/datasets
 
-checksums           rmd160  c02ca26a81cbd25a15454e60f88a9a706306ccd3 \
-                    sha256  65e7988caae5bf5410aab21284a65aa7f5ec4957a2255823fde2b945d9617a13 \
-                    size    82140654
+checksums           rmd160  a4cdd40935581a920dd1d2bad2c546a991b7f2f6 \
+                    sha256  0f700096c82f288833714f6120f3cd4a1d08e22095dda182cc4d3ac31b66977a \
+                    size    208979612
 
-python.versions     37 38 39
+python.versions     38 39 310 311
 
 if {${name} ne ${subport}} {
-    depends_build-append \
-                    port:py${python.version}-setuptools
-
     depends_run-append \
                     port:py${python.version}-absl \
                     port:py${python.version}-attrs \
@@ -47,15 +45,9 @@ if {${name} ne ${subport}} {
     depends_test-append \
                     port:py${python.version}-jupyter \
                     port:py${python.version}-mako \
-                    port:py${python.version}-pytest \
-                    port:py${python.version}-pytest-xdist \
-                    port:py${python.version}-tensorflow-data-validation
+                    port:py${python.version}-pytest-xdist
 
     test.run        yes
-    test.cmd        py.test-${python.branch}
-    test.target
-    test.env-append \
-                    PYTHONPATH=${worksrcpath}/build/lib
 
     post-destroot {
         set docdir ${prefix}/share/doc/${subport}
@@ -63,6 +55,4 @@ if {${name} ne ${subport}} {
         xinstall -m 0644 -W ${worksrcpath} LICENSE README.md \
             ${destroot}${docdir}
     }
-
-    livecheck.type  none
 }

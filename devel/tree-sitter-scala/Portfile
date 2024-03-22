@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           tree_sitter 1.0
+
+github.setup        tree-sitter tree-sitter-scala 0.21.0 v
+revision            0
+
+description         A tree-sitter parser for Scala
+
+long_description    {*}${description}
+
+categories          devel
+license             MIT
+maintainers         {amake @amake} openmaintainer
+
+checksums           rmd160  9eb0216c58b6249781e31518dd570ea6c33a63f5 \
+                    sha256  f6a72995dc35a8ae51d92b4c03b454d8f349d4888db0fe80c56dc2aa486be862 \
+                    size    1339091
+
+worksrcdir          ${worksrcdir}/src

@@ -3,24 +3,24 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         String-Tagged 0.17
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         String-Tagged 0.22 ../../authors/id/P/PE/PEVANS
 revision            0
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
 description         String::Tagged - string buffers with value tags on extents
-long_description    ${description}
+long_description    {*}${description}
 
-platforms           darwin
+platforms           {darwin any}
+supported_archs     noarch
 
-checksums           rmd160  74e23d236dd0a4f9c1c7fe3722aa2d5ec149c9f0 \
-                    sha256  2e4f254b8c336e297f007493bfa916688aa9bbf5d4fe534fe0a164dc206ef880 \
-                    size    41396
+checksums           rmd160  c8172b0808345666fabf55c12d5fed371e4bc6cb \
+                    sha256  9132384cb2de32e582ddebcd286c14fdd6484f80a73f0f0a8f5c8415c86c3444 \
+                    size    45824
 
 if {${perl5.major} != ""} {
     depends_build-append \
-                    port:p${perl5.major}-test-identity
+                    port:p${perl5.major}-test2-suite
 
     perl5.use_module_build
-    supported_archs noarch
 }

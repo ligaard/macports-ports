@@ -4,40 +4,41 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-soco
-version             0.25.0
+version             0.30.0
 revision            0
 
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
 license             MIT
 
 maintainers         {@catap korins.ky:kirill} openmaintainer
 
 description         SoCo (Sonos Controller) is a simple library to control Sonos speakers.
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://github.com/SoCo/SoCo
 
-checksums           rmd160  3d79573502aa129f95f73d569c7f087882fe5fee \
-                    sha256  24d94a47509e33f5607c71aeb28df67a0cc0fd04980f61bf06c651c3d334bb91 \
-                    size    715989
+checksums           rmd160  791bd2faa36a093780d035a93f5cde06d9a88d53 \
+                    sha256  9c5f7d2177f823be6b9ea1801be45641c0c853eed431dc4176e04c4037b12491 \
+                    size    731715
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
     depends_build-append \
                     port:py${python.version}-setuptools
 
     depends_lib-append \
+                    port:py${python.version}-appdirs \
                     port:py${python.version}-ifaddr \
+                    port:py${python.version}-lxml \
                     port:py${python.version}-requests \
                     port:py${python.version}-xmltodict
 
     depends_test-append \
-                    port:py${python.version}-pip \
-                    port:py${python.version}-wheel
+                    port:py${python.version}-pyflakes \
+                    port:py${python.version}-requests-mock
 
     test.run        yes
-
-    livecheck.type  none
+    test.args       -m 'not integration'
 }

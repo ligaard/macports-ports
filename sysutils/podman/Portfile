@@ -6,56 +6,57 @@ PortGroup           golang 1.0
 # After the upgrade, it is highly recommended to test the `podman machine`.
 # This port has problems with this command from time to time.
 # See https://gist.github.com/judaew/85c6e8a62bf0e7f5be5188e020492e21
-go.setup            github.com/containers/podman 3.4.4 v
+go.setup            github.com/containers/podman 5.0.0 v
 github.tarball_from archive
 revision            0
 
 categories          sysutils
 license             Apache-2
-platforms           darwin
+maintainers         {judaew @judaew} {@catap korins.ky:kirill} openmaintainer
 
 description         Tool for managing OCI containers and pods.
-
-long_description    Podman is a tool for running Linux containers. \
-                    You can do this from a MacOS desktop as long as you have access to a linux box \
-                    either running inside of a VM on the host, or available via the network. \
-                    You need to install the remote client and then setup ssh connection information.
-
-maintainers         {judaew @judaew} openmaintainer
+long_description    \
+    Podman is a tool for running Linux containers. You can do this from a \
+    MacOS desktop as long as you have access to a linux box either running \
+    inside of a VM on the host, or available via the network. You need to \
+    install the remote client and then setup ssh connection information.
 
 checksums           ${distname}${extract.suffix} \
-                        rmd160  695711f70b93fa1160752613d6e928f48fedc996 \
-                        sha256  718c9e1e734c2d374fcf3c59e4cc7c1755acb954fc7565093e1d636c04b72e3a \
-                        size    10945990
+                        rmd160  447472e76367731b1277478482eeaa010dc4d48f \
+                        sha256  818db636955a1eeec4dcb586d18783ab86a8afd07e3f4adaf25920b3697316c9 \
+                        size    21861935
 
-depends_run         port:gvisor-tap-vsock port:qemu
+set py_ver          3.12
+set py_ver_nodot    [string map {. {}} ${py_ver}]
 
-post-extract {
-    reinplace "s|-mod=vendor||g" ${worksrcpath}/Makefile
-}
+depends_build-append \
+                    port:go-md2man \
+                    port:python${py_ver_nodot} \
+                    port:pre-commit
+depends_run         port:gvisor-tap-vsock port:vfkit port:qemu
 
-patchfiles          patch-defaultHelperBinariesDir-for-MacPorts.diff \
-                    patch-getEdk2CodeFd-for-MacPorts.diff
-
-# See https://trac.macports.org/ticket/64131#comment:3
-patchfiles-append   patch-remove-hvf-accel-option-for-qemu.diff
+patchfiles          patch-defaultHelperBinariesDir-for-MacPorts.diff
 
 post-patch {
     reinplace "s|@@PREFIX@@|${prefix}|g" \
-        ${worksrcpath}/vendor/github.com/containers/common/pkg/config/config_darwin.go \
-        ${worksrcpath}/pkg/machine/qemu/options_darwin_arm64.go
+        ${worksrcpath}/vendor/github.com/containers/common/pkg/config/config_darwin.go
 }
 
 build.cmd           make
-build.target        ${name}-remote-darwin
-build.target-append install-${name}-remote-darwin-docs
+build.args          PYTHON=${prefix}/bin/python${py_ver} \
+                    PRE_COMMIT=${prefix}/bin/pre-commit
+build.target        ${name}-remote ${name}-mac-helper docs
 
 destroot {
-    xinstall -m 0755 ${worksrcpath}/bin/darwin/${name} ${destroot}${prefix}/bin/${name}
+    xinstall -m 0755 ${worksrcpath}/bin/darwin/${name} \
+        ${destroot}${prefix}/bin/
+
+    xinstall -m 0755 ${worksrcpath}/bin/darwin/${name}-mac-helper \
+        ${destroot}${prefix}/bin/
 
     # Add man-pages
     xinstall -d ${destroot}${prefix}/share/man/man1
-    xinstall -m 640 {*}[glob ${worksrcpath}/docs/build/remote/darwin/*.1] \
+    xinstall -m 640 {*}[glob ${worksrcpath}/docs/build/man/*.1] \
         ${destroot}${prefix}/share/man/man1/
 
     # Add shell completion
@@ -69,5 +70,11 @@ destroot {
     xinstall -m 644 ${worksrcpath}/completions/fish/${name}.fish \
         ${destroot}${prefix}/share/fish/vendor_completions.d/
 }
+
+notes "
+If you have an issue where podman won't run on ARM then try the following:
+
+https://trac.macports.org/ticket/67731#comment:14
+"
 
 github.livecheck.regex  {([^"r-]+)}

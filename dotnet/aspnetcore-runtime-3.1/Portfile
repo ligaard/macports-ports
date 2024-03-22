@@ -1,13 +1,17 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           deprecated 1.0
+
+deprecated.eol_version yes
 
 name                aspnetcore-runtime-3.1
-version             3.1.20
-revision            0
+version             3.1.32
+revision            1
 categories          dotnet
 license             MIT
-maintainers         {tsabirgaliev @tsabirgaliev} openmaintainer
+maintainers         {@tsabirgaliev gmail.com:tair.sabirgaliev} \
+                    {@judaew judaew} openmaintainer
 
 description         ASP.NET Core is a cross-platform .NET framework for building modern \
                     cloud-based web applications on Windows, Mac, or Linux.
@@ -24,16 +28,17 @@ supported_archs     x86_64
 distname            aspnetcore-runtime-${version}-osx-x64
 master_sites        https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/${version}/
 
-checksums           rmd160  b65b74326db739fceeac654a4d3980a37f755e18 \
-                    sha256  7b2eb1d6002fbdb09eaced4b3f38aa344a2f15fda0f97243ed7e9231fac1c76b \
-                    size    37572371
+checksums           rmd160  d9c4da94b1e6a8a1c3f60d15667359a5d580d9e5 \
+                    sha256  cc853a95232ce6b8c4443d5d9dd71927c24cc18931589709aedad7d94fa5baff \
+                    size    37695493
 
 worksrcdir          ${name}-${version}
 extract.mkdir       yes
 
 use_configure       no
 
-depends_run         port:dotnet-cli
+depends_run         port:dotnet-cli \
+                    port:dotnet-runtime-3.1
 
 build {}
 
@@ -44,3 +49,7 @@ destroot {
 
     move ${worksrcpath}${runtime_dir}/${version} ${destroot}${dotnet_home}${runtime_dir}
 }
+
+livecheck.type      regex
+livecheck.url       https://dotnet.microsoft.com/en-us/download/dotnet/3.1
+livecheck.regex     "ASP.NET Core Runtime (\\d+(?:\\.\\d+)*)"

@@ -8,8 +8,8 @@ version             1.0.7
 revision            0
 
 categories          java tex
-platforms           darwin
 supported_archs     noarch
+platforms           any
 license             GPL-2
 maintainers         {judaew @judaew} openmaintainer
 

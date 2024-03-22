@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran livinoa powerindexR 1.5
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2
+description         Measure the power in voting systems
+long_description    {*}${description}
+checksums           rmd160  885adb2c7eb3832020322bcca2fec932c5cb6b84 \
+                    sha256  837dbfa87020dcd88b1c8306e23337b7fb12158f168d62657f7ef1d0b9ad45b6 \
+                    size    12342
+supported_archs     noarch
+
+test.run            yes

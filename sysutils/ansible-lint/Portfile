@@ -4,12 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        ansible-community ansible-lint 5.3.1 v
+github.setup        ansible-community ansible-lint 24.2.1 v
+github.tarball_from archive
 revision            0
 
 categories          sysutils
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             MIT
 maintainers         artisancomputer.com:zdw \
                     {judaew @judaew} \
@@ -19,20 +20,28 @@ description         Best practices checker for Ansible playbooks
 long_description \
     ansible-lint checks playbooks for practices and behaviour that could potentially be improved
 
-checksums           rmd160  5237023757b4bdf9b32b508dbc8178c4c31ad433 \
-                    sha256  e2257ccaf78f17cc63d7286a93b1ca2d99d5e900eaac6a465640ab5c98337c17 \
-                    size    342826
+checksums           rmd160  f8bd53b0c1cb2b9e6a4742ee201e9db4bb91d5fc \
+                    sha256  c8d8bb5e97febe5d1ab955034eda8e61344cb3b79db9241da9264b0833fad978 \
+                    size    458739
 
-python.default_version      39
+# Keep Python version compatible with yamllint
+python.default_version      311
 python.link_binaries_suffix
 
 depends_build-append \
                     port:py${python.version}-setuptools \
+                    port:py${python.version}-setuptools_scm \
                     port:py${python.version}-toml \
                     port:py${python.version}-wheel
 
-depends_run-append  port:py${python.version}-ansible
+depends_run-append  port:py${python.version}-ansible \
+                    port:py${python.version}-ansible-compat \
+                    port:py${python.version}-black \
+                    port:yamllint
+
 depends_lib-append  port:py${python.version}-enrich \
+                    port:py${python.version}-filelock \
+                    port:py${python.version}-jsonschema \
                     port:py${python.version}-packaging \
                     port:py${python.version}-ruamel-yaml \
                     port:py${python.version}-ruamel-yaml-clib \
@@ -42,13 +51,10 @@ depends_lib-append  port:py${python.version}-enrich \
 
 # Stop setuptools from using the scm version which doesn't exist in this context
 patchfiles          patch-disable_use_scm_version.diff
-post-patch {
-    reinplace "s|@@VERSION@@|${version}|g" ${worksrcpath}/setup.cfg
-}
 
 python.pep517       yes
 
-github.livecheck.regex  {([^"r-]+)}
+github.livecheck.regex  {([0-9.]+)}
 
 notes "
 Before using ansible-lint need to select the Python version of Ansible:

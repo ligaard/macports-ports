@@ -1,13 +1,16 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           cmake 1.1
-PortGroup           github 1.0
+PortGroup           cmake   1.1
+PortGroup           github  1.0
 
 # Need strndup()
 PortGroup           legacysupport 1.0
 
-github.setup        MiniZinc libminizinc 2.5.5
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        MiniZinc libminizinc 2.8.3
+github.tarball_from archive
 name                minizinc
 revision            0
 
@@ -25,21 +28,24 @@ long_description    {*}${description} You can use MiniZinc to model \
                     developed at Monash University in collaboration with \
                     Data61 Decision Sciences and the University of Melbourne.
 
+categories          devel
+installs_libs       no
+license             MPL-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-
-checksums           rmd160  3bda69f4c4de414f1149051bf520f6d17664624a \
-                    sha256  22b40b7d86c1db79c1f291c0a1b822f47738abcd44fdb1269cd3a6b9f30a452f \
-                    size    12595439
-
-legacysupport.newest_darwin_requires_legacy 10
-
-categories          devel
-license             MPL-2
 platforms           darwin linux
+
+checksums           rmd160  09c124a32b914ccc045b47005ce3c1c8d003cc1d \
+                    sha256  151ec26165abfb13d709d89be92b3f9bbb5ba3873b8ecf9d88ac15f31042628f \
+                    size    8029275
 
 depends_build-append \
                     port:bison
+
+depends_lib-append  port:zlib
+
+compiler.cxx_standard \
+                    2014
 
 configure.args-append \
                     -DUSE_CCACHE=OFF

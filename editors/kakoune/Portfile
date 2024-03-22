@@ -5,7 +5,7 @@ PortGroup           github          1.0
 PortGroup           legacysupport   1.1
 PortGroup           makefile        1.0
 
-github.setup        mawww kakoune 2021.11.08 v
+github.setup        mawww kakoune 2023.08.05 v
 github.tarball_from archive
 revision            0
 
@@ -35,13 +35,14 @@ long_description    Kakoune is a code editor that implements Vi’s \
 license             public-domain
 
 categories          editors
+installs_libs       no
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 platforms           darwin linux freebsd
 
-checksums           rmd160  ca41e2f686a7bb9ae48e8bdac97db58f6f0df6e1 \
-                    sha256  0885dc65377057fcfea0e7053d01d95a83668ec1907aced84dface8e00b83dee \
-                    size    657567
+checksums           rmd160  4ae13dce960a1fff40d955bad8626436aa132017 \
+                    sha256  1ad7bfe9e1d861115cd418cb500990ea5fa63726e998df13702e5caa8fc84356 \
+                    size    694458
 
 # error: 'uncaught_exceptions' is unavailable: introduced in macOS 10.12
 if {${os.platform} eq "darwin" && ${os.major} < 16} {
@@ -57,8 +58,10 @@ pre-build {
     close ${_version_file}
 }
 
-compiler.cxx_standard   2017
+compiler.cxx_standard   2020
 
 depends_lib-append      port:ncurses
 
 makefile.has_destdir    yes
+
+use_parallel_build      no

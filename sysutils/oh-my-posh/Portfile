@@ -3,33 +3,31 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/JanDeDobbeleer/oh-my-posh 6.28.2 v
-go.package          oh-my-posh
+go.setup            github.com/JanDeDobbeleer/oh-my-posh 17.5.1 v
 github.tarball_from archive
 revision            0
 
 homepage            https://ohmyposh.dev
 
 description         A prompt theme engine for any shell.
-
 long_description    {*}${description}
 
 categories          sysutils shells
 installs_libs       no
-license             GPL-3.0
+license             GPL-3
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  7d87e54cbdfa22a079e9330f3894865c44440499 \
-                    sha256  ee582f3b45be22c9d1e3cec6f5d5a9fd8f458f59c2819350427a7cfa85a318b9 \
-                    size    3537886
+checksums           rmd160  5a985aeb45bb895d86f912dcddcc32c39d2981f2 \
+                    sha256  29abe3604ae034be278c13b2d698a7c3336fcd0fb19ff20afbdc080b3a54bb29 \
+                    size    2710516
 
 build.dir           ${worksrcpath}/src
 
 # Allow Go to fetch dependencies at build time
-build.env-delete    GO111MODULE=off GOPROXY=off
+go.offline_build no
 build.pre_args-append \
-    -ldflags \"-X main.Version=${version}\"
+    -ldflags \"-X main.Version=${version}\" -o ${name}
 
 set omp_share_path  ${prefix}/share/${name}
 

@@ -4,13 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-geopandas
-version             0.9.0
+version             0.14.3
 revision            0
 categories-append   science
 license             BSD
-platforms           darwin
+platforms           {darwin any}
+supported_archs     noarch
 
-python.versions     27 35 36 37 38 39
+python.versions     38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -19,35 +20,26 @@ description         Geographic pandas extensions
 long_description    GeoPandas is a project to add support for geographic data \
                     to pandas objects.
 
-homepage            http://geopandas.org
+homepage            https://geopandas.org
 
-checksums           rmd160  ac2f47cef558a17c3dce0c2ab647512058f36ed2 \
-                    sha256  63972ab4dc44c4029f340600dcb83264eb8132dd22b104da0b654bef7f42630a \
-                    size    991735
+checksums           rmd160  d26eae51f961d2f6a9b21d3a75cb52cea2abdb0b \
+                    sha256  748af035d4a068a4ae00cab384acb61d387685c833b0022e0729aa45216b23ac \
+                    size    1103416
 
 if {${name} ne ${subport}} {
-    depends_build-append \
-                        port:py${python.version}-setuptools
-
     depends_lib-append  port:py${python.version}-pandas \
                         port:py${python.version}-shapely \
                         port:py${python.version}-fiona \
-                        port:py${python.version}-pyproj
+                        port:py${python.version}-pyproj \
+                        port:py${python.version}-packaging
 
-    if {${python.version} < 36} {
-        version             0.8.2
-        revision            0
-        distname            ${python.rootname}-${version}
-        checksums           rmd160  28566e35e048d1e164908b60d63acdf28e4e4d6f \
-                            sha256  aa9ae82e4e6b52efa244bd4b8bd2363d66693e5592ad1a0f52b6afa8c36348cb \
-                            size    961168
+    if {${python.version} eq 38} {
+        version         0.13.2
+        revision        0
+        checksums       rmd160  0e23b5bc624f07074a7bd5fc1e715e84da72607b \
+                        sha256  e5b56d9c20800c77bcc0c914db3f27447a37b23b2cd892be543f5001a694a968 \
+                        size    1091231
     }
 
     livecheck.type      none
-}
-
-# py27 subport no longer available (dependency on obsoleted py27-fiona)
-subport py27-${python.rootname} {
-    replaced_by py36-${python.rootname}
-    PortGroup obsolete 1.0
 }

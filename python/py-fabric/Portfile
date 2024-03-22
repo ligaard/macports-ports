@@ -5,34 +5,31 @@ PortGroup           python 1.0
 PortGroup           select 1.0
 
 name                py-fabric
-version             2.4.0
+version             3.2.2
 revision            0
 categories-append   devel
-platforms           darwin
 license             BSD
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     27 36 37 38 39
+python.versions     38 39 310 311
 
 maintainers         {stromnov @stromnov} openmaintainer
 
 description         Fabric is a simple tool for remote execution and deployment.
-long_description    ${description}
+long_description    {*}${description}
 
-homepage            http://fabfile.org
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
+homepage            https://fabfile.org
 
-distname            ${python.rootname}-${version}
-
-checksums           rmd160  121a6cb61ae07c16f8c7e220d99386030c344b59 \
-                    sha256  93684ceaac92e0b78faae551297e29c48370cede12ff0f853cdebf67d4b87068 \
-                    size    156850
+checksums           rmd160  b865cfcf8d5fca1943d21fbab49c3c28217a081c \
+                    sha256  8783ca42e3b0076f08b26901aac6b9d9b1f19c410074e7accfab902c184ff4a3 \
+                    size    183215
 
 if {${name} ne ${subport}} {
-    depends_lib-append  port:py${python.version}-setuptools \
-                        port:py${python.version}-invoke \
+    depends_lib-append  port:py${python.version}-invoke \
                         port:py${python.version}-paramiko \
-                        port:py${python.version}-cryptography \
+                        port:py${python.version}-decorator \
+                        port:py${python.version}-deprecated \
                         port:fabric_select
 
     select.group        fabric
@@ -43,6 +40,4 @@ when you execute the commands without a version suffix, e.g. 'fab', run:
 
 port select --set ${select.group} [file tail ${select.file}]
 "
-
-    livecheck.type      none
 }

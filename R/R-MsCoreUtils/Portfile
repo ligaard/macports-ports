@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor RforMassSpectrometry MsCoreUtils 1.14.1
+revision            0
+maintainers         nomaintainer
+license             Artistic-2
+description         Core utils for mass spectrometry data
+long_description    {*}${description}
+homepage            https://github.com/RforMassSpectrometry/MsCoreUtils
+checksums           rmd160  ca233a06deda6f16a7aee0aed5f4d8523178a421 \
+                    sha256  5fe7604847d3e6936009f1d20d2c1a75afe7a2da70125fecd0ed26f4ee6cd950 \
+                    size    408688
+
+depends_lib-append  port:R-clue \
+                    port:R-Rcpp \
+                    port:R-S4Vectors

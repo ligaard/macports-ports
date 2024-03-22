@@ -4,10 +4,12 @@ PortSystem          1.0
 PortGroup           compilers 1.0
 PortGroup           github 1.0
 
-github.setup        nco nco 5.0.3
-revision            3
+github.setup        nco nco 5.2.1
+revision            0
 platforms           darwin
-maintainers         {takeshi @tenomoto}
+maintainers         {takeshi @tenomoto} \
+                    {me.com:remko.scharroo @remkos} \
+                    openmaintainer
 license             GPL-3
 categories          science
 description         The netCDF Operators
@@ -19,9 +21,9 @@ if {${os.major} > 12} {
     compilers.setup -clang33 -clang34
 }
 
-checksums           rmd160  b9e99cf6906bcfeafe7fe167f930db554d7a09a2 \
-                    sha256  84e6766b384e3825ee1430ab2fe164ec346d94dbe100eb6e937cd5df8facc0cf \
-                    size    5760295
+checksums           rmd160  025285981b204f1be7a130289853d8d826903ee7 \
+                    sha256  d05ff044080326b2634f996c1ba84e460ed328fbbcc94a1b73c748799eddfe50 \
+                    size    6507681
 
 homepage            http://nco.sourceforge.net/
 long_description \
@@ -35,14 +37,9 @@ long_description \
 
 depends_lib         port:curl \
                     port:gettext \
-                    port:libiconv \
-                    port:libxml2 \
                     port:netcdf \
-                    path:lib/libssl.dylib:openssl \
                     port:udunits2 \
-                    port:zlib \
                     port:gsl \
-                    port:hdf5 \
                     port:xercesc3
 depends_build       port:antlr \
                     port:bison \
@@ -58,10 +55,7 @@ configure.cppflags-append   -I${prefix}/include/udunits2 \
 configure.ldflags-append    -lxerces-c
 configure.args      --disable-dependency-tracking \
                     --mandir=${prefix}/share/man  \
-                    --enable-udunits2             \
-                    --enable-dap                  \
-                    --enable-netcdf4              \
-                    --disable-esmf                \
+                    --disable-shared              \
                     --disable-openmp
 
 if {[gcc_variant_isset] || [clang_variant_isset]} {
@@ -87,18 +81,4 @@ variant openmp description {enable support for OpenMP} {
     compiler.fallback       macports-clang-7.0
 }
 
-variant mpich description {enable MPI with mpich (currently MPI is not supported)} {
-}
-
-variant openmpi description {enable MPI with openmpi (currently MPI is not supported)} {
-}
-
-variant esmf description {use ESMF (Earth System Modeling Framework)} {
-    configure.args-delete   --disable-esmf
-    configure.args-append   --enable-esmf
-    depends_lib-append      port:esmf
-}
-
-livecheck.type              regex
-livecheck.url               ${homepage}
-livecheck.regex             {nco-([0-9]+\.[0-9]+\.[0-9]+).tar.gz}
+github.livecheck.regex      {([^"rba]+)}

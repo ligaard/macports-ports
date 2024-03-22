@@ -1,19 +1,22 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           cmake 1.1
-PortGroup           github 1.0
+PortGroup           cmake           1.1
+PortGroup           github          1.0
+PortGroup           legacysupport   1.1
 
+github.setup        google re2 2024-03-01
+github.tarball_from archive
 epoch               1
-github.setup        google re2 2021-11-01
 revision            0
 
-checksums           rmd160  e821ad726d2ee886d67ba9152b18ad4c0b088bd3 \
-                    sha256  1d10b5cf7ad4cde7f085ca02a0f78296beb43bb02efe79b2dd6f796677a933be \
-                    size    408960
+checksums           rmd160 a6641f2cbb8d0e890c2736e239c6456a569f7278 \
+                    sha256 7b2b3aa8241eac25f674e5b5b2e23d4ac4f0a8891418a2661869f736f03f57f4 \
+                    size   389495
 
 categories          devel textproc
-maintainers         nomaintainer
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
 
 description         an efficient, principled regular expression library
 
@@ -21,39 +24,29 @@ long_description    RE2 is a fast, safe, thread-friendly alternative to \
                     backtracking regular expression engines like those \
                     used in PCRE, Perl, and Python. It is a C++ library.
 
-platforms           darwin
 license             BSD
 
-compiler.cxx_standard   2011
+patchfiles          patch-re2pc-avoid-overlinking.diff
+
+# clock_gettime needed for abseil
+# https://github.com/macports/macports-ports/pull/19905#issuecomment-1680281240
+legacysupport.newest_darwin_requires_legacy 15
+
+compiler.cxx_standard \
+                    2014
+compiler.thread_local_storage \
+                    yes
 
 configure.args-append \
                     -DBUILD_SHARED_LIBS:BOOL=ON
 
-# Fix pkgconfig and shared library versioning; see:
-# https://bugs.archlinux.org/task/67739
-# https://gist.github.com/mtorromeo/1d48de16534dc8ee29cd872f94b070e5
-
-pre-configure {
-    reinplace s|@includedir@|${prefix}/include|g \
-        ${worksrcpath}/re2.pc
-    reinplace s|@libdir@|${prefix}/lib|g \
-        ${worksrcpath}/re2.pc
-    set somajor [exec /bin/sh -c "grep '^SONAME=' ${worksrcpath}/Makefile | cut -d= -f2"]
-    # append this line to CMakeLists.txt
-    reinplace "\$ a\\
-set_target_properties(re2 PROPERTIES VERSION ${somajor}.0.0 SOVERSION ${somajor})" \
-        ${worksrcpath}/CMakeLists.txt
-}
+depends_lib-append  port:abseil
 
 post-destroot {
-    xinstall -d ${destroot}${prefix}/lib/pkgconfig
-    xinstall -m 644 -W ${worksrcpath} \
-        re2.pc \
-        ${destroot}${prefix}/lib/pkgconfig
     # install additional documents.
     set docdir ${prefix}/share/doc/re2
     xinstall -d ${destroot}${docdir}
-    xinstall -m 644 -W ${worksrcpath} \
-        AUTHORS CONTRIBUTORS LICENSE README doc/syntax.html doc/syntax.txt \
+    xinstall -m 0644 -W ${worksrcpath} \
+        LICENSE README doc/syntax.html doc/syntax.txt \
         ${destroot}${docdir}
 }

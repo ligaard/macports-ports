@@ -6,14 +6,8 @@ PortGroup           muniversal 1.0
 set short_v         1.1
 name                openssl[string map {. {}} $short_v]
 
-# The revision of the openssl shim port should be bumped whenever
-# the version or revision is changed here.
-version             ${short_v}.1l
-revision            5
-
-# Please revbump these ports when updating OpenSSL.
-#  - freeradius (#43461)
-#  - openssh (#54990)
+version             ${short_v}.1w
+revision            1
 
 categories          devel security
 platforms           darwin
@@ -44,20 +38,20 @@ master_sites        ${homepage}/source \
                     ftp://ftp.linux.hr/pub/openssl/source/ \
                     ftp://guest.kuria.katowice.pl/pub/openssl/source/
 
-checksums           rmd160  aa470eea95b127e7ea389c39610a7568579d6b86 \
-                    sha256  0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1 \
-                    size    9834044
+checksums           rmd160  09f13793ced2360999e244d9627f0ee4a43457a0 \
+                    sha256  cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8 \
+                    size    9893384
+
+platform darwin 8 {
+    # No Availability.h on Tiger
+    patchfiles-append patch-crypto-rand-tiger.diff
+}
 
 if {${os.platform} eq "darwin" && ${os.major} < 11} {
     # Having the stdlib set to libc++ on 10.6 causes a dependency on a
     # macports-clang compiler to be added, which would be a dep cycle.
     configure.cxx_stdlib
 }
-
-#   https://github.com/openssl/openssl/commit/96ac8f13f4d0ee96baf5724d9f96c44c34b8606c
-#   https://github.com/openssl/openssl/commit/2f3b120401533db82e99ed28de5fc8aab1b76b33
-#   Patches updated to fix 10.4 build
-patchfiles-append   patch-pre-Sierra.diff
 
 set my_name         openssl-${short_v}
 set my_prefix       ${prefix}/libexec/${name}
@@ -115,7 +109,10 @@ pre-destroot {
     if {[variant_exists universal] && [variant_isset universal]} {
         global merger_dont_diff
         if {[llength ${universal_archs_to_use}] > 2} {
-            lappend merger_dont_diff ${prefix}/include/openssl/opensslconf.h
+            lappend merger_dont_diff ${my_prefix}/include/openssl/opensslconf.h
+            # Previous version/revisions got this wrong, but this situation
+            # is too obscure to justify revbumping the dependents.
+            notes-append "Universal dependents may need to be rebuilt."
         }
     }
 }
@@ -142,6 +139,8 @@ destroot.args       MANDIR=${prefix}/share/man MANSUFFIX=ssl
 variant rfc3779 description {enable RFC 3779: X.509 Extensions for IP Addresses and AS Identifiers} {
     configure.args-append   enable-rfc3779
 }
+
+notes-append        "This is the last release of OpenSSL 1.1. No further public security updates will be provided. Please migrate to the openssl3 port."
 
 livecheck.type      regex
 #livecheck.url       https://www.openssl.org/source/old/1.1.1/

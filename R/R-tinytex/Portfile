@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran rstudio tinytex 0.50
+revision            0
+categories-append   tex
+maintainers         nomaintainer
+license             MIT
+description         Helper functions to install and maintain TeX Live, and compile LaTeX documents
+long_description    {*}${description}
+checksums           rmd160  93701426aab46acd83ab1e9f350449054d60cc00 \
+                    sha256  b4846eae816ff09cd24e95b3f14286fb2e190e5084cf7e2b2793ac7100bd6086 \
+                    size    34312
+supported_archs     noarch
+
+depends_lib-append  port:R-xfun
+
+depends_test-append port:R-rstudioapi \
+                    port:R-testit
+
+test.run            yes

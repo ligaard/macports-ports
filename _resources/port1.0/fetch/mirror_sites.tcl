@@ -47,7 +47,6 @@ set portfetch::mirror_sites::sites(cpan) {
     http://cpan.inode.at/modules/by-module/
     http://cpan.inspire.net.nz/modules/by-module/
     http://cpan.ip-connect.vn.ua/modules/by-module/
-    http://cpan.llarian.net/modules/by-module/
     http://cpan.lnx.sk/modules/by-module/
     http://cpan.mines-albi.fr/modules/by-module/
     https://cpan.mirror.ac.za/modules/by-module/
@@ -66,7 +65,6 @@ set portfetch::mirror_sites::sites(cpan) {
     http://cpan.mirrors.ionfish.org/modules/by-module/
     http://cpan.mirrors.tds.net/modules/by-module/
     http://cpan.mirrors.uk2.net/modules/by-module/
-    http://cpan.mmgdesigns.com.ar/modules/by-module/
     http://cpan.nctu.edu.tw/modules/by-module/
     http://cpan.noris.de/modules/by-module/
     http://cpan.pair.com/modules/by-module/
@@ -81,7 +79,6 @@ set portfetch::mirror_sites::sites(cpan) {
     http://cpan.uni-altai.ru/modules/by-module/
     http://cpan.webdesk.ru/modules/by-module/
     https://cpan.zbr.pt/modules/by-module/
-    http://download.xs4all.nl/CPAN/modules/by-module/
     http://httpupdate118.cpanel.net/CPAN/modules/by-module/
     http://httpupdate127.cpanel.net/CPAN/modules/by-module/
     http://kartolo.sby.datautama.net.id/CPAN/modules/by-module/
@@ -136,7 +133,6 @@ set portfetch::mirror_sites::sites(cpan) {
     http://mirror.softaculous.com/cpan/modules/by-module/
     http://mirror.sov.uk.goscomb.net/CPAN/modules/by-module/
     http://mirror.team-cymru.org/CPAN/modules/by-module/
-    http://mirror.teklinks.com/CPAN/modules/by-module/
     http://mirror.transip.net/CPAN/modules/by-module/
     http://mirror.truenetwork.ru/CPAN/modules/by-module/
     http://mirror.ucu.ac.ug/cpan/modules/by-module/
@@ -429,7 +425,6 @@ set aarnet.au   http
 set atl.us      http
 set cph.dk      ${letsencrypt_https_or_http}
 set cjj.kr      http
-set ema.uk      ${letsencrypt_https_or_http}
 # cert doesn't have macports.org SANs; admin notified
 #set fco.it      ${letsencrypt_https_or_http}
 set fco.it      http
@@ -444,21 +439,22 @@ set pek.cn      ${letsencrypt_https_or_http}
 #set ykf.ca      ${letsencrypt_https_or_http}
 set ykf.ca      http
 set ywg.ca      ${letsencrypt_https_or_http}
+set fcix.net    http
 
 set portfetch::mirror_sites::sites(macports_distfiles) [lsearch -all -glob -inline -not "
     ${fastly}://distfiles.macports.org/:mirror
+    ${nue.de}://nue.de.distfiles.macports.org/:mirror
+    ${fcix.net}://mirror.fcix.net/macports/distfiles/:mirror
     ${aarnet.au}://aarnet.au.distfiles.macports.org/pub/macports/distfiles/:mirror
     ${atl.us}://atl.us.distfiles.macports.org/:mirror
     ${cjj.kr}://cjj.kr.distfiles.macports.org/:mirror
     ${cph.dk}://cph.dk.distfiles.macports.org/:mirror
-    ${ema.uk}://ema.uk.distfiles.macports.org/:mirror
     ${fco.it}://fco.it.distfiles.macports.org/:mirror
     ${fra.de}://fra.de.distfiles.macports.org/:mirror
     ${jnb.za}://jnb.za.distfiles.macports.org/distfiles/:mirror
     ${jog.id}://jog.id.distfiles.macports.org/macports/distfiles/:mirror
     ${kmq.jp}://kmq.jp.distfiles.macports.org/:mirror
     ${mse.uk}://mse.uk.distfiles.macports.org/:mirror
-    ${nue.de}://nue.de.distfiles.macports.org/:mirror
     ${pek.cn}://pek.cn.distfiles.macports.org/macports/distfiles/:mirror
     ${ykf.ca}://ykf.ca.distfiles.macports.org/MacPorts/mpdistfiles/:mirror
     ${ywg.ca}://ywg.ca.distfiles.macports.org/mirror/macports/distfiles/:mirror

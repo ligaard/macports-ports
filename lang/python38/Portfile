@@ -1,21 +1,18 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           select 1.0
 
 name                python38
 
 epoch               1
 # Remember to keep py38-tkinter, py38-htmldocs, and py38-gdbm's versions sync'd with this
-version             3.8.12
-revision            4
+version             3.8.19
 
 set major           [lindex [split $version .] 0]
 set branch          [join [lrange [split ${version} .] 0 1] .]
 
 categories          lang
 license             PSF
-platforms           darwin
 maintainers         nomaintainer
 
 description         An interpreted, object-oriented programming language
@@ -28,9 +25,9 @@ master_sites        ${homepage}ftp/python/${version}/
 distname            Python-${version}
 use_xz              yes
 
-checksums           rmd160  3453c1e5cacbc2cb506c8a98b2310fda9ade3ea8 \
-                    sha256  b1d3a76420375343b5e8a22fceb1ac65b77193e9ed27146524f0a9db058728ea \
-                    size    18443568
+checksums           md5 2532d25930266546822c144b99652254 \
+                    rmd160 9eede506febbecb73e4ffe0974fda791a23d9b96 \
+                    sha256 d2807ac69f69b84fd46a0b93bbd02a4fa48d3e70f4b2835ff0f72a2885040076
 
 patchfiles          patch-setup.py.diff \
                     patch-Lib-cgi.py.diff \
@@ -39,9 +36,10 @@ patchfiles          patch-setup.py.diff \
                     patch-libedit.diff \
                     patch-configure-xcode4bug.diff \
                     sysconfig.py.diff \
-                    distutils_spawn.py.patch
+                    distutils_spawn.py.patch \
+                    libedit-types.patch
 
-if {${os.platform} eq "darwin" && ${os.major} < 10} {
+if {${os.platform} eq "darwin" && ${os.major} <= 10} {
     # work around no copyfile and/or pthread_threadid_np on older systems
     patchfiles-append  patch-no-copyfile-on-Tiger.diff \
                        patch-threadid-older-systems.diff
@@ -50,7 +48,7 @@ if {${os.platform} eq "darwin" && ${os.major} < 10} {
 depends_build       port:pkgconfig
 depends_lib         port:bzip2 \
                     port:expat \
-                    port:gettext \
+                    port:gettext-runtime \
                     port:libedit \
                     port:libffi \
                     port:ncurses \
@@ -58,8 +56,10 @@ depends_lib         port:bzip2 \
                     port:sqlite3 \
                     port:xz \
                     port:zlib
-depends_run         port:python_select \
-                    port:python3_select
+
+set pythonVerNoDot  [string map {. {}} $branch]
+depends_run         port:python_select-${pythonVerNoDot} \
+                    port:python3_select-${pythonVerNoDot}
 
 # blacklist llvm-gcc-4.2 compiler known to produce bad code
 compiler.blacklist-append  *llvm-gcc-4.2
@@ -75,6 +75,11 @@ configure.args      --enable-framework=${frameworks_dir} \
                     --with-system-ffi
 
 configure.ccache    no
+# pkg-config removes -I flags for paths in CPATH, which confuses python.
+configure.env       PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 \
+                    SETUPTOOLS_USE_DISTUTILS=stdlib
+build.env           SETUPTOOLS_USE_DISTUTILS=stdlib
+destroot.env        SETUPTOOLS_USE_DISTUTILS=stdlib
 
 post-patch {
     reinplace "s|@@PREFIX@@|${prefix}|g" \
@@ -95,10 +100,6 @@ test.target         test
 
 destroot.target     frameworkinstall maninstall
 
-set pythonNoDot python[string map {. {}} $branch]
-select.entries      [list python python-$pythonNoDot $pythonNoDot] \
-                    [list python3 python3-$pythonNoDot $pythonNoDot]
-
 platform darwin {
     set framewpath  ${frameworks_dir}/Python.framework
     set framewdir   ${framewpath}/Versions/${branch}
@@ -108,35 +109,10 @@ platform darwin {
         # poll() misbehaves on 10.8 and older
         # See https://trac.macports.org/ticket/18376
         if {${os.platform} eq "darwin" && ${os.major} <= 12} {
+            set oldmtime [file mtime ${worksrcpath}/pyconfig.h]
             system -W ${worksrcpath} "ed - pyconfig.h < ${filespath}/pyconfig.ed"
+            file mtime ${worksrcpath}/pyconfig.h $oldmtime
         }
-    }
-
-    post-build {
-        set buildlibdir [lindex [glob -directory ${worksrcpath}/build lib.*-*-*-${branch}] 0]
-        # preserve mtime of sysconfig data file to avoid rebuilding things after changing it
-        set oldmtime [file mtime ${buildlibdir}/_sysconfigdata__darwin_darwin.py]
-
-        # Without this, LINKFORSHARED is set to
-        # ... $(PYTHONFRAMEWORKDIR)/Versions/$(VERSION)/$(PYTHONFRAMEWORK)
-        # (this becomes Python.framework/Versions/3.8/Python) which doesn't
-        # work for dependents that incorrectly use this variable to find out
-        # how to link against python (see ticket #15099); instead we mirror
-        # the behavior of `python-config --ldflags` here.
-        set lfs_pattern {^([[:space:]]*'LINKFORSHARED':).*}
-        set lfs_replacement "\\1 '-L${framewdir}/lib/python${branch}/${confdir} -lpython${branch} -ldl -framework CoreFoundation',"
-        reinplace -E s|${lfs_pattern}|${lfs_replacement}| \
-            ${buildlibdir}/_sysconfigdata__darwin_darwin.py
-
-        # remove -arch flags from the config
-        reinplace -E {s|-arch [a-z0-9_]+||g} \
-            ${buildlibdir}/_sysconfigdata__darwin_darwin.py
-
-        # also remove gettext overlinking
-        reinplace "s|-lintl||" \
-            ${buildlibdir}/_sysconfigdata__darwin_darwin.py
-
-        file mtime ${buildlibdir}/_sysconfigdata__darwin_darwin.py $oldmtime
     }
 
     post-destroot {
@@ -148,15 +124,45 @@ platform darwin {
         ln -s ${framewdir}/lib/pkgconfig/python-${branch}.pc ${destroot}${prefix}/lib/pkgconfig/
         ln -s ${framewdir}/lib/pkgconfig/python-${branch}-embed.pc ${destroot}${prefix}/lib/pkgconfig/
 
+        set libdir ${destroot}${framewdir}/lib/python${branch}
+        # Without this, LINKFORSHARED is set to
+        # ... $(PYTHONFRAMEWORKDIR)/Versions/$(VERSION)/$(PYTHONFRAMEWORK)
+        # (this becomes Python.framework/Versions/3.8/Python) which doesn't
+        # work for dependents that incorrectly use this variable to find out
+        # how to link against python (see ticket #15099); instead we mirror
+        # the behavior of `python-config --ldflags` here.
+        set lfs_pattern {^([[:space:]]*'LINKFORSHARED':).*}
+        set lfs_replacement "\\1 '-L${framewdir}/lib/python${branch}/${confdir} -lpython${branch} -ldl -framework CoreFoundation',"
+        reinplace -E s|${lfs_pattern}|${lfs_replacement}| \
+            ${libdir}/_sysconfigdata__darwin_darwin.py
+
+        # remove -arch flags from the config
+        reinplace -E {s|-arch [a-z0-9_]+||g} \
+            ${libdir}/_sysconfigdata__darwin_darwin.py
+
+        # also remove gettext overlinking
+        reinplace "s|-lintl||" \
+            ${libdir}/_sysconfigdata__darwin_darwin.py
+
+        # recompile the modified file
+        set python_for_build python.exe
+        # executable differs depending on filesystem case sensitivity
+        if {![file exists ${worksrcpath}/${python_for_build}]} {
+            set python_for_build python
+        }
+        system -W ${worksrcpath} "env DYLD_FRAMEWORK_PATH=. ./${python_for_build} -E -m compileall -d [shellescape ${framewdir}/lib/python${branch}] [shellescape ${libdir}/_sysconfigdata__darwin_darwin.py]"
+        system -W ${worksrcpath} "env DYLD_FRAMEWORK_PATH=. ./${python_for_build} -E -O -m compileall -d [shellescape ${framewdir}/lib/python${branch}] [shellescape ${libdir}/_sysconfigdata__darwin_darwin.py]"
+        system -W ${worksrcpath} "env DYLD_FRAMEWORK_PATH=. ./${python_for_build} -E -OO -m compileall -d [shellescape ${framewdir}/lib/python${branch}] [shellescape ${libdir}/_sysconfigdata__darwin_darwin.py]"
+
         # Also make the sysconfig changes in the Makefile
         reinplace {s|^\(LINKFORSHARED=\).*$|\1 -L$(LIBPL) -lpython$(VERSION)$(ABIFLAGS) $(LIBS) $(SYSLIBS)|} \
-            ${destroot}${framewdir}/lib/python${branch}/${confdir}/Makefile
+            ${libdir}/${confdir}/Makefile
 
         reinplace -E {s|-arch [a-z0-9_]+||g} \
-           ${destroot}${framewdir}/lib/python${branch}/${confdir}/Makefile
+           ${libdir}/${confdir}/Makefile
 
         reinplace "s|-lintl||" \
-           ${destroot}${framewdir}/lib/python${branch}/${confdir}/Makefile
+           ${libdir}/${confdir}/Makefile
     }
 }
 
@@ -170,8 +176,8 @@ notes "
 To make this the default Python or Python 3 (i.e., the version run by\
 the 'python' or 'python3' commands), run one or both of:
 
-    sudo port select --set python $pythonNoDot
-    sudo port select --set python3 $pythonNoDot
+    sudo port select --set python python$pythonVerNoDot
+    sudo port select --set python3 python$pythonVerNoDot
 "
 
 variant universal {
@@ -220,7 +226,9 @@ variant universal {
     }
     configure.args-append   --enable-universalsdk=${configure.sysroot}
     post-configure {
+        set oldmtime [file mtime ${worksrcpath}/pyconfig.h]
         system -W ${worksrcpath} "ed - pyconfig.h < ${filespath}/pyconfig.h-universal.ed"
+        file mtime ${worksrcpath}/pyconfig.h $oldmtime
     }
 
     post-destroot {

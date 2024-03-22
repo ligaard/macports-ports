@@ -4,9 +4,8 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-tifffile
-version             2021.11.2
+version             2024.2.12
 revision            0
-platforms           darwin
 license             BSD
 maintainers         {mps @Schamschula} openmaintainer
 
@@ -14,23 +13,22 @@ categories-append   science
 description         Store numpy data arrays in TIFF files.
 long_description    {*}${description} Read image and metadata from TIFF-like files used in \
                     bioimaging.
-
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://www.lfd.uci.edu/~gohlke/
 
-checksums           rmd160  91ccc788c3222e77c94f607f1f885a1faa6f00cb \
-                    sha256  153e31fa1d892f482fabb2ae9f2561fa429ee42d01a6f67e58cee13637d9285b \
-                    size    271504
+checksums           rmd160  1c05cb80c17bc3a770fe41ff68a1c461e626d14e \
+                    sha256  4920a3ec8e8e003e673d3c6531863c99eedd570d1b8b7e141c072ed78ff8030d \
+                    size    354832
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
     depends_build-append \
                     port:py${python.version}-setuptools
 
-    depends_lib     port:py${python.version}-cython \
+    depends_lib     path:bin/cython-${python.branch}:py${python.version}-cython \
                     port:py${python.version}-numpy
-
-    livecheck.type  none
 }
 
 variant imagecodecs description {Use imagecodecs for encoding or decoding LZW, JPEG, etc.} {

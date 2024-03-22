@@ -3,11 +3,15 @@
 PortSystem          1.0
 
 name                aspnetcore-runtime-devel
-version             5.0.11
+set main_version    9.0.0
+# See patch version in https://dotnet.microsoft.com/en-us/download/dotnet/9.0
+set patch_version   2.24128.4
+version             ${main_version}-preview.${patch_version}
 revision            0
 categories          dotnet
 license             MIT
-maintainers         {tsabirgaliev @tsabirgaliev} openmaintainer
+maintainers         {@tsabirgaliev gmail.com:tair.sabirgaliev} \
+                    {@judaew judaew} openmaintainer
 
 description         ASP.NET Core is a cross-platform .NET framework for building modern \
                     cloud-based web applications on Windows, Mac, or Linux.
@@ -19,21 +23,40 @@ long_description    .NET is a free, cross-platform, open source developer platfo
                     to build for web, mobile, desktop, games, and IoT.
 
 homepage            https://dotnet.microsoft.com/
-platforms           darwin
-supported_archs     x86_64
-distname            aspnetcore-runtime-${version}-osx-x64
-master_sites        https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/${version}/
+platforms           {darwin any}
+supported_archs     x86_64 arm64
 
-checksums           rmd160  1d633a121de65698326ec0769800a5d063973df2 \
-                    sha256  ee18fc558dcd85e93931005aba81cc1f2d226803b398d3fa4cd58e60c7124297 \
-                    size    38794051
+switch ${build_arch} {
+    x86_64 {
+        distname            aspnetcore-runtime-${version}-osx-x64
+        checksums           rmd160  966beac820852f4eb7a6b40612f9612a783cd521 \
+                            sha256  6b9ac75a5c6a3dfc44048834ca4ece00d07671c8f28db1aea130f16df1696896 \
+                            size    42312456
+    }
+    arm64 {
+        distname            aspnetcore-runtime-${version}-osx-arm64
+        checksums           rmd160  4529e4c7205bc80b91b69be975bc9d7660171256 \
+                            sha256  3892291cd4e906096cb44ef11e4004b60484366e7906a6e1b010963289e2a40c \
+                            size    40299410
+    }
+    default {
+        known_fail yes
+        pre-fetch {
+            ui_error "${subport} @ ${version} only supported for architectures ${supported_archs}"
+            return -code error "Unsupported architecture: ${build_arch}"
+        }
+    }
+}
+
+master_sites        https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/${version}/
 
 worksrcdir          ${name}-${version}
 extract.mkdir       yes
 
 use_configure       no
 
-depends_run         port:dotnet-cli
+depends_run         port:dotnet-cli \
+                    port:dotnet-runtime-devel
 
 build {}
 
@@ -44,3 +67,8 @@ destroot {
 
     move ${worksrcpath}${runtime_dir}/${version} ${destroot}${dotnet_home}${runtime_dir}
 }
+
+livecheck.version   [join [lrange [split ${patch_version} .] 0 0] .]
+livecheck.type      regex
+livecheck.url       https://dotnet.microsoft.com/en-us/download/dotnet/9.0
+livecheck.regex     "ASP.NET Core Runtime ${main_version}-preview.(\\d)"

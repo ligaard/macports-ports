@@ -20,11 +20,12 @@ if {${subport} eq "${name}-fstar"} {
                         sha256  4e8e232887ddfa643adb6a30dcd3743cb2fa6591735fbd302b49f7028cdc0363 \
                         size    4177051
 } else {
-    github.setup        Z3Prover z3 4.8.13 z3-
+    github.setup        Z3Prover z3 4.12.6 z3-
     revision            0
-    checksums           rmd160  b91efb8bb07119c7942964298648ba631b962724 \
-                        sha256  59a0b35711fa7ae48dd535116d2067a6a16955fcbf2623c516a3f630cd2832d8 \
-                        size    5103999
+    checksums           rmd160  ea2d648b1e178130ef8bf11cc416d618584e32f6 \
+                        sha256  9e46a1260ea26c441a1ad6faf378bf911ee9ffd110868867b4b2f2e3c7d2200e \
+                        size    5492517
+    github.tarball_from archive
 }
 
 platforms           darwin freebsd
@@ -33,9 +34,9 @@ license             MIT
 github.tarball_from archive
 
 if {[vercmp ${version} "4.8.9"] >= 0} {
-    patchfiles          libz3-static.diff
+    patchfiles-append   libz3-static.diff
 } else {
-    patchfiles          libz3-static-4.8.5.diff
+    patchfiles-append   libz3-static-4.8.5.diff
 }
 
 worksrcdir          ${name}-${github.tag_prefix}${version}
@@ -46,7 +47,7 @@ cmake.generator     Ninja
 # Build requires -std=gnu++17
 compiler.cxx_standard   2017
 
-# Don't overide z3's default optimization flags 
+# Don't overide z3's default optimization flags
 configure.optflags
 
 destroot.target     install
@@ -88,7 +89,11 @@ variant debug description {Enable the debug build configuration} {
 
 # Options not shared with our language-binding subports
 if {${subport} eq ${name} || ${subport} eq "${name}-fstar"} {
-    depends_build-append    port:python27 \
+
+    set py_ver              3.12
+    set py_ver_nodot        [string map {. {}} ${py_ver}]
+
+    depends_build-append    port:python${py_ver_nodot} \
                             port:bash
 
     patchfiles-append       build-z3-qprofdiff.diff
@@ -99,7 +104,7 @@ if {${subport} eq ${name} || ${subport} eq "${name}-fstar"} {
         legacysupport.use_mp_libcxx                 yes
     }
 
-    configure.args-append   -DPYTHON_EXECUTABLE=${prefix}/bin/python2.7
+    configure.args-append   -DPYTHON_EXECUTABLE=${prefix}/bin/python${py_ver}
 
     if {[vercmp ${version} "4.8.7"] >= 0} {
         configure.args-append   -DZ3_ENABLE_EXAMPLE_TARGETS=ON
@@ -208,7 +213,7 @@ if {${subport} eq ${name} || ${subport} eq "${name}-fstar"} {
             if {[vercmp ${version} "4.8.7"] >= 0} {
                 configure.args-delete       -DZ3_SINGLE_THREADED=ON
                 configure.args-append       -DZ3_SINGLE_THREADED=OFF
-            } else {                   
+            } else {
                 configure.args-delete       -DSINGLE_THREADED=ON
                 configure.args-append       -DSINGLE_THREADED=OFF
             }
@@ -238,7 +243,7 @@ if {${subport} eq ${name} || ${subport} eq "${name}-fstar"} {
     }
 
     variant polly_vector requires polly description {Enable automatic vector code generation using LLVM's Polly optimizer} {
-        configure.optflags-append   -mllvm -polly-vectorizer=stripmine 
+        configure.optflags-append   -mllvm -polly-vectorizer=stripmine
     }
 
     variant polly_parallel requires polly description {Enable automatic generation of OpenMP code for parallel loops using LLVM's Polly optimizer} {
@@ -251,7 +256,7 @@ if {${subport} eq ${name} || ${subport} eq "${name}-fstar"} {
     }
 
     pre-configure {
-        # Verify that a polly-supporting compiler was actually selected 
+        # Verify that a polly-supporting compiler was actually selected
         if {[variant_isset polly] && ![z3.polly_supported_compiler ${configure.compiler}]} {
             ui_error "${name} @${version}: +polly requires macports-clang-12 or later"
             return -code error "incompatible compiler selected"
@@ -321,28 +326,27 @@ subport ${name}-fstar {
     }
 }
 
-set pyversions {27 37 38 39}
+set pyversions {38 39 310 311 312}
 
 # Create a top-level Python binding metaport
 subport py-${name} {
     PortGroup   python 1.0
+    PortGroup   stub   1.0
 
+    supported_archs     noarch
+    platforms           any
     categories-append   python
 
     description         Python bindings for the Z3 theorem prover
     long_description    Python bindings for the Z3 SMT solver library from Microsoft Research.
 
-    supported_archs     noarch
     python.default_version [lindex ${pyversions} end]
     depends_lib         port:${name} \
                         port:py${python.version}-${name}
 
-    distfiles
-    patch       {}
-    configure   {}
-    build       {}
-    destroot    {
-        system "echo ${subport} is a stub port > ${destroot}${prefix}/share/doc/${subport}/README"
+    # Feb 2023 - master base/github PG default to yes which errors
+    if {[exists extract.rename]} {
+        extract.rename no
     }
 }
 
@@ -353,16 +357,20 @@ foreach v ${pyversions} {
 
         python.version          ${v}
 
+        supported_archs         noarch
+        platforms               {darwin any}
         categories-append       python
 
         description             Python ${python.branch} bindings for the Z3 theorem prover
         long_description        Python ${python.branch} bindings for the Z3 SMT solver library from Microsoft Research.
 
+        # needs pkg_resources at runtime
         depends_lib-append      port:${name} \
-                                port:python${v}
+                                port:python${v} \
+                                port:py${v}-setuptools
 
         use_configure           yes
-        configure.args-append   -DPYTHON_EXECUTABLE=${python.bin} \
+        configure.args-append   -DPython3_EXECUTABLE=${python.bin} \
                                 -DZ3_BUILD_PYTHON_BINDINGS=ON \
                                 -DZ3_INSTALL_PYTHON_BINDINGS=ON
 
@@ -374,7 +382,7 @@ foreach v ${pyversions} {
 
         post-destroot {
             # The python module looks for libz3 in its package path
-            ln -sf "${prefix}/lib/libz3.dylib" "${destroot}/${python.pkgd}/z3/"
+            ln -sf "${prefix}/lib/libz3.dylib" "${destroot}${python.pkgd}/z3/"
         }
 
         build.target            src/api/python/all

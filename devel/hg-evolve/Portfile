@@ -4,14 +4,17 @@ PortSystem              1.0
 PortGroup               python 1.0
 
 name                    hg-evolve
-version                 10.4.0
+version                 11.1.2
 revision                0
+checksums               rmd160  7644c5c4d86beeb64479e9995c3eead6461093b7 \
+                        sha256  ba0f93d6c45207e279172ab375347bc59b6fc9b85dcc165823b838ad7d780c7a \
+                        size    860623
 
 categories              devel
 license                 GPL-2
-platforms               darwin
+platforms               {darwin any}
 supported_archs         noarch
-maintainers             {lbschenkel @lbschenkel} openmaintainer
+maintainers             {danchr @danchr} openmaintainer
 
 homepage                https://www.mercurial-scm.org/doc/evolution/
 description             Additional history rewriting commands for Mercurial.
@@ -25,14 +28,18 @@ long_description        Additional history rewriting commands for Mercurial \
                         developers to safely rewrite the same parts of history \
                         in a distributed way.
 
-checksums               rmd160  a5754254fe8b91ec867ed7aa3f5851631916e27e \
-                        sha256  64fd249a7fcabea60953fc3e7f08da6a85960aca367c04d078b999b7f6fd0246 \
-                        size    853676
-
-python.default_version  39
+python.default_version  311
+python.pep517           yes
 
 depends_lib-append      port:mercurial
+depends_test-append     port:dash
 
+test.run                yes
+
+test.cmd                ${python.bin} ./run-tests.py
+test.args               -v -j ${build.jobs} --shell=${prefix}/bin/dash
+test.target
+test.dir                ${worksrcpath}/tests
 
 notes                   "
 To enable the evolve extension, add the following to your ~/.hgrc:
@@ -40,6 +47,11 @@ To enable the evolve extension, add the following to your ~/.hgrc:
 \[extensions\]
 evolve =
 "
+
+pre-test {
+    xinstall ${prefix}/share/mercurial/contrib/killdaemons.py ${test.dir}
+    xinstall ${prefix}/share/mercurial/contrib/run-tests.py ${test.dir}
+}
 
 post-patch {
     file delete ${worksrcpath}/hgext3rd/__init__.py

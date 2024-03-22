@@ -4,13 +4,15 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-jupyter_client
-version             6.1.12
+version             8.6.0
 revision            0
-platforms           darwin
+
 license             BSD
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     27 35 36 37 38 39 310
+python.versions     38 39 310 311 312
+python.pep517_backend   hatch
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -19,26 +21,18 @@ long_description    {*}${description}
 
 homepage            https://jupyter.org
 
-checksums           rmd160  1e2bf8a6a8ec37e0744a7d5cb85895224636b43e \
-                    sha256  c4bca1d0846186ca8be97f4d2fa6d2bae889cce4892a167ffa1ba6bd1f73e782 \
-                    size    301499
+checksums           rmd160  d09591b465993f10f255463a9b55b40af5f215a1 \
+                    sha256  0642244bb83b4764ae60d07e010e15f0e2d275ec4e918a8f7b80fbbef3ca60c7 \
+                    size    339721
 
 if {${name} ne ${subport}} {
-    depends_lib-append  port:py${python.version}-setuptools \
-                        port:py${python.version}-traitlets \
-                        port:py${python.version}-jupyter_core \
-                        port:py${python.version}-zmq \
+    depends_lib-append  port:py${python.version}-jupyter_core \
                         port:py${python.version}-dateutil \
-                        port:py${python.version}-tornado
+                        port:py${python.version}-zmq \
+                        port:py${python.version}-tornado \
+                        port:py${python.version}-traitlets
 
-    if {${python.version} <= 35} {
-        version             5.3.4
-        revision            0
-        distname            ${python.rootname}-${version}
-        checksums           rmd160  8dc84b386f1d095f79da23e6953b7f793e71e7b3 \
-                            sha256  60e6faec1031d63df57f1cc671ed673dced0ed420f4377ea33db37b1c188b910 \
-                            size    275850
+    if {${python.version} < 310} {
+        depends_lib-append  port:py${python.version}-importlib-metadata
     }
-
-    livecheck.type      none
 }

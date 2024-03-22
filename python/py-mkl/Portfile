@@ -6,12 +6,11 @@ PortGroup           python 1.0
 name                py-mkl
 if {${os.platform} eq "darwin" && ${os.major} < 19} {
     version         2019.0
+    revision        1
 } else {
-    version         2021.4.0
+    version         2023.2.1
+    revision        0
 }
-revision            0
-platforms           darwin
-supported_archs     noarch
 
 # https://software.intel.com/en-us/license/intel-simplified-software-license
 license             Restrictive/Distributable
@@ -24,7 +23,7 @@ long_description    ${description}
 extract.suffix      .whl
 extract.only
 
-python.versions     27 35 36 37 38 39 310
+python.versions     27 35 36 37 38 39 310 311 312
 
 # Intel only supports 10.12 and newer
 if {${os.platform} eq "darwin" && ${os.major} <= 15} {
@@ -39,12 +38,11 @@ if {${os.platform} eq "darwin" && ${os.major} <= 15} {
 foreach _py ${python.versions} {
     subport py${_py}-mkl-include {
         python.rootname     mkl_include
+        supported_archs     noarch
     }
 }
 
 if {${name} ne ${subport}} {
-
-    supported_archs x86_64
 
     depends_build-append \
         port:py${python.version}-pip
@@ -66,18 +64,22 @@ if {${name} ne ${subport}} {
 
         } else {
 
-            master_sites    https://files.pythonhosted.org/packages/96/15/cb0b6d590a7fa8a5df38da43f5909be065eb78b9d7c8187e8ddd4b6ca8eb/
+            python.pep517   no
+
+            master_sites    https://files.pythonhosted.org/packages/89/d3/93eefe93873e725e41881856b9decd58f055313647b31aa611a62a236519/
             distname        mkl_include-${version}-py2.py3-none-macosx_10_15_x86_64.macosx_11_0_x86_64
 
-            checksums       rmd160  e9a2c5199d3997cfcbbe704fc5e4bf2b9a258e3d \
-                            sha256  d8b3ad7254047c952aa1e3059ed2a8c671cf70dc3a8aa7f7195757ee7936b75f \
-                            size    902519
+            checksums       rmd160  01d7559ee69a50f0895bb1225f657527bfe2f268 \
+                            sha256  367ef3fcc2cc2d74bee2a1bff11801d9638dabb15afc6ce8f1f0f80d5b5d0511 \
+                            size    1061332
 
         }
 
         depends_lib-append  port:py${python.version}-mkl
 
     } else {
+
+        supported_archs x86_64
 
         if {${os.platform} eq "darwin" && ${os.major} < 19} {
 
@@ -89,12 +91,14 @@ if {${name} ne ${subport}} {
                             size    193800193
         } else {
 
-            master_sites    https://files.pythonhosted.org/packages/b6/b2/b8c755092e3881d6b5ea74be49c7bf3758b6174296626aed39c3416a1b02/
+            python.pep517   no
+
+            master_sites    https://files.pythonhosted.org/packages/f3/77/5cfa3161c078bfc47cf60b97a8903eecbd610b022694a34136e2081b5f7d
             distname        mkl-${version}-py2.py3-none-macosx_10_15_x86_64.macosx_11_0_x86_64
 
-            checksums       rmd160  a0148fc03cb0a6c95a75cdf30dd67e5032345cf2 \
-                            sha256  67460f5cd7e30e405b54d70d1ed3ca78118370b65f7327d495e9c8847705e2fb \
-                            size    186391276
+            checksums       rmd160  260b7951c6f3b2542ab8c2c0ebf20a63d724c882 \
+                            sha256  953a55a778d87cea9fd44f777c3b0a7a5804e9e810dc5f22852b2c4a42a79bcb \
+                            size    187623390
 
         }
 
@@ -105,8 +109,9 @@ if {${name} ne ${subport}} {
             set PythonVersionWithDot [string index ${python.version} 0].[string range ${python.version} 1 end]
             set py_lib_root ${prefix}/Library/Frameworks/Python.framework/Versions/${PythonVersionWithDot}/lib
             foreach dlib [glob -directory ${destroot}${py_lib_root} *.dylib] {
-                system "install_name_tool -add_rpath ${prefix}/lib        ${dlib}"
-                system "install_name_tool -add_rpath ${prefix}/lib/libomp ${dlib}"
+                system "install_name_tool -add_rpath ${prefix}/lib         ${dlib} ; echo true"
+                system "install_name_tool -add_rpath ${prefix}/lib/libomp  ${dlib} ; echo true"
+                system "install_name_tool -add_rpath ${prefix}/libexec/tbb ${dlib} ; echo true"
             }
         }
 

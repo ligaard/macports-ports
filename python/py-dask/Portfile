@@ -4,14 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-dask
-version             2021.9.0
+version             2024.3.1
 revision            0
 categories-append   devel
-platforms           darwin
 license             BSD
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     27 35 36 37 38 39 310
+python.versions     39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -28,42 +28,23 @@ long_description    Dask provides multi-core execution on larger-than-memory \
 
 homepage            https://github.com/dask/dask/
 
-checksums           rmd160  351a8e870960e563600bb544508101c782217eb9 \
-                    sha256  7c1ed5069fd81925130db7a7c94037eb8259fb3599adb4d130748aa3966e5684 \
-                    size    3792016
+checksums           rmd160  f833813b8f4d10fd7fb5d809c1ae2f845e3b7de1 \
+                    sha256  78bee2ffd735514e572adaa669fc2a437ec256aecb6bec036a1f5b8dd36b2e60 \
+                    size    9337231
 
 if {${name} ne ${subport}} {
     depends_build-append \
-                        port:py${python.version}-setuptools
+                        port:py${python.version}-versioneer
 
-    if {${python.version} >= 36} {
-        depends_lib-append  port:py${python.version}-packaging \
-                            port:py${python.version}-yaml \
-                            port:py${python.version}-cloudpickle \
-                            port:py${python.version}-fsspec \
-                            port:py${python.version}-toolz \
-                            port:py${python.version}-partd
+    depends_lib-append  port:py${python.version}-click \
+                        port:py${python.version}-cloudpickle \
+                        port:py${python.version}-fsspec \
+                        port:py${python.version}-packaging \
+                        port:py${python.version}-partd \
+                        port:py${python.version}-toolz \
+                        port:py${python.version}-yaml
+
+    if {${python.version} < 312} {
+        depends_lib-append  port:py${python.version}-importlib-metadata
     }
-
-    if {${python.version} eq 27} {
-        version             1.2.2
-        revision            0
-        epoch               1
-        distname            ${python.rootname}-${version}
-        checksums           rmd160  94cce1974d6ad2830a6fd3d745cbe5d4100ff5ba \
-                            sha256  5e7876bae2a01b355d1969b73aeafa23310febd8c353163910b73e93dc7e492c \
-                            size    2404729
-    }
-
-    if {${python.version} eq 35} {
-        version             2.6.0
-        revision            0
-        epoch               1
-        distname            ${python.rootname}-${version}
-        checksums           rmd160  29c49c566dfbb45c0908dd40d969538390ad231a \
-                            sha256  81c7891f0d2e7ac03d1f7fabf1f639360a1db52c03a7155ba9b08e9ee6280f2b \
-                            size    2479716
-    }
-
-    livecheck.type      none
 }

@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           tree_sitter 1.0
+
+github.setup        tree-sitter tree-sitter-ruby 0.20.1 v
+revision            0
+
+description         A tree-sitter parser for Ruby
+
+long_description    {*}${description}
+
+categories          devel
+license             MIT
+maintainers         {amake @amake} openmaintainer
+
+checksums           rmd160  b6df85b4f1968ada61546bd9050c6927175e46d3 \
+                    sha256  db53085941351652a60cac6cffee0432f9884a05036c227eafc4269bab05e0d6 \
+                    size    601068
+
+worksrcdir          ${worksrcdir}/src

@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ropensci readODS 2.2.0
+revision            0
+categories-append   textproc
+maintainers         nomaintainer
+license             GPL-3
+description         Read and write ODS files
+long_description    {*}${description}
+checksums           rmd160  7979ec8dcf969b283c6b195a3d04e0a76285275d \
+                    sha256  362c7805258b3030d5cab10e7a70cff12f45b0bf5d8562ee0399aa2eb75d07b9 \
+                    size    907963
+
+depends_lib-append  port:R-cellranger \
+                    port:R-cpp11 \
+                    port:R-readr \
+                    port:R-stringi \
+                    port:R-tibble \
+                    port:R-vctrs \
+                    port:R-zip
+
+depends_test-append port:R-covr \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-withr
+
+test.run            yes

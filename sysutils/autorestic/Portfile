@@ -3,13 +3,15 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/cupcakearmy/autorestic 1.2.0 v
+go.setup            github.com/cupcakearmy/autorestic 1.7.9 v
+github.tarball_from archive
 revision            0
 
 categories          sysutils
-maintainers         {gmail.com: smanojkarthick @manojkarthick} \
-                    openmaintainer
+installs_libs       no
 license             Apache-2
+maintainers         {gmail.com:smanojkarthick @manojkarthick} \
+                    openmaintainer
 
 description         High level CLI utility for restic
 
@@ -21,15 +23,14 @@ long_description    Autorestic is a wrapper around the amazing restic. \
 
 homepage            https://autorestic.vercel.app/
 
-checksums           ${distname}${extract.suffix} \
-                        rmd160  e5fe173e4763c9479d6779b5119cfc89e10b647c \
-                        sha256  b70db1a4c5dc017ce4d84edd8b09dc8468ce3ec0f073f8156b4e1f7e8fa251e5 \
-                        size    178382
+checksums           rmd160  512185272f65d0a28cae7237afdec238d5a6e7a4 \
+                    sha256  e57bbc045edee4aabd850da2e61da9c18a6d12bd323866be1eb3edca4709b363 \
+                    size    173499
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
 # https://trac.macports.org/ticket/61192
-build.env-delete    GOPROXY=off GO111MODULE=off
+go.offline_build no
 
 depends_run         port:restic
 

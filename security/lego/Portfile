@@ -3,7 +3,9 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/go-acme/lego 4.5.3 v
+go.setup            github.com/go-acme/lego 4.16.1 v
+go.offline_build    no
+github.tarball_from archive
 revision            0
 
 homepage            https://go-acme.github.io/lego
@@ -18,25 +20,19 @@ long_description    {*}${description}. Supports ACME v2 RFC 8555.  Allows \
                     bundling, and more.
 
 categories          security www
-license             MIT
 installs_libs       no
-
-# Do not restrict Go from downloading dependencies at build time.
-build.env-delete    GOPROXY=off GO111MODULE=off
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
 
 build.cmd           make
 build.pre_args      VERSION=v${version}
 build.args          build
 
-maintainers         {gmail.com:herby.gillot @herbygillot} \
-                    openmaintainer
-
-checksums           rmd160  070ab8efbd39a499181cd1359daa5c6ecc500fbc \
-                    sha256  82778a122e98225b55e1e6c102a06948747263533d88284216f0cce238b897c9 \
-                    size    516241
-
-github.tarball_from archive
+checksums           rmd160  a21116cc7360c4e397ad26db24b780fdeee0202c \
+                    sha256  40dcd261dc92f81e0667137efcf4799b8ccc67dc3e3d0b1e29c3d0fa71f40f88 \
+                    size    698801
 
 destroot {
-    xinstall -m 755 ${worksrcpath}/dist/${name} ${destroot}${prefix}/bin/
+    xinstall -m 0755 ${worksrcpath}/dist/${name} ${destroot}${prefix}/bin/
 }

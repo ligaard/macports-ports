@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        osxfuse osxfuse 4.2.3 macfuse-
+github.setup        osxfuse osxfuse 4.5.0 macfuse-
 revision            0
 name                macfuse
 conflicts           osxfuse
@@ -24,9 +24,9 @@ github.tarball_from releases
 distname            ${name}-${version}
 use_dmg             yes
 
-checksums           rmd160  74f09d7108cb24d264fd8d864bb959fde6e7db27 \
-                    sha256  800d9113c61ff1708b46a970e8c398f85563adab217ff82287bd00ac3da27283 \
-                    size    5980309
+checksums           rmd160  ff3fbf4c08e6cbadfc25304e481daa0c90d62ebb \
+                    sha256  9df7257315a9b9a97a9ba3a76011cabed7bc3784515b69fa098f8d81efec726d \
+                    size    5974209
 
 if {${os.platform} eq "darwin" && ${os.major} < 16} {
     known_fail yes
@@ -69,6 +69,7 @@ destroot {
     copy {*}[glob ${pkg}/Library/Frameworks/*] ${destroot}${prefix}/Library/Frameworks
     copy {*}[glob ${pkg}/usr/local/include/*] ${destroot}${prefix}/include
     copy {*}[glob ${pkg}/usr/local/lib/pkgconfig/*] ${destroot}${prefix}/lib/pkgconfig
+    reinplace "s|/usr/local|${prefix}|g" [glob ${destroot}${prefix}/lib/pkgconfig/*]
     copy {*}[glob -type f ${pkg}/usr/local/lib/*] ${destroot}${prefix}/lib
     # remove unwanted files like ._uninstall_macfuse.app
     system "find  ${destroot}${prefix} -type f -iname '._*' -delete"

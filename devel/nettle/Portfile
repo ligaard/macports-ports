@@ -5,15 +5,13 @@ PortGroup           muniversal 1.0
 PortGroup           compiler_blacklist_versions 1.0
 
 name                nettle
-version             3.7.3
+version             3.9.1
 revision            0
-
-checksums           rmd160  f5314ed30570326464cbc4c7af0d0984d80aee9a \
-                    sha256  661f5eb03f048a3b924c3a8ad2515d4068e40f67e774e8a26827658007e3bcf0 \
-                    size    2383985
+checksums           rmd160  90fc85e5f84f546c130cc8c0b67af20098f199ca \
+                    sha256  ccfeff981b0ca71bbd6fbcb054f407c60ffb644389a5be80d6716d5b550c6ce3 \
+                    size    2396741
 
 categories          devel crypto
-platforms           darwin
 maintainers         {ryandesign @ryandesign} openmaintainer
 license             LGPL-2.1+
 
@@ -38,6 +36,7 @@ depends_lib         port:gmp
 
 patchfiles          no-fink.patch
 
+# We patch configure.ac.
 use_autoreconf      yes
 autoreconf.args     -fvi
 
@@ -58,9 +57,6 @@ configure.args      --disable-openssl \
 # etc.
 set merger_configure_args(arm64) --build=aarch64-apple-darwin${os.major}
 
-if {![info exists universal_possible]} {
-    set universal_possible [expr {${os.universal_supported} && [llength ${configure.universal_archs}] >= 2}]
-}
 if {(!${universal_possible} || ![variant_isset universal]) && [info exists merger_configure_args(${build_arch})]} {
     configure.args-append $merger_configure_args(${build_arch})
 }

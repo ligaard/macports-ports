@@ -3,11 +3,11 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/digitalocean/doctl 1.68.0 v
+go.setup            github.com/digitalocean/doctl 1.104.0 v
+github.tarball_from archive
 revision            0
 
 categories          www devel
-platforms           darwin
 license             Apache-2
 maintainers         {@kritr gmail.com:krdevmail} \
                     {@judaew judaew} \
@@ -15,9 +15,9 @@ maintainers         {@kritr gmail.com:krdevmail} \
 description         A command line interface for the DigitalOcean API
 long_description    ${description}
 
-checksums           rmd160  e77750d7b9fce5af9d36462b176c486983c8a8d3 \
-                    sha256  3f3c222338bac6419f2b5351eed4f40813314884d2203ee6864e9007711c2315 \
-                    size    5513708
+checksums           rmd160  5dff44832831da8dd2077a0bc3c5e6d32607477c \
+                    sha256  2a9827494c730cf663ebdb6f8b1e4f294366cf847e32ee0d9d274af3bac4bc1b \
+                    size    7842050
 
 set doctl_ver [split ${version} "."]
 set doctl_major [lindex ${doctl_ver} 0]
@@ -46,7 +46,7 @@ destroot {
     xinstall -d ${destroot}${bash_completion}
     exec ${destroot}${prefix}/bin/${name} completion bash >> \
         ${destroot}${bash_completion}/${name}
-    
+
     set zsh_completion ${prefix}/share/zsh/site-functions
     xinstall -d ${destroot}${zsh_completion}
     exec ${destroot}${prefix}/bin/${name} completion zsh >> \

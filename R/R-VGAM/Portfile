@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran t.yee VGAM 1.1-10
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3
+description         Vector generalized linear and additive models
+long_description    {*}${description}
+homepage            https://www.stat.auckland.ac.nz/~yee/VGAM
+checksums           rmd160  ff4cab8b5106a5bacbdfe4a7ff176f0124a72f00 \
+                    sha256  cbb3e87a5806d0ce775ed7fef8623c8dc0d0fa92394da505b1dc8d167b2ede13 \
+                    size    1645851
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-VGAMdata \
+                    port:R-VGAMextra
+
+test.run            yes

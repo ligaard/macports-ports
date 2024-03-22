@@ -5,29 +5,27 @@ PortGroup           python 1.0
 
 name                py-wand
 python.rootname     Wand
-version             0.6.7
+version             0.6.13
 revision            0
 categories-append   graphics
-platforms           darwin
 license             MIT
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     27 35 36 37 38 39
+python.versions     38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
 description         Ctypes-based simple MagickWand API binding for Python
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            http://wand-py.org/
 
-checksums           rmd160  af1293c4063c66cacd4c8d200a5c025cc8603c18 \
-                    sha256  ebc01bccc25dba68414ab55b482341f9ad2b197d7f49d5e724f339bbf63fb6db \
-                    size    11686093
+checksums           rmd160  b6e0df5816bed3602d179df75ff09bbeb13eb41c \
+                    sha256  f5013484eaf7a20eb22d1821aaefe60b50cc329722372b5f8565d46d4aaafcca \
+                    size    11883700
 
 if {${name} ne ${subport}} {
-    depends_build-append \
-                        port:py${python.version}-setuptools
     depends_lib-append  port:ImageMagick
 
     patchfiles-append   patch-wand_api.py.diff
@@ -35,6 +33,4 @@ if {${name} ne ${subport}} {
     post-patch {
         reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/wand/api.py
     }
-
-    livecheck.type      none
 }

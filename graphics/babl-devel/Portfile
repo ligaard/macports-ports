@@ -3,11 +3,13 @@
 PortSystem          1.0
 PortGroup           compiler_blacklist_versions 1.0
 PortGroup           meson 1.0
+PortGroup           debug 1.0
 
 name                babl-devel
 conflicts           babl
 set my_name         babl
-version             0.1.88
+version             0.1.108
+revision            0
 license             LGPL-3+
 set branch          [join [lrange [split ${version} .] 0 1] .]
 categories          graphics
@@ -24,9 +26,9 @@ dist_subdir         ${my_name}
 distname            ${my_name}-${version}
 use_xz              yes
 
-checksums           rmd160  848aca23f6a4200de1c8086fc1e3a07288534da3 \
-                    sha256  4f0d7f4aaa0bb2e725f349adf7b351a957d9fb26d555d9895a7af816b4167039 \
-                    size    299972
+checksums           rmd160  4664f9386b2fe69a4a11ebee901a825576a98a59 \
+                    sha256  26defe9deaab7ac4d0e076cab49c2a0d6ebd0df0c31fd209925a5f07edee1475 \
+                    size    317036
 
 configure.args-append \
                     -Dwith-docs=false
@@ -35,11 +37,19 @@ depends_build-append \
                     port:pkgconfig
 
 depends_lib-append  port:lcms2 \
-                    port:gobject-introspection \
-                    port:vala
+                    path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
+                    path:bin/vala:vala
 
-patchfiles          patch-babl-linker-fix-darwin.diff \
-                    patch-babl-allow-non-clang-compilers-on-darwin.diff
+# Vapigen is broken on PPC: https://gitlab.gnome.org/GNOME/vala/-/issues/1297
+platform darwin powerpc {
+    depends_lib-delete \
+                    path:bin/vala:vala
+    configure.args-append \
+                    -Denable-vapi=false
+}
+
+patchfiles-append   patch-babl-linker-fix-darwin.diff
+patchfiles-append   patch-babl-allow-non-clang-compilers-on-darwin.diff
 
 # require C11 (typedef redefinition)
 # babl-icc.c:1031:25: error: redefinition of typedef 'UTF8' is invalid in C
@@ -55,9 +65,6 @@ compiler.blacklist-append *gcc-3.* *gcc-4.*
 #                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 compiler.blacklist-append {clang < 900}
 
-if {![info exists universal_possible]} {
-    set universal_possible [expr {${os.universal_supported} && [llength ${configure.universal_archs}] >= 2}]
-}
 # gobject-introspection uses g-ir-scanner, which uses $CC from env
 if {${universal_possible} && [variant_isset universal]} {
     foreach arch ${configure.universal_archs} {

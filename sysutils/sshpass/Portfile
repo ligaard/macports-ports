@@ -3,11 +3,11 @@
 PortSystem          1.0
 
 name                sshpass
-version             1.06
+version             1.10
 categories          sysutils
 license             GPL-2
 platforms           darwin
-maintainers         nomaintainer
+maintainers         @manakbisht openmaintainer
 
 description         Non-interactive ssh password authentication
 
@@ -27,8 +27,9 @@ long_description    SSH's (secure shell) most common authentication mode is \
                     conjunction with the ssh agent (RTFM ssh-add), please do \
                     so before being tempted into using this package.
 
-homepage            http://sourceforge.net/projects/sshpass/
+homepage            https://sourceforge.net/projects/sshpass/
 master_sites        sourceforge:project/${name}/${name}/${version}
 
-checksums           rmd160  4759f5b23506537bf95619dd023cdc3178fc3ff3 \
-                    sha256  c6324fcee608b99a58f9870157dfa754837f8c48be3df0f5e2f3accf145dee60
+checksums           rmd160  a355de629eafe270a47349c3c862f1e3d9872e08 \
+                    sha256  ad1106c203cbb56185ca3bad8c6ccafca3b4064696194da879f81c8d7bdfeeda \
+                    size    139652

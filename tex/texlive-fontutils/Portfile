@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           texlive 1.0
 
 name                texlive-fontutils
-version             57972
+version             70274
 revision            0
 
 categories          tex
@@ -13,22 +13,22 @@ license             Copyleft Permissive
 description         TeX Live: Graphics and font utilities
 long_description    Programs for conversion between font formats, testing fonts, virtual fonts, .gf and .pk manipulation, mft, fontinst, etc. Manipulating OpenType, TrueType, Type 1,and for manipulation of PostScript and other image formats.
 
-checksums           texlive-fontutils-57972-run.tar.xz \
-                    rmd160  b9948c241b7da545b63a3a2e76eebaa350109acb \
-                    sha256  8b2b28fff607e458d55dca10ae3faf16297f726b8638ca42ff3c146358920ccb \
-                    size    5569536 \
-                    texlive-fontutils-57972-doc.tar.xz \
-                    rmd160  ffbad351ff00a1f98ea015f78167e6d88baa75f1 \
-                    sha256  b13eca19e51141dbe9f30d0a51f15902812e72f7c466c9061f47ef0e831744d6 \
-                    size    1823952 \
-                    texlive-fontutils-57972-src.tar.xz \
-                    rmd160  8875c1f7a3de780c99d3fa09b07712cc503e3dcf \
-                    sha256  94b1d9e41af0356f49d6b6040c75a878b5f112becceca90d06589604a2354cb4 \
-                    size    668388
+checksums           texlive-fontutils-70274-run.tar.xz \
+                    rmd160  b544f85b58798127f1ae8c781822fc062b761644 \
+                    sha256  f534f658505a2cf50daad54c1fb9fd922a054e5e9cd9b3a493b26f779bec8846 \
+                    size    7907440 \
+                    texlive-fontutils-70274-doc.tar.xz \
+                    rmd160  79130c97c1e71f1978ac990ee313277df1ed3386 \
+                    sha256  1b116ce42be75977c9b4236128337ad9f303b0ccaf9febce3330627fa8aa5522 \
+                    size    1954720 \
+                    texlive-fontutils-70274-src.tar.xz \
+                    rmd160  364005e79e65967b892e461d7b3fb3ddfefb3b8a \
+                    sha256  bad2cc9d1c9e58adfcbbda8a9babc3fb6b7d73b35ec0e4757bd11a32d3c1c17a \
+                    size    672576
 
 depends_lib         port:texlive-basic
 
-texlive.binaries    afm2afm afm2pl albatross autoinst dosepsbin epstopdf fontinst mag mf2pt1 mkt1font ot2kpx pfb2pfa pk2bm pltotf ps2pk repstopdf tftopl ttf2afm ttf2pk ttf2tfm ttfdump vftovp vpl2ovp vpl2vpl vptovf
+texlive.binaries    afm2afm afm2pl albatross autoinst dosepsbin epstopdf fontinst luafindfont mag mf2pt1 mkt1font ot2kpx pfb2pfa pk2bm pltotf ps2pk repstopdf tftopl ttf2afm ttf2pk ttf2tfm ttfdump vftovp vpl2ovp vpl2vpl vptovf
 
 depends_run-append  port:lcdf-typetools \
                     port:ps2eps \

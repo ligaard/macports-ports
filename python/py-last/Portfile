@@ -5,37 +5,45 @@ PortGroup           python 1.0
 
 name                py-last
 python.rootname     pylast
-version             4.4.0
+version             5.2.0
 revision            0
 
 categories-append   devel audio
 license             Apache-2
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
 
 description         A Python interface to Last.fm and Libre.fm
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://github.com/pylast/pylast
 
 maintainers         {@catap korins.ky:kirill} openmaintainer
 
-checksums           rmd160  15e2695323e4ca747682e0051bd5ae580d51f595 \
-                    sha256  da6ebea506019af571941c35c8b4802abde4679592d52d13675650dc447e6c29 \
-                    size    43708
+checksums           rmd160  38f359461deffb49c23957992ec9c4657523d1cc \
+                    sha256  bb046804ef56a0c18072c750d61a282d47ac102a3b0b9c44a023eaf5b0934b0a \
+                    size    41137
 
-python.versions     37 38 39 310
+python.pep517       yes
+python.pep517_backend   hatch
+
+python.versions     38 39 310 311
 
 if {${name} ne ${subport}} {
     depends_build-append \
-                    port:py${python.version}-setuptools \
-                    port:py${python.version}-setuptools_scm \
-                    port:py${python.version}-setuptools_scm_git_archive
+                    port:py${python.version}-hatch-vcs
+
+    depends_lib-append \
+                    port:py${python.version}-httpx
 
     depends_test-append \
                     port:py${python.version}-flaky \
-                    port:py${python.version}-pytest
+                    port:py${python.version}-pytest \
+                    port:py${python.version}-pytest-cov \
+                    port:py${python.version}-pytest-random-order \
+                    port:py${python.version}-yaml
 
+    # See https://github.com/pylast/pylast/issues/397
     test.run        yes
 
     livecheck.type  none

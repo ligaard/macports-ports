@@ -3,13 +3,13 @@
 PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           github 1.0
+PortGroup           legacysupport 1.1
 
-github.setup        dankamongmen notcurses 3.0.0 v
+github.setup        dankamongmen notcurses 3.0.9 v
 github.tarball_from archive
 revision            0
 
 categories          devel
-platforms           darwin
 license             Apache-2
 maintainers         {linux.com:nickblack @dankamongmen} openmaintainer
 
@@ -26,13 +26,13 @@ master_sites-append https://github.com/dankamongmen/${name}/releases/download/v$
 distfiles-append    ${name}-doc-${version}${extract.suffix}:bootstrap
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  79b671c905ebe84fa14c1fac57ed7a1cd70a2b2e \
-                    sha256  b4839108ca8f9aef31d2f537485cbd878356bbcd4ad4f7a4dd19e72201d01cee \
-                    size    10101772 \
+                    rmd160  05b4d9bef689fe9348245c27edd23cd7c5524055 \
+                    sha256  e5cc02aea82814b843cdf34dedd716e6e1e9ca440cf0f899853ca95e241bd734 \
+                    size    10148050 \
                     ${name}-doc-${version}${extract.suffix} \
-                    rmd160  be4e3f82bd9dbab32189038ddb59fa63147af8f1 \
-                    sha256  90d48eba21f78fc7eabded6dc21709492d8dc201d085a30909bcda56fc384aeb \
-                    size    141494
+                    rmd160  f00189a7b7859e829c8471b3eb045cdb6c7072f7 \
+                    sha256  a40d7d5c4b948e3423bfdfc24b1c10a823dee146540ab7da03e932b80c161432 \
+                    size    162750
 
 extract.only        ${distname}${extract.suffix}
 
@@ -43,6 +43,12 @@ post-extract {
         ${distpath}/${name}-doc-${version}${extract.suffix} |\
         /usr/bin/tar -xf -"
 }
+
+# requires clock_gettime()
+legacysupport.newest_darwin_requires_legacy 15
+
+# https://github.com/dankamongmen/notcurses/pull/2724
+patchfiles-append   0001-inttypes.h-needs-__STDC_FORMAT_MACROS-defined.patch
 
 compiler.c_standard 2011
 compiler.cxx_standard \
@@ -67,5 +73,10 @@ post-destroot {
     xinstall -m 0644 {*}[glob ${notcurses-doc}/*.3] \
         ${destroot}${prefix}/share/man/man3
 }
+
+# dyld: Library not loaded: @rpath/libnotcurses++.3.dylib
+configure.pre_args-replace \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
+                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
 
 test.run            yes

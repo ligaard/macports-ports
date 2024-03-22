@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           texlive 1.0
 
 name                texlive-plain-generic
-version             58478
+version             70579
 revision            0
 
 categories          tex
@@ -13,22 +13,22 @@ license             Copyleft Permissive
 description         TeX Live: Plain (La)TeX packages
 long_description    Add-on packages and macros that work with plain TeX, often LaTeX, and occasionally other formats.
 
-checksums           texlive-plain-generic-58478-run.tar.xz \
-                    rmd160  90a36a7ad99cb2a6b11754dafbc70f5d0fdbcb4f \
-                    sha256  2fa5d38063e1306db3bdaec83379ec12253c573fa49fa1dc4cd5fc11db433edb \
-                    size    26840456 \
-                    texlive-plain-generic-58478-doc.tar.xz \
-                    rmd160  c38f9ad9ed1785050234e6b305abaaf3cd275ce8 \
-                    sha256  c8f67f5a6e157d0dc2780525eb90e963e29889bc636b882636dc25465506c93f \
-                    size    24750696 \
-                    texlive-plain-generic-58478-src.tar.xz \
-                    rmd160  94059735b2d2f766a3960c48dbb4c8e890785c58 \
-                    sha256  d45c73b7c5a4b7da5b1be9bf295f99929fd0ef3ef9d18cfefe678dbb62c59c70 \
-                    size    282836
+checksums           texlive-plain-generic-70579-run.tar.xz \
+                    rmd160  0fa4e9da0bb155bd9ad8fb6ed62e88682bee4d15 \
+                    sha256  7551a70d3fad1642c1800e89ced721cdc13d0254ec5742d83588fbe720a7e9a3 \
+                    size    29738212 \
+                    texlive-plain-generic-70579-doc.tar.xz \
+                    rmd160  c059db36a6688a3c77257504330cda3fb7d3ac6c \
+                    sha256  ddd7e6d89fc9c558476fa303279a79a0cd13c440a4bee0b4d572b4911de955e2 \
+                    size    25867532 \
+                    texlive-plain-generic-70579-src.tar.xz \
+                    rmd160  b54802db370d469b84608cc7898745b2fd505d12 \
+                    sha256  b8cb2304d89648e68c77dbeea8587ba2d2198e82c5c076f26d89557006b2987f \
+                    size    1861816
 
 depends_lib         port:texlive-basic
 
-texlive.binaries    ht htcontext htlatex htmex httex httexi htxelatex htxetex mk4ht t4ht tex4ht xhlatex
+texlive.binaries    ht htlatex htmex httex httexi htxelatex htxetex mk4ht t4ht tex4ht xhlatex
 
 
 texlive.texmfport

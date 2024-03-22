@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran duxbury ergMargins 1.2
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         Process analysis for exponential random graph models
+long_description    {*}${description}
+checksums           rmd160  74535ad4f97ed9a168c280e77b05b54a3da97b0a \
+                    sha256  d58117330c6112f583fa05e9540e633c8012327b23456b4058c5cedda83aad67 \
+                    size    33178
+supported_archs     noarch
+
+depends_lib-append  port:R-btergm \
+                    port:R-dplyr \
+                    port:R-ergm \
+                    port:R-network \
+                    port:R-numDeriv \
+                    port:R-sampling \
+                    port:R-sna
+
+depends_test-append port:R-ergm.count \
+                    port:R-knitr \
+                    port:R-Rcpp \
+                    port:R-rmarkdown \
+                    port:R-statnet.common
+
+test.run            yes

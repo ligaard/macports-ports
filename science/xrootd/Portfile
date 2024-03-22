@@ -6,12 +6,12 @@ PortGroup           compiler_blacklist_versions  1.0
 PortGroup           github                       1.0
 PortGroup           legacysupport                1.1
 
-github.setup        xrootd xrootd 5.3.4 v
+github.setup        xrootd xrootd 5.6.9 v
 revision            0
 
-checksums           rmd160  55bb6398b41b469c327fc8af98b60965b90a3561 \
-                    sha256  bd8179d455a382ff13aab50aee0accbb1e7390e10f2c7aca4deab58a29d8db23 \
-                    size    2917615
+checksums           rmd160  a833852d359df20ad1363e10ffa5d7b0af37217a \
+                    sha256  bbae6bbd2cfffac3c55299d664933790eefb496c946252b3ed651e839f6d6c7f \
+                    size    6745190
 
 categories          science
 maintainers         {jonesc @cjones051073} openmaintainer
@@ -20,7 +20,6 @@ description         Generic suite for fast, low-latency and scalable data access
 long_description    {*}${description}
 
 license             LGPL-3+
-platforms           darwin
 
 homepage            http://xrootd.org/
 
@@ -40,7 +39,7 @@ default_variants    +ssl +readline +kerberos
 cmake.out_of_source yes
 
 # Force a compatible compiler
-compiler.blacklist-append *gcc* {clang < 900} {macports-clang-3.[0-9]} {macports-clang-[4-5].0}
+compiler.blacklist-append *gcc-4.* {clang < 900} {macports-clang-3.[0-9]} {macports-clang-[4-5].0}
 # Blacklist Xcode clang on 10.12
 # error: template argument for template template parameter must be a class template or type alias template
 compiler.blacklist-append {clang < 1000}
@@ -58,28 +57,43 @@ configure.args-append -DENABLE_CRYPTO=False \
                       -DCMAKE_CXX_FLAGS="${configure.cxxflags}" \
                       -DCMAKE_INSTALL_MANDIR="share/man"
 
-set python_vs        {3.8 3.9 3.10}
+set python_vs        {3.8 3.9 3.10 3.11 3.12}
 set variant_set      no
+set selected_py_v    3.12
 foreach python_v ${python_vs} {
     set python_v_nodot  [string map {. {}} $python_v]
-    variant python${python_v_nodot} description "Enable python ${python_v} bindings" {
-        configure.python        ${prefix}/bin/python${python_v}
-        depends_lib-append      port:python${python_v_nodot}
-        configure.args-replace -DENABLE_PYTHON=FALSE  -DENABLE_PYTHON=TRUE
-        configure.args-append  -DPYTHON_EXECUTABLE=${configure.python}
-        post-extract {
-            # Fix python install location
-            set python_framework ${frameworks_dir}/Python.framework/Versions/${python_v}
-            reinplace "s|\${CMAKE_INSTALL_PREFIX}|${python_framework}|g" ${worksrcpath}/bindings/python/CMakeLists.txt
-        }
-    }
+    variant python${python_v_nodot} description "Enable python ${python_v} bindings" { }
     if {[variant_isset python${python_v_nodot}]} {
-        set variant_set  yes
+        set variant_set    yes
+        set selected_py_v  ${python_v}
     }
 }
 if { ${variant_set} eq no} {
-    default_variants-append +python310
+    default_variants-append +python[string map {. {}} $selected_py_v]
 }
+proc setup_py_variants {} {
+    global python_vs prefix configure.python selected_py_v
+    set selected_py_v_nodot [string map {. {}} ${selected_py_v}]
+    if {[variant_isset python${selected_py_v_nodot}]} {
+        configure.python        ${prefix}/bin/python${selected_py_v}
+        depends_lib-append      port:python${selected_py_v_nodot}
+        depends_build-append    port:py${selected_py_v_nodot}-setuptools \
+                                port:py${selected_py_v_nodot}-setuptools_scm \
+                                port:py${selected_py_v_nodot}-pip
+        configure.args-replace -DENABLE_PYTHON=FALSE  -DENABLE_PYTHON=TRUE
+        configure.args-append  -DPython_EXECUTABLE=${configure.python}
+        post-extract {
+            # Fix python install location
+            set python_framework ${frameworks_dir}/Python.framework/Versions/${selected_py_v}
+            reinplace "s|\${CMAKE_INSTALL_PREFIX}|${python_framework}|g" ${worksrcpath}/bindings/python/CMakeLists.txt
+        }
+        post-configure {
+            # Do not attempt to remove old pip installs
+            reinplace "s|pip\ install|pip\ install\ \-I|g" ${workpath}/build/bindings/python/cmake_install.cmake
+        }
+    }
+}
+port::register_callback setup_py_variants
 
 variant readline description {Build with Readline Support} {
     configure.args-delete   -DENABLE_READLINE=False
@@ -89,7 +103,6 @@ variant readline description {Build with Readline Support} {
 
 variant ssl description {Build with OpenSSL Support} {
     PortGroup openssl         1.0
-    openssl.branch            1.1
     # Build configuration does not properly respect custom openssl
     # location and opportunistically finds and uses the shim openssl
     # port includes instead. Use compiler wrap option to fix this.

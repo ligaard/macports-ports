@@ -5,14 +5,16 @@ PortGroup           python 1.0
 
 name                py-rtree
 python.rootname     Rtree
-version             0.9.7
+version             1.2.0
 revision            0
 categories-append   devel
-platforms           darwin
 license             MIT
+# The wheels provided upstream are platform- and arch-specific because
+# they include spatialindex, but the module itself is pure python.
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     27 35 36 37 38 39
+python.versions     38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -24,15 +26,10 @@ long_description    Rtree is a Python library that uses ctypes and an  \
 
 homepage            https://github.com/Toblerity/rtree
 
-checksums           rmd160  2420ec2ad717dfbcae9a733ed452b400b232facb \
-                    sha256  be8772ca34699a9ad3fb4cfe2cfb6629854e453c10b3328039301bbfc128ca3e \
-                    size    44877
+checksums           rmd160  087f47b936b5a9ed235a2b95c7206cc29fc6e941 \
+                    sha256  f5145f7852bf7f95c126fb16bf1a4c2ca9300ae151b07f8a0f7083ea47912675 \
+                    size    48431
 
 if {${name} ne ${subport}} {
-    depends_build-append \
-                        port:py${python.version}-setuptools \
-                        port:py${python.version}-wheel
     depends_lib-append  port:spatialindex
-
-    livecheck.type      none
 }

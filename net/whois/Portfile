@@ -13,17 +13,16 @@ PortGroup                   compiler_blacklist_versions 1.0
 PortGroup                   github 1.0
 PortGroup                   perl5 1.0
 
-github.setup                rfc1036 whois 5.5.10 v
+github.setup                rfc1036 whois 5.5.21 v
 revision                    0
-checksums                   rmd160  2e4edad312cf10a2bb47f2dc559b4ed24233530b \
-                            sha256  2391037b079695d0e9fd3c85ab021809a539cf093d25b6c51ca65019a54158dd \
-                            size    85168
+checksums                   rmd160  1389aa5e51ab383881809bd9fe474ac782b61468 \
+                            sha256  760ab584beae76acdcc89c6aec2e91cff571185bccc2bee8e4412a3f8e70be77 \
+                            size    90812
 
 conflicts                   bahamut expect ripe-whois
 categories                  net
 maintainers                 {ryandesign @ryandesign} openmaintainer
 license                     GPL-2+
-platforms                   darwin
 use_parallel_build          yes
 
 description                 A replacement whois client
@@ -35,12 +34,12 @@ master_sites                http://ftp.debian.org/debian/pool/main/w/${name}/
 use_xz                      yes
 
 distfiles                   ${name}_${version}${extract.suffix}
-worksrcdir                  ${name}
 
-perl5.branches              5.28
+perl5.branches              5.34
 
-depends_build               port:perl${perl5.major} \
-                            port:pkgconfig
+depends_build               port:bash-completion \
+                            port:perl${perl5.major} \
+                            path:bin/pkg-config:pkgconfig
 
 depends_lib                 port:gettext \
                             port:libidn2 \
@@ -55,7 +54,7 @@ patchfiles-append           patch-idn-iconv.diff
 patchfiles-append           implicit.patch
 
 platform darwin {
-    # -lcrypt cannot be used (and is unnecessary) on Mac OS X
+    # -lcrypt cannot be used (and is unnecessary) on macOS.
     patchfiles-append       patch-lcrypt.diff
 }
 

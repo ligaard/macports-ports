@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           cmake       1.1
 PortGroup           github      1.0
 
-github.setup        ngs-lang ngs 0.2.13 v
+github.setup        ngs-lang ngs 0.2.16 v
 github.tarball_from archive
 revision            0
 
@@ -19,9 +19,9 @@ long_description    \
     with a focus on Ops and systems engineering. One way to think about NGS \
     is bash plus data structures plus better syntax and error handling.
 
-checksums           rmd160  ea7335942152c9ae74d3f240077e4063bc592dbe \
-                    sha256  7648761edb3695292d3289b91f9644c204d42269b8af697c765707ce192e45b5 \
-                    size    724109
+checksums           rmd160  1bad347434e78e4ea212e380ab44757acee9210b \
+                    sha256  282bcd00164044a01b025b5373ed2e0b03d6e5b3d04cea2f363629a7ea5b92c7 \
+                    size    745378
 
 categories          shells
 installs_libs       no
@@ -53,6 +53,7 @@ post-patch {
 }
 
 depends_build-append \
+                    path:bin/gawk:gawk  \
                     path:bin/gsed:gsed  \
                     port:pandoc         \
                     port:peg            \
@@ -61,7 +62,7 @@ depends_build-append \
 depends_lib-append  port:boehmgc    \
                     port:json-c     \
                     port:libffi     \
-                    port:pcre2
+                    port:pcre
 
 configure.env-append \
                     "PKG_CONFIG_PATH=${prefix}/lib/pkgconfig"

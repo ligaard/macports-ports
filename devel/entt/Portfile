@@ -4,21 +4,22 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           github 1.0
 
-github.setup        skypjack entt 3.8.1 v
+github.setup        skypjack entt 3.13.1 v
 revision            0
 
 categories          devel games
-platforms           darwin
 license             MIT
+platforms           any
+supported_archs     noarch
 maintainers         {judaew @judaew} openmaintainer
 
 description         EnTT is a header-only, tiny and easy to use library for \
                     game programming and much more written in modern C++.    
 long_description    {*}${description}
 
-checksums           rmd160 476a509707c263d0ea3d5c9f5e4fa3046a8e452a \
-                    sha256 b03c861ca6432e93a162e8cb80155ac8be6bb798193be57df5e3f546254301fd \
-                    size 537537
+checksums           rmd160 5da48d22a95ac3be81b5459b428caaa41e4fe33e \
+                    sha256 2fae6003373b45521ce2f2e5c99dc8157fe7ee0d6ee52ff1f80c7e99353dcff0 \
+                    size 853904
 
 post-destroot {
     xinstall -d ${destroot}${prefix}/share/doc/${name}

@@ -1,0 +1,33 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ValeriaPolicastro robin 1.1.2
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2+
+description         ROBustness in Network
+long_description    {*}${description}
+homepage            https://github.com/ValeriaPolicastro/robin
+checksums           rmd160  52e2945f6713719022277c3e363e240dded2b87f \
+                    sha256  bf03c6ae263ffdff64a99bbe5384c012f1f000dee887d0ed91b722a002c2ecf7 \
+                    size    297924
+supported_archs     noarch
+
+depends_lib-append  port:R-DescTools \
+                    port:R-fdatest \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-igraph \
+                    port:R-networkD3 \
+                    port:R-qpdf \
+                    port:R-spam
+
+depends_test-append port:R-devtools \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

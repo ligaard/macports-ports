@@ -4,7 +4,9 @@ PortSystem          1.0
 
 PortGroup           golang 1.0
 
-go.setup            github.com/kubernetes/kops 1.22.2 v
+go.setup            github.com/kubernetes/kops 1.28.4 v
+go.offline_build    no
+github.tarball_from archive
 revision            0
 go.package          k8s.io/kops
 
@@ -16,16 +18,15 @@ installs_libs       no
 license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-platforms           darwin
 
-checksums           rmd160  d48b97f61ddd87db047b5565b0d6eb3f52cfcdc7 \
-                    sha256  b6c80827d9a2562743e6b88e23f5ad21bf80d3650acc6dc6009fcc0b3d42df0a \
-                    size    29012815
+checksums           rmd160  32f6063b45dbeaf19719b921a7c3680aada2482f \
+                    sha256  755ffbb74f7f0157c18ef16a81f44b170db780ac7ef371e497ebaa6be235440c \
+                    size    34335369
 
-depends_run         port:kubectl-1.22
+depends_run-append  port:kubectl-1.28
 
 build.cmd           make
-build.target        all
+build.target        kops
 
 # Do not build on macOS 10.11 and earlier
 if {${os.platform} eq "darwin" && ${os.major} < 16} {
@@ -39,8 +40,8 @@ if {${os.platform} eq "darwin" && ${os.major} < 16} {
 
 destroot {
     xinstall -m 0755 \
-        {*}[glob ${worksrcpath}/.build/local/*] ${destroot}${prefix}/bin
+        {*}[glob ${worksrcpath}/.build/dist/${goos}/${goarch}/kops] \
+        ${destroot}${prefix}/bin
 }
 
 github.livecheck.regex  {([0-9.]+)}
-github.tarball_from     archive

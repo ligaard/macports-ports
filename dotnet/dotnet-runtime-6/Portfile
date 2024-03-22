@@ -1,0 +1,71 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+
+name                dotnet-runtime-6
+version             6.0.28
+revision            0
+categories          dotnet
+license             MIT
+maintainers         {@tsabirgaliev gmail.com:tair.sabirgaliev} \
+                    {@judaew judaew} openmaintainer
+
+description         .NET is a cross-platform runtime for cloud, mobile, desktop, and IoT apps.
+
+long_description    .NET is a free, cross-platform, open source developer platform \
+                    for building many different types of applications. \
+                    \
+                    With .NET, you can use multiple languages, editors, and libraries \
+                    to build for web, mobile, desktop, games, and IoT.
+
+homepage            https://dotnet.microsoft.com/
+platforms           darwin
+supported_archs     x86_64 arm64
+
+switch ${build_arch} {
+    x86_64 {
+        distname            dotnet-runtime-${version}-osx-x64
+        checksums           rmd160  56770f337209ab448675bb4400eb31de9631f454 \
+                            sha256  944e1a0b57b4e5e5f03d5f534ceb43a49e04f6fb0249597546cb71d21c978ca0 \
+                            size    30090033
+    }
+    arm64 {
+        distname            dotnet-runtime-${version}-osx-arm64
+        checksums           rmd160  c81e71d47035e0d05c07fa341e2ddd20c961849f \
+                            sha256  b2f250e3918f53f7dfb3167dd8e49d4961296145305b8e49aaf799922e8b2a7b \
+                            size    28192781
+    }
+    default {
+        known_fail yes
+        pre-fetch {
+            ui_error "${subport} @ ${version} only supported for architectures ${supported_archs}"
+            return -code error "Unsupported architecture: ${build_arch}"
+        }
+    }
+}
+
+master_sites        https://dotnetcli.azureedge.net/dotnet/Runtime/${version}/
+
+worksrcdir          ${name}-${version}
+extract.mkdir       yes
+
+use_configure       no
+
+depends_run         port:dotnet-cli
+
+build {}
+
+destroot {
+    set dotnet_home ${prefix}/share/dotnet
+    set hostfxr_dir /host/fxr
+    set runtime_dir /shared/Microsoft.NETCore.App
+    xinstall -d ${destroot}${dotnet_home}${hostfxr_dir}
+    xinstall -d ${destroot}${dotnet_home}${runtime_dir}
+
+    move ${worksrcpath}${hostfxr_dir}/${version} ${destroot}${dotnet_home}${hostfxr_dir}
+    move ${worksrcpath}${runtime_dir}/${version} ${destroot}${dotnet_home}${runtime_dir}
+}
+
+livecheck.type      regex
+livecheck.url       https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+livecheck.regex     ".NET Runtime (\\d+(?:\\.\\d+)*)"

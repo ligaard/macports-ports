@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-pyviz_comms
-version             2.1.0
+version             3.0.1
 revision            0
 categories-append   devel
 license             BSD
@@ -13,25 +13,25 @@ description         Offers a simple bidirectional communication architecture for
                     tools including support for Jupyter comms in both the classic \
                     notebook and Jupyterlab.
 long_description    {*}${description}
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://github.com/holoviz/pyviz_comms
 
-checksums           rmd160  4b7a9ef06cf0d955ca681643de20b7c58c48e135 \
-                    sha256  f4a7126f318fb6b964fef3f92fa55bc46b9218f62a8464a8b18e968b3087dbc0 \
-                    size    31140
+checksums           rmd160  9200a472da4922b4c9e7c1aa6081e9a69af692a3 \
+                    sha256  427c33a5a81780db9b9e757f0675f65ea2292d9a642a2d291cfb5cae6cd46991 \
+                    size    195282
 
-python.versions     36 37 38 39
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
+    python.pep517   yes
+    python.pep517_backend \
+                    hatch
+
     depends_build-append \
                     port:git \
-                    port:py${python.version}-jupyter_packaging
+                    port:py${python.version}-hatch-nodejs-version
 
     depends_lib-append  \
-                    port:py${python.version}-numpy \
-                    port:py${python.version}-param \
-                    port:py${python.version}-pyobjc \
-                    port:py${python.version}-setuptools
-
-    livecheck.type  none
+                    port:py${python.version}-jupyterlab
 }

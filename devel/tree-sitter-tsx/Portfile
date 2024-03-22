@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           tree_sitter 1.0
+
+github.setup        tree-sitter tree-sitter-typescript 0.20.6 v
+name                tree-sitter-tsx
+revision            0
+
+description         A tree-sitter parser for TSX
+
+long_description    {*}${description}
+
+categories          devel
+license             MIT
+maintainers         {amake @amake} openmaintainer
+
+checksums           rmd160  6b5d47f48546e177660c6f53a7041d64f41e2e4d \
+                    sha256  c4abf446aa80f178fd09efb31ad5259df346280bbf43ebaf136925b87b3dad5b \
+                    size    1564242
+
+worksrcdir          ${worksrcdir}/tsx/src

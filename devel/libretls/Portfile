@@ -1,10 +1,14 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           legacysupport 1.1
+
+# TARGET_OS_OSX
+legacysupport.newest_darwin_requires_legacy 14
 
 name                libretls
-version             3.4.1
-revision            1
+version             3.8.1
+revision            0
 categories          devel
 platforms           darwin
 license             ISC
@@ -18,17 +22,14 @@ long_description    LibreTLS is a port of libtls from LibreSSL to OpenSSL. \
 homepage            https://git.causal.agency/libretls/about/
 master_sites        https://causal.agency/libretls/
 
-checksums           rmd160  ef9634114bece359b905185735131c34b83ce91e \
-                    sha256  3aa7e5a014c5ecfd75cb3ae21ec91fe203478860a5ef3e0f03cb4fd5d9cdae89 \
-                    size    435404
+checksums           rmd160  e41b0263096eb3d1098edb1839659d0e24dcc869 \
+                    sha256  3bc9fc0e61827ee2f608e5e44993a8fda6d610b80a1e01a9c75610cc292997b5 \
+                    size    432142
 
 depends_lib         port:openssl
 
 configure.args      --with-openssl=${prefix}
-
-if {[vercmp [macports_version] 2.6.99] >= 0} {
 configure.checks.implicit_function_declaration.whitelist-append getpagesize
-}
 
 livecheck.type      regex
 livecheck.url       ${master_sites}

@@ -3,12 +3,12 @@
 PortSystem      1.0
 
 PortGroup       github 1.0
-github.setup    fribidi fribidi 1.0.11 v
+github.setup    fribidi fribidi 1.0.13 v
 revision        0
 
-checksums       rmd160  924ee8495d1f423f2e5d18e198435eb4c2fbb39e \
-                sha256  30f93e9c63ee627d1a2cedcf59ac34d45bf30240982f99e44c6e015466b4e73d \
-                size    1077004
+checksums       rmd160  2a482e2a8f2b3f678f41676f9365ed75d30f8d84 \
+                sha256  7fa16c80c81bd622f7b198d31356da139cc318a63fc7761217af4130903f54a2 \
+                size    1170100
 
 github.tarball_from releases
 

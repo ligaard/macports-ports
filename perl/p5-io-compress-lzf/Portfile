@@ -3,23 +3,23 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         IO-Compress-Lzf 2.100
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         IO-Compress-Lzf 2.207 ../../authors/id/P/PM/PMQS
+revision            0
 license             {Artistic-1 GPL}
-maintainers         {devans @dbevans} openmaintainer
+maintainers         nomaintainer
 description         IO::Compress::Lzf - Write lzf files/buffers
-long_description    ${description}
+long_description    {*}${description}
 
-platforms           darwin
+platforms           {darwin any}
+supported_archs     noarch
 
-checksums           rmd160  12df9b72ff38ca9b58f4cdb6ee06bf9c8316ab13 \
-                    sha256  32fbaecd4910d0d4e38a1952a231d07a272b44ce31bf720cf9890ab0e8f40ad4 \
-                    size    75712
+checksums           rmd160  f1c4984a01e5c22a0be5d1b89100f705ec4700bf \
+                    sha256  42b043ddffff5cd349b795f2bbb61b819ae33aa64794603f107c94991ead1056 \
+                    size    79564
 
 if {${perl5.major} != ""} {
     depends_lib-append \
                     port:p${perl5.major}-compress-lzf \
                     port:p${perl5.major}-io-compress
-
-    supported_archs noarch
 }

@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran noma NMA 1.4-2
+revision            0
+maintainers         nomaintainer
+license             GPL-3
+description         Network meta-analysis based on multivariate meta-analysis models
+long_description    {*}${description}
+homepage            https://www.ism.ac.jp/~noma/file/software/NMA.r
+checksums           rmd160  1f3ae11ef5791ee72ade0c20aac484f22d94e437 \
+                    sha256  7f2cbd5b48c75a155a3af77ff42cf8150029d1d5313d6f97b027b31a87f69a53 \
+                    size    37323
+supported_archs     noarch
+
+depends_lib-append  port:R-forestplot \
+                    port:R-ggplot2 \
+                    port:R-metafor \
+                    port:R-stringr
+
+test.run            yes

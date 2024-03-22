@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mlpack mlpack 4.3.0.1
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             BSD
+description         Rcpp integration for the mlpack library
+long_description    A fast, flexible machine learning library, written in C++, \
+                    that aims to provide fast, extensible implementations \
+                    of cutting-edge machine learning algorithms.
+checksums           rmd160  b67fb2ffa94c21bcade77f54a7c4c4bb1d1f2f5a \
+                    sha256  ad6531f1d1dc43967fa0ae094abe767ede3d57b3fe676880ee18e38f113a5569 \
+                    size    1553719
+
+depends_lib-append  port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppEnsmallen
+
+compiler.cxx_standard 2014
+compilers.setup     require_fortran
+
+depends_test-append port:R-testthat
+
+test.run            yes

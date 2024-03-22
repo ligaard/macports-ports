@@ -4,11 +4,11 @@ PortSystem      1.0
 PortGroup       java 1.0
 
 name            ki-shell
-version         0.3.3
-revision        0
+version         0.5.2
+revision        1
 
 categories      java
-platforms       darwin
+platforms       any
 maintainers     {breun.nl:nils @breun} openmaintainer
 license         Apache-2
 supported_archs noarch
@@ -23,13 +23,15 @@ long_description The shell is an extensible implementation of Kotlin REPL with r
                 \n* List declared symbols
 
 homepage        https://github.com/Kotlin/kotlin-interactive-shell
-master_sites    https://search.maven.org/remotecontent?filepath=org/jetbrains/kotlinx/${name}/${version}/
+master_sites    https://github.com/Kotlin/kotlin-interactive-shell/releases/download/v${version}/
 
-distname        ${name}-${version}-archive
+distname        ki-archive
 
-checksums       rmd160  b3443bcfe9f4d78ed3758530fec1c0934f47a37e \
-                sha256  ea7461051589f86c80babd9a54b8c7a6bb29a77ac134498a63f26c54a28508ef \
-                size    60319541
+worksrcdir      ki
+
+checksums       rmd160  3b4577b367997d2b476c9076949f4417d400acfc \
+                sha256  9bd5697f9ec29cd63eaf0b503f46edce377bac73e46552aa12231ac5dbda21e4 \
+                size    64151230
 
 use_zip         yes
 use_configure   no

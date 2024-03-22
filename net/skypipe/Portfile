@@ -10,7 +10,7 @@ git.branch          6162610a1876282ff1cc8eeca6c8669b8f605482
 
 python.default_version  27
 categories          net devel
-maintainers         {g5pw @g5pw} openmaintainer
+maintainers         nomaintainer
 supported_archs     noarch
 
 description         Skypipe lets you pipe data across sessions and machines.
@@ -20,13 +20,11 @@ long_description    Skypipe is a magical command line tool that lets you easily 
                     or even behind a firewall. It gives you named pipes in the sky \
                     and lets you magically pipe data anywhere.
 
-platforms           darwin
+platforms           {darwin any}
 
 depends_build       port:py${python.version}-setuptools
 depends_lib         port:py${python.version}-zmq \
                     port:py${python.version}-requests \
                     port:py${python.version}-colorama
-
-build {}
 
 livecheck.type      none

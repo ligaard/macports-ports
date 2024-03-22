@@ -4,25 +4,22 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-bracex
-version             2.2.1
+version             2.4
 revision            0
-python.versions     36 37 38 39 310
+python.versions     38 39 310 311
 
-platforms           darwin
 license             MIT
+platforms           {darwin any}
+supported_archs     noarch
 maintainers         {judaew @judaew} openmaintainer
 
 description         Bash style brace expansion for Python.
-long_description    ${description} Brace expanding is used to generate \
+long_description    {*}${description} Brace expanding is used to generate \
                     arbitrary strings.
 homepage            https://github.com/facelessuser/bracex
 
-checksums           rmd160  235e21ec8caf2d7453d4576ee47c7f918ab56073 \
-                    sha256  1c8d1296e00ad9a91030ccb4c291f9e4dc7c054f12c707ba3c5ff3e9a81bcd21 \
-                    size    28645
+checksums           rmd160  02790d8535f44c3c7c4c9a50c7d2bf3387c89143 \
+                    sha256  a27eaf1df42cf561fed58b7a8f3fdf129d1ea16a81e1fadd1d17989bc6384beb \
+                    size    26588
 
-if {${name} ne ${subport}} {
-    depends_build-append    port:py${python.version}-setuptools
-
-    livecheck.type          none
-}
+python.pep517_backend   hatch

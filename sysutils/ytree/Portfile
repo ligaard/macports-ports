@@ -1,0 +1,37 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           makefile 1.0
+
+name                ytree
+version             2.07
+revision            0
+
+description         Ytree - a (curses-based) file manager similar to DOS \
+                    Xtree\(tm\)
+
+long_description    {*}${description}, for browsing filesystems and archives \
+                    \(RAR/SPM/RPM/TAR/ARC/LHA/ZIP/ZOO\).
+
+homepage            https://www.han.de/~werner/ytree.html
+master_sites        https://www.han.de/~werner/
+
+categories          sysutils
+installs_libs       no
+license             GPL-2
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  518a15ce0e4ba1c849370237d9b5e619cc1caa1a \
+                    sha256  636f4adb6fefea3b29669f700faf94e7a40ec7f033a42c8b31a0bfe41effcceb \
+                    size    119460
+
+patchfiles          patch-Makefile.diff
+
+build.target        ${name}
+
+depends_lib-append  port:ncurses \
+                    port:readline
+
+livecheck.type      regex
+livecheck.regex     ytree-(\[0-9.\]+)${extract.suffix}

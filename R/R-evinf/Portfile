@@ -1,0 +1,38 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran Doktorandahl evinf 0.8.8
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Inference with extreme value inflated count data
+long_description    {*}${description}
+checksums           rmd160  30c26424d707775cca5e41ae215729debb3af6d4 \
+                    sha256  2f53b4d092fa08b57e31c8b7573ae4f22d66addd47b204cbf69edea526052fec \
+                    size    112121
+
+depends_lib-append  port:R-doParallel \
+                    port:R-doRNG \
+                    port:R-dplyr \
+                    port:R-foreach \
+                    port:R-generics \
+                    port:R-magrittr \
+                    port:R-mistr \
+                    port:R-MLmetrics \
+                    port:R-pscl \
+                    port:R-purrr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-Rdpack \
+                    port:R-rlang \
+                    port:R-stringi \
+                    port:R-stringr \
+                    port:R-tibble \
+                    port:R-tidyr
+
+compilers.setup     require_fortran
+
+test.run            yes

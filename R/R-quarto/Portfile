@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran quarto-dev quarto 1.4
+revision            0
+maintainers         nomaintainer
+license             GPL-2+
+description         R interface to Quarto markdown publishing system
+long_description    {*}${description}
+homepage            https://quarto-dev.github.io/quarto-r
+checksums           rmd160  f57be852850669da8d22a7f3f83c1857b4ec0ec0 \
+                    sha256  accc7fb445a0c3da8e580cfd89be25733138334d6273e07e5d382c9cd72e5b24 \
+                    size    84926
+supported_archs     noarch
+
+depends_lib-append  port:R-cli \
+                    port:R-jsonlite \
+                    port:R-later \
+                    port:R-processx \
+                    port:R-rlang \
+                    port:R-rmarkdown \
+                    port:R-rsconnect \
+                    port:R-rstudioapi \
+                    port:R-yaml
+
+depends_test-append port:R-curl \
+                    port:R-knitr \
+                    port:R-testthat \
+                    port:R-withr \
+                    port:R-xfun
+
+test.run            yes

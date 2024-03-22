@@ -3,23 +3,27 @@
 PortSystem              1.0
 PortGroup               github 1.0
 
-github.setup            tj git-extras 6.3.0
+github.setup            tj git-extras 7.1.0
+revision                0
 
-checksums               rmd160  56a1dae7a9de6fe44b5fbfa335aff988207970a8 \
-                        sha256  3dc11ce488793cf1d15996ac311ec2af8514d28e31b936ddf7b1cd854cb84705 \
-                        size    159236
+checksums               rmd160  d0acd97d9e3d3a2f1d6cdaeeda5d561dd1f34ade \
+                        sha256  b100b7a81f2267870743b6cadee606a204efeb213c3c1e1283d7f47f4b6c0537 \
+                        size    176744
 
 maintainers             {grimreaper @grimreaper} openmaintainer
-platforms               darwin
+platforms               any
 categories              devel
 supported_archs         noarch
 
 description             Git utilities
-long_description        ${description} -- repo summary, repl, changelog population, author \
+long_description        {*}${description} -- repo summary, repl, changelog population, author \
                         commit percentages and more
 license                 MIT
 
 use_configure           no
+
+patch.pre_args          -p1
+patchfiles-append       macports-release.patch
 
 build {}
 

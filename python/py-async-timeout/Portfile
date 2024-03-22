@@ -4,12 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-async-timeout
-version             4.0.1
+version             4.0.3
 categories-append   devel
 license             Apache-2
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     36 37 38 39 310
+python.versions     37 38 39 310 311 312
 
 maintainers         {ipglider.org:miguel @ipglider} openmaintainer
 
@@ -22,14 +23,12 @@ long_description    asyncio-compatible is useful in cases when you want to \
 
 homepage            https://github.com/aio-libs/async-timeout
 
-checksums           rmd160  f6e4a1a48d974a60570545d8214bf28ac704aeea \
-                    sha256  b930cb161a39042f9222f6efb7301399c87eeab394727ec5437924a36d6eef51 \
-                    size    8030
+checksums           rmd160  dd25bbfdca3ea2d1fdc654822bc2d2eb5a1f37b0 \
+                    sha256  4640d96be84d82d02ed59ea2b7105a0f7b33abe8703703cd0ab0bf87c427522f \
+                    size    8345
 
 if {${name} ne ${subport}} {
     depends_build-append    port:py${python.version}-setuptools
 
     depends_lib-append      port:py${python.version}-typing_extensions
-
-    livecheck.type          none
 }

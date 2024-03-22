@@ -4,52 +4,41 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-rich
-version             10.15.2
-platforms           darwin
+version             13.7.1
 license             MIT
 supported_archs     noarch
+platforms           {darwin any}
 
-maintainers         {@harens gmail.com:harensdeveloper} \
-                    openmaintainer
+maintainers         {@harens harens} openmaintainer
 
 description         Python library for rich text and beautiful formatting \
                     in the terminal
 long_description    {*}${description}. The Rich API makes it easy to add color \
                     and style to terminal output. Rich can also render pretty tables, \
                     progress bars, markdown, syntax highlighted source code, tracebacks, \
-                    and more — out of the box.
+                    and more out of the box.
 
 homepage            https://rich.readthedocs.io/en/latest/
 
-checksums           rmd160 6ed81e52bd6dfec477246c90f1d2782fcd1dd355 \
-                    sha256 1dded089b79dd042b3ab5cd63439a338e16652001f0c16e73acdcf4997ad772d \
-                    size   197381
+checksums           rmd160 d9f9c1041c883b2a6caf78d3cf1593cbe4baf28b \
+                    sha256 9be308cb1fe2f1f57d67ce99e95af38a1e2bc71ad9813b0e247cf7ffbcc3a432 \
+                    size   221248
 
-python.versions     36 37 38 39 310
+python.versions     38 39 310 311 312
+
+python.pep517_backend   poetry
 
 if {${name} ne ${subport}} {
-
-    depends_build-append \
-                        port:py${python.version}-setuptools
-
-    depends_run-append  port:py${python.version}-colorama \
-                        port:py${python.version}-commonmark \
+    depends_run-append  port:py${python.version}-markdown-it-py \
                         port:py${python.version}-pygments
 
-    if {${python.version} < 38} {
+    if {${python.version} < 39} {
         depends_run-append \
                         port:py${python.version}-typing_extensions
     }
 
-    # Separate if statment since we want typing_extensions for py36 as well.
-    if {${python.version} eq 36} {
-        depends_run-append \
-                        port:py${python.version}-dataclasses
-    }
-
     test.run            yes
+    python.test_framework
     test.cmd            ${python.bin}
     test.target         -m rich
-
-    livecheck.type      none
 }

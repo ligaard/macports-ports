@@ -1,0 +1,25 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran snodg031 cpfa 1.1-2
+revision            0
+maintainers         nomaintainer
+license             GPL-2+
+description         Classification with Parallel Factor Analysis
+long_description    {*}${description}
+checksums           rmd160  9a973512271a6337c59df0e8dffb4e12cb76bc47 \
+                    sha256  960a762a81ba44b0155082fb57cbb28434a917771b57180c9d175f4823d96211 \
+                    size    31567
+supported_archs     noarch
+
+depends_lib-append  port:R-doParallel \
+                    port:R-e1071 \
+                    port:R-foreach \
+                    port:R-glmnet \
+                    port:R-multiway \
+                    port:R-randomForest \
+                    port:R-rda
+
+test.run            yes

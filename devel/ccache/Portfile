@@ -2,18 +2,19 @@
 
 PortSystem          1.0
 PortGroup           cmake 1.1
-PortGroup           compiler_blacklist_versions 1.0
 PortGroup           github 1.0
+PortGroup           legacysupport 1.1
+legacysupport.newest_darwin_requires_legacy 18
+legacysupport.use_mp_libcxx yes
 
 # src/third_party/blake3/CMakeLists.txt checks CMAKE_SIZEOF_VOID_P
 PortGroup           muniversal 1.0
 
-github.setup        ccache ccache 4.5.1 v
+github.setup        ccache ccache 4.9.1 v
 revision            0
-
-checksums           rmd160  fd0a072736cdd6f53a28fed7640ee68d1a1eda55 \
-                    sha256  51186ebe0326365f4e6131e1caa8911de7da4aa6718efc00680322d63a759517 \
-                    size    513008
+checksums           rmd160  7b55e04fb66d6d51e5799dafb65ead75b6b37764 \
+                    sha256  4c03bc840699127d16c3f0e6112e3f40ce6a230d5873daa78c60a59c7ef59d25 \
+                    size    583764
 
 categories          devel
 platforms           darwin freebsd
@@ -33,9 +34,6 @@ homepage            https://ccache.dev
 github.tarball_from releases
 use_xz              yes
 
-platform darwin powerpc {
-    patchfiles-append  patch-ccache-powerpc-darwin.diff
-}
 platform darwin 8 {
     patchfiles-append  patch-ccache-no-posix-tiger.diff
 }
@@ -43,12 +41,11 @@ platform darwin 8 {
 compiler.c_standard 1999
 
 compiler.cxx_standard \
-                    2014
+                    2017
 
-# CMake Error at CMakeLists.txt:31: The compiler you are using is too old, sorry.
-compiler.blacklist-append  {clang < 700}
-# error: static_assert failed "unique_ptr constructed with null function pointer deleter"
-compiler.blacklist-append  {clang < 900}
+depends_build-append \
+                    bin:perl:perl5 \
+                    path:bin/pkg-config:pkgconfig
 
 depends_lib-append  port:hiredis \
                     port:zstd
@@ -62,8 +59,9 @@ variant doc description {Enable documentation} {
     configure.args-replace -DENABLE_DOCUMENTATION=OFF -DENABLE_DOCUMENTATION=ON
     depends_build-append \
                     port:asciidoctor
+    license_noconflict  asciidoctor
 }
 
-default_variants +doc
+default_variants    +doc
 
 test.run            yes

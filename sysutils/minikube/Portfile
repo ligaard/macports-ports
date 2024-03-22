@@ -3,8 +3,9 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/kubernetes/minikube 1.24.0 v
+go.setup            github.com/kubernetes/minikube 1.32.0 v
 go.package          k8s.io/minikube
+go.offline_build    no
 github.tarball_from archive
 revision            0
 
@@ -12,33 +13,35 @@ homepage            https://minikube.sigs.k8s.io
 
 description         Run Kubernetes locally
 
-long_description    Minikube runs a single-node Kubernetes cluster inside a VM \
-                    on your laptop for users looking to try out Kubernetes or \
-                    develop with it day-to-day.
+long_description    \
+    Minikube runs a single-node Kubernetes cluster inside a VM on your laptop \
+    for users looking to try out Kubernetes or develop with it day-to-day.
 
 categories          sysutils
 installs_libs       no
 license             Apache-2
-maintainers         {lbschenkel @lbschenkel} \
-                    {gmail.com:herby.gillot @herbygillot} \
+maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-platforms           darwin
-# Hyperkit driver does not build on arm64
-supported_archs     x86_64
+supported_archs     arm64 x86_64
 
-checksums           rmd160  30b21a94e7d190ee598223ad228c0e40260e4614 \
-                    sha256  df8e273468163341ff28721c8774a380df9b9d5a8e45eb3cbbcb485552d1a1c2 \
-                    size    86420906
+checksums           rmd160  2017889afbd9ed99778a9ee5d9c208699aa90e9c \
+                    sha256  d8413766aa8ba81a6eee24d8ca8f2f7862029521630122b83ed892ec4f9b4960 \
+                    size    88183862
 
 depends_build-append \
                     port:go-bindata
 
-depends_run         path:${prefix}/bin/kubectl:kubectl-1.22
+depends_run-append  path:${prefix}/bin/kubectl:kubectl-1.28
 
-default_variants    +hyperkit
+# Minikube needs the hyperkit driver on Darwin x86_64 platforms
+platform i386 {
+    default_variants +hyperkit
+}
 
-# Allow Go to fetch deps at build time
-build.env-delete    GO111MODULE=off GOPROXY=off
+if {${build_arch} ne "arm64"} {
+    default_variants +hyperkit
+}
+
 build.cmd           make
 build.target        ${name}-${goos}-${goarch}
 

@@ -1,0 +1,30 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran stan-dev StanHeaders 2.32.6
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             BSD
+description         C++ header files for Stan
+long_description    {*}${description}
+homepage            https://mc-stan.org
+checksums           rmd160  e53742ddbdec5a6aae5e46184c3f25e713bd3c61 \
+                    sha256  898061f5b36c9e68cf5d8f1129a52534bc8b26b515e5dd247140de5820cbe1a2 \
+                    size    2395238
+
+# Notice, this is not a header-only port, despite its name.
+
+depends_lib-append  port:R-RcppEigen \
+                    port:R-RcppParallel
+
+depends_test-append port:R-BH \
+                    port:R-knitr \
+                    port:R-Rcpp \
+                    port:R-rmarkdown \
+                    port:R-rstan \
+                    port:R-withr
+
+test.run            yes

@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/noborus/ov 0.9.4 v
+go.setup            github.com/noborus/ov 0.33.3 v
 github.tarball_from archive
 revision            0
 
@@ -18,12 +18,12 @@ license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  862b9f7f0acb90918bb3fbda771b4f4d95a21cda \
-                    sha256  9c66632770b585ce047f74bfa2c1d957016858faaad9168a775bd12d37f20d36 \
-                    size    4235740
+checksums           rmd160  2c4ffeb70d5b57f808c0899e595d2f1b12a71d58 \
+                    sha256  9a7f70d06559049c363ab2d4d1ad4907446278cb5dc89e61be22845a7125f9ef \
+                    size    3407394
 
 # Enable fetching deps at build time
-build.env-delete    GO111MODULE=off GOPROXY=off
+go.offline_build no
 build.cmd           make
 build.pre_args-append \
                     LDFLAGS="\\\"-X main.Version=${version}\\\""
@@ -39,3 +39,5 @@ destroot {
 notes "
     You can find a sample config file for ov at: ${ov_share_path}/${name}.yaml
 "
+
+github.livecheck.regex (\[0-9.\]+)

@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-sunpy
-version             3.1.2
+version             5.1.1
 revision            0
 categories          python
 license             BSD
@@ -12,14 +12,15 @@ maintainers         {mps @Schamschula} openmaintainer
 description         SunPy is an open-source Python library for Solar Physics data \
                     analysis and visualization.
 long_description    {*}${description}
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any >= 11}
 homepage            https://sunpy.org
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311 312
 
-checksums           rmd160  95b873700f590c076fb3554939a57a1aa5f68468 \
-                    sha256  5eeb479c3f2424bf46355165249a1caa849872f8bee525349c4dca4d15b271fd \
-                    size    7378090
+checksums           rmd160  ff4fdf679c2d9fb69125c7c7694708bcff8a0e83 \
+                    sha256  9367ec9af2a397fcd59638b2007208d4eeaf9ed24e3e8dc2596c26b1896c2e1f \
+                    size    3658460
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -29,11 +30,27 @@ if {${name} ne ${subport}} {
     depends_lib-append \
                     port:py${python.version}-astropy \
                     port:py${python.version}-numpy \
+                    port:py${python.version}-packaging \
                     port:py${python.version}-parfive
 
-    variant asdf {
-        depends_lib-append \
-                    port:py${python.version}-pyasdf
+    if {${python.version} == 38} {
+        version     4.1.7
+        revision    0
+
+        checksums   rmd160  88ef7c6b361e37f86e18b89c7cb70aaf55c2c87b \
+                    sha256  51e5a312c69f21b4f05eeb15749cddfa843144b27d773ebee7ce1c748ef29230 \
+                    size    3612301
+    } else {
+        python.pep517   yes
+    }
+
+    # Note:
+    # the asdf variant requires py311-obspy which is missing dependencies.
+    if {${python.version} < 311} {
+        variant asdf {
+            depends_lib-append \
+                        port:py${python.version}-pyasdf
+        }
     }
 
     variant dask {
@@ -87,5 +104,7 @@ if {${name} ne ${subport}} {
 
     default_variants +database +image +map +net +timeseries +visualization
 
-    livecheck.type  none
+    post-patch {
+        reinplace "s|oldest-supported-numpy|numpy|g" ${worksrcpath}/pyproject.toml
+    }
 }

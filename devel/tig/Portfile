@@ -3,11 +3,12 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        jonas tig 2.5.4 tig-
+github.setup        jonas tig 2.5.8 tig-
 github.tarball_from releases
-checksums           rmd160  cb3fd5a5ca5380bfbcf55a528b89cc297ee0cce6 \
-                    sha256  c48284d30287a6365f8a4750eb0b122e78689a1aef8ce1d2961b6843ac246aa7 \
-                    size    1167930
+revision            1
+checksums           rmd160  86b2c0cf87e704c7e8ff11108ce289f8138e2c71 \
+                    sha256  b70e0a42aed74a4a3990ccfe35262305917175e3164330c0889bd70580406391 \
+                    size    1179844
 
 categories          devel
 maintainers         {cal @neverpanic} \
@@ -21,7 +22,9 @@ platforms           darwin
 
 depends_lib         bin:git:git \
                     port:libiconv \
-                    port:ncurses
+                    port:ncurses \
+                    port:pcre2 \
+                    port:readline
 
 license_noconflict  git asciidoc
 

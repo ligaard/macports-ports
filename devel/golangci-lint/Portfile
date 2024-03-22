@@ -3,39 +3,37 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/golangci/golangci-lint 1.42.1 v
+go.setup            github.com/golangci/golangci-lint 1.56.1 v
+github.tarball_from archive
 revision            0
 
 homepage            https://golangci-lint.run
 
 description         Linters Runner for Go.
 
-long_description    GolangCI-Lint is a linters aggregator. It's fast: on \
-                    average 5 times faster than gometalinter. It's easy to \
-                    integrate and use, has nice output and has a minimum \
-                    number of false positives. It supports go modules.
+long_description    \
+    GolangCI-Lint is a linters aggregator. It's fast: on average 5 times \
+    faster than gometalinter. It's easy to integrate and use, has nice output \
+    and has a minimum number of false positives. It supports Go modules.
 
-platforms           darwin
 categories          devel
-license             GPL-3
 installs_libs       no
-
+license             GPL-3
 maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    {@steenzout} \
                     openmaintainer
 
-checksums           rmd160  3a7e47d028ca49ab724ee7ad139f3eeb7c1dd254 \
-                    sha256  ce44ca899cddc5520ac8816defd8c4ab23beab4da00baaca138f10028729388a \
-                    size    1590268
+checksums           rmd160  7672b8e988a2865d2257f67b1c94af1ed09eec62 \
+                    sha256  34e1fb90a34c96c6c131cdcb4b32727ed61137a737878633f21a8805f3b50342 \
+                    size    1695648
 
 build.args          ./cmd/golangci-lint
-
-github.tarball_from archive
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
 # https://trac.macports.org/ticket/61192
-build.env-delete    GOPROXY=off GO111MODULE=off
+go.offline_build no
 
 destroot {
-    xinstall -m 755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/${name}
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/${name}
 }

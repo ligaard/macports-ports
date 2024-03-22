@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-psygnal
+version             0.10.2
+revision            0
+license             BSD
+platforms           {darwin any}
+supported_archs     noarch
+maintainers         {mps @Schamschula} openmaintainer
+description         Pure python implementation of Qt-style Signals
+long_description    {*}${description}, with (optional) signature and type checking, and \
+                    support for threading.
+homepage            https://github.com/tlambert03/psygnal
+
+python.versions     38 39 310 311 312
+
+checksums           rmd160  5b11be52eef6d5761d46069239860855bb2d1e3c \
+                    sha256  adb2c38d5cecfdb1212970a3123079f6d97241ac0e772c3db79418a5cabef079 \
+                    size    96090
+
+if {${name} ne ${subport}} {
+    python.pep517           yes
+    python.pep517_backend   hatch
+
+    depends_build-append \
+                    port:py${python.version}-hatch-vcs
+
+    depends_lib-append  \
+                    port:py${python.version}-mypy_extensions \
+                    port:py${python.version}-typing_extensions
+}

@@ -18,13 +18,13 @@ long_description    SHTOOLS is a library of Fortran 95 software that can be \
                     bases, and standard operations on global gravitational \
                     and magnetic field data. Requires linking with FFTW-3 and \
                     LAPACK compatible libraries.
-homepage            https://shtools.github.io/SHTOOLS/
+homepage            https://shtools.github.io/SHTOOLS/index-fortran.html
 
-github.setup        SHTOOLS SHTOOLS 4.9.1 v
+github.setup        SHTOOLS SHTOOLS 4.10.4 v
 github.tarball_from   releases
-checksums           sha256  5c22064f9daf6e9aa08cace182146993aa6b25a6ea593d92572c59f4013d53c2 \
-                    rmd160  61e3c1f210d6a0f40a733171d6712c6b09ba9aeb \
-                    size    40877403
+checksums           sha256  f31ab09e960d85ad23d046fa427b692ffb80915a2c96773725bb83ad90bdec20 \
+                    rmd160  5ae2a7dca10ed43362bc3aee7c0b67b89a26a1b4 \
+                    size    41551514
 
 use_configure       no
 

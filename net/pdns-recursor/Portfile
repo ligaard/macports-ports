@@ -2,12 +2,12 @@
 
 PortSystem          1.0
 PortGroup           boost 1.0
+PortGroup           openssl 1.0
 
 name                pdns-recursor
-version             4.2.0
-revision            3
+version             4.9.1
+revision            0
 categories          net
-platforms           darwin
 maintainers         {l2dy @l2dy} openmaintainer
 license             {GPL-2 OpenSSLException}
 
@@ -24,17 +24,15 @@ homepage            https://www.powerdns.com/recursor.html
 master_sites        https://downloads.powerdns.com/releases/
 use_bzip2           yes
 
-checksums           rmd160  4a24342b78f7867e6cfe58d29ecd6f20eb3a6370 \
-                    sha256  f03c72c1816fdcc645cc539d8c16721d2ec294feac9b5179e78c3db311b7c2c2 \
-                    size    1316156
+checksums           rmd160  fb9fa2bca8133178ae7c403c6b30b02d0abeabad \
+                    sha256  0a1edc13e8f2bd661f39e316387d941e22de6a03b8a7a2fc662fdf8b942ea2be \
+                    size    1566613
 
 depends_build       port:pkgconfig
 
-depends_lib         path:lib/libssl.dylib:openssl
+boost.version       1.76
 
-boost.version       1.71
-
-compiler.cxx_standard 2011
+compiler.cxx_standard 2017
 compiler.thread_local_storage yes
 
 startupitem.create      yes

@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran RcppCore RcppArmadillo 0.12.8.1.0
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2+
+description         Rcpp integration for the Armadillo Templated Linear Algebra Library
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
+checksums           rmd160  8b277260a5ca6d001364661da18cb61a42a44091 \
+                    sha256  e287de1dd9ce42bdc0d06442366fc5af0d1d97c202a436d9316c8cda4440a42b \
+                    size    1404885
+
+depends_lib-append  port:R-Rcpp
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-pkgKitten \
+                    port:R-reticulate \
+                    port:R-slam \
+                    port:R-tinytest
+
+test.run            yes

@@ -9,10 +9,9 @@ version                 5.4.4
 revision                1
 
 categories              security
-platforms               darwin
 supported_archs         x86_64
 license                 GPL-3
-maintainers             {@lhaeger gmx.net:lothar.haeger} openmaintainer
+maintainers             nomaintainer
 
 description             KeyStore Explorer is a free GUI replacement for the Java command-line utilities keytool and jarsigner
 long_description        ${description} with the following features: \
@@ -54,4 +53,4 @@ destroot {
 # run livecheck against upstream
 livecheck.version       ${version}
 livecheck.url           https://github.com/kaikramer/keystore-explorer/tags
-livecheck.regex         "archive/v${github.livecheck.regex}.tar.gz"
+livecheck.regex         archive/refs/tags/v${github.livecheck.regex}\\.tar\\.gz

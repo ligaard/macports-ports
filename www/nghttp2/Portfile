@@ -2,12 +2,11 @@
 
 PortSystem          1.0
 PortGroup           github 1.0
-PortGroup           legacysupport 1.0
+PortGroup           legacysupport 1.1
 
-github.setup        nghttp2 nghttp2 1.46.0 v
+github.setup        nghttp2 nghttp2 1.60.0 v
 revision            0
 categories          www
-platforms           darwin
 maintainers         {mps @Schamschula} openmaintainer
 license             MIT
 
@@ -19,26 +18,28 @@ homepage            https://${name}.org
 github.tarball_from releases
 use_xz              yes
 
-checksums           rmd160  eb8aa93fc636aede10643691274bed65ec34843b \
-                    sha256  1a68cc4a5732afb735baf50aaac3cb3a6771e49f744bd5db6c49ab5042f12a43 \
-                    size    4024972
+checksums           rmd160  f4682fe0844bb9cd27db30f844d4ac3a98b1ac89 \
+                    sha256  625d6c3da1d9ca4fd643a638256431ae68fd1901653b2a61a245eea7b261bf4e \
+                    size    1587004
 
 depends_build       port:pkgconfig
 
 # See: https://trac.macports.org/ticket/57960
+# See: https://github.com/nghttp2/nghttp2/issues/1309
+# See: https://github.com/nghttp2/nghttp2/pull/1319
+# See: https://github.com/nghttp2/nghttp2/pull/2086
 patchfiles-append   patch-src-shrpx_client_handler.cc.diff \
                     patch-src-shrpx_downstream_connection_pool.cc.diff \
                     src-shrpx_config.diff
 
 use_autoreconf      yes
+configure.checks.implicit_function_declaration.whitelist-append strchr
 
 compiler.cxx_standard   2014
 
 configure.args      --disable-silent-rules \
                     --disable-threads \
                     --enable-lib-only \
-                    --disable-python-bindings \
-                    --without-cython \
                     ac_cv_prog_AWK=/usr/bin/awk
 
 if {${subport} eq ${name}} {
@@ -47,7 +48,7 @@ if {${subport} eq ${name}} {
 }
 
 subport nghttp2-tools {
-    incr revision
+    revision            0
     description         Tools for nghttp2, an implementation of HTTP/2 in C.
     long_description    HTTP/2 client, server and proxy tools, as well as a \
                         load test and benchmarking tool for HTTP/2.
@@ -62,6 +63,7 @@ subport nghttp2-tools {
                         port:libev \
                         port:libevent \
                         port:libxml2 \
+                        port:ngtcp2 \
                         path:lib/libssl.dylib:openssl \
                         port:zlib
 
@@ -80,52 +82,5 @@ subport nghttp2-tools {
         # remove files contained in the main port
         delete ${destroot}${prefix}/lib
         delete ${destroot}${prefix}/include
-    }
-}
-
-set pyversions {36 37 38 39}
-
-foreach pyversion ${pyversions} {
-    subport py${pyversion}-${name} {
-        PortGroup           python 1.0
-
-        python.version      ${pyversion}
-
-        description         Python ${python.branch} bindings for nghttp2.
-        long_description    {*}${description}
-        categories          www python
-        homepage            https://nghttp2.org/documentation/python-apiref.html
-
-        use_configure       yes
-
-        depends_build-append \
-                    port:py${python.version}-cython
-
-        depends_lib-append \
-                    port:nghttp2 \
-                    port:py${python.version}-setuptools \
-                    port:python${python.version}
-
-        configure.args-replace \
-                        --disable-python-bindings --enable-python-bindings
-        configure.args-replace \
-                        --without-cython --with-cython
-
-        configure.env-append \
-                      CYTHON=${prefix}/bin/cython-${python.branch} \
-                      PYTHON=${prefix}/bin/python${python.branch}
-
-        destroot.env   PYTHONPATH=${destroot}${prefix}/lib/python${python.branch}/site-packages/
-
-        build.dir      ${worksrcpath}/python
-        destroot.dir   ${worksrcpath}/python
-
-        build.env-append LDFLAGS=-L${prefix}/lib
-
-        pre-build {
-            system -W ${worksrcpath}/python "cython-${python.branch} nghttp2.pyx"
-        }
-
-        livecheck.type  none
     }
 }

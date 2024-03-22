@@ -44,7 +44,7 @@ compiler.blacklist-append {clang < 1000}
 depends_lib-append \
                 port:bzip2 \
                 port:expat \
-                port:icu \
+                path:lib/pkgconfig/icu-uc.pc:icu \
                 port:libiconv \
                 port:lzma \
                 port:zlib \
@@ -58,8 +58,6 @@ post-extract {
     }
     # Enforce correct compiler and flags are used to build b2
     xinstall -m 755 -d ${workpath}/bin
-    configure.env-append  PATH=${workpath}/bin:$env(PATH)
-    build.env-append      PATH=${workpath}/bin:$env(PATH)
     ln -s ${configure.cxx} ${workpath}/bin/clang++
     ln -s ${configure.cc}  ${workpath}/bin/clang
     # Also link gcc/g++ for older systems
@@ -67,6 +65,8 @@ post-extract {
     ln -s ${configure.cxx} ${workpath}/bin/g++
     ln -s ${configure.cc}  ${workpath}/bin/gcc
 }
+configure.env-append  PATH=${workpath}/bin:$env(PATH)
+build.env-append      PATH=${workpath}/bin:$env(PATH)
 
 # Install prefix for this port
 set bprefix ${prefix}/libexec/boost/${branch}
@@ -125,6 +125,10 @@ post-patch {
 # ld: internal error: atom not found in symbolIndex(__ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EERKS9_SB_) for architecture x86_64
 patchfiles-append patch-b2-build-older-OSes.diff
 
+# Upstream fix to allow building Boost with Clang 16+. Included in versions v181+.
+# https://trac.macports.org/ticket/67324
+patchfiles-append patch-boost-clang16-cpp17-compat.diff
+
 proc write_jam s {
     global worksrcpath
     set config [open ${worksrcpath}/user-config.jam a]
@@ -165,9 +169,13 @@ if {[string match *gcc* ${configure.compiler}]} {
     configure.args-append --with-toolset=gcc
 }
 
-if {${os.platform} eq "darwin" && ${os.major} <= 10} {
-    configure.args-append   --without-libraries=context \
-                            --without-libraries=coroutine
+# makecontext/swapcontext introduced in 10.6
+# In 10.6.x Rosetta they do not work: https://trac.macports.org/ticket/64978
+platform darwin {
+    if {${os.major} < 10 || (${os.major} == 10 && ${configure.build_arch} eq "ppc")} {
+        configure.args-append   --without-libraries=context \
+                                --without-libraries=coroutine
+    }
 }
 
 configure.universal_args
@@ -183,7 +191,7 @@ post-configure {
     }
 
     set cxx_stdlibflags {}
-    if {[string match *clang* ${configure.cxx}]} {
+    if {[string match *clang* ${configure.cxx}] && ${configure.cxx_stdlib} ne ""} {
         set cxx_stdlibflags -stdlib=${configure.cxx_stdlib}
     }
 
@@ -247,7 +255,7 @@ post-destroot {
     }
 }
 
-set pythons_versions {2.7 3.5 3.6 3.7 3.8 3.9 3.10}
+set pythons_versions {2.7 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12}
 
 set pythons_ports {}
 foreach v ${pythons_versions} {
@@ -282,8 +290,9 @@ foreach v ${pythons_versions} {
         configure.args-delete   --without-libraries=python
         configure.args-append   --with-python=${prefix}/bin/python${v} --with-python-root=${prefix}/bin/python${v}
 
-        patchfiles-append   ${bppatch} patch-tools-build-src-tools-python.jam.diff \
-                            patch-tools-build-src-tools-python-2.jam.diff
+        patchfiles-append   ${bppatch} patch-tools-build-src-tools-python.jam.diff
+        patchfiles-append   patch-tools-build-src-tools-python-2.jam.diff
+        patchfiles-append   patch-python-enum_type.diff
 
         post-patch {
             reinplace s|@FRAMEWORKS_DIR@|${frameworks_dir}| ${worksrcpath}/tools/build/src/tools/python.jam
@@ -292,7 +301,7 @@ foreach v ${pythons_versions} {
 }
 
 if {![variant_isset debug]} {
-    set selected_python python39
+    set selected_python python312
     foreach v ${pythons_versions} {
         set s [string map {. {}} ${v}]
         if {[variant_isset python${s}]} {
@@ -329,7 +338,7 @@ variant no_single description {Disable building single-threaded libraries} {
 }
 
 subport ${name}-numpy {
-    revision 3
+    revision 7
     description Boost.Numpy library
     long_description {*}${description}
     depends_lib port:boost${tag}
@@ -354,7 +363,7 @@ subport ${name}-numpy {
 
 if {$subport eq $name} {
 
-    revision 2
+    revision 10
 
     patchfiles-append patch-disable-numpy-extension.diff
 
@@ -440,27 +449,24 @@ if {$subport eq $name} {
     livecheck.type  none
 }
 
-if {![info exists universal_possible]} {
-    set universal_possible [expr {${os.universal_supported} && [llength ${configure.universal_archs}] >= 2}]
-}
 if {!${universal_possible} || ![variant_isset universal]} {
-    if {[lsearch ${build_arch} arm*] != -1} {
+    if {[lsearch ${configure.build_arch} arm*] != -1} {
         build.args-append address-model=64 architecture=arm
     } else {
-        if {[lsearch ${build_arch} ppc*] != -1} {
+        if {[lsearch ${configure.build_arch} ppc*] != -1} {
             build.args-append architecture=power
             if {${os.arch} ne "powerpc"} {
                 build.args-append --disable-long-double
             }
         } else {
-            if {[lsearch ${build_arch} *86*] != -1} {
+            if {[lsearch ${configure.build_arch} *86*] != -1} {
                 build.args-append architecture=x86
             } else {
                 pre-fetch {
-                    error "Current value of 'build_arch' (${build_arch}) is not supported."
+                    error "Current value of 'configure.build_arch' (${configure.build_arch}) is not supported."
                 }
             }
-            if {[lsearch ${build_arch} *64] != -1} {
+            if {[lsearch ${configure.build_arch} *64] != -1} {
                 build.args-append address-model=64
             } else {
                 build.args-append address-model=32
@@ -474,6 +480,12 @@ variant universal {
 
     if {[lsearch ${configure.universal_archs} arm*] != -1} {
         build.args-append address-model=64 architecture=combined
+
+        # allow universal building on arm/Intel
+        # https://trac.macports.org/ticket/64954
+        patchfiles-append patch-boost176-universal-arm64-x86_64-fix.diff \
+                          patch-boost176-no-abi-asm_sources.diff
+
     } else {
         if {[lsearch ${configure.universal_archs} ppc*] != -1} {
             if {[lsearch ${configure.universal_archs} *86*] != -1} {

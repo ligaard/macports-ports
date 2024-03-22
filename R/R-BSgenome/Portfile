@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor BSgenome 1.70.2
+revision            0
+maintainers         nomaintainer
+license             Artistic-2
+description         Software infrastructure for efficient representation of full genomes and their SNPs
+long_description    {*}${description}
+checksums           rmd160  2ca505383589549ece1b22cfaa57ba617ea1e592 \
+                    sha256  2d1879cc4aaab1ebdeeb36228143800dcbdee17cc13aba1f21524747cfc3190b \
+                    size    5909171
+supported_archs     noarch
+
+depends_lib-append  port:R-BiocGenerics \
+                    port:R-BiocIO \
+                    port:R-Biostrings \
+                    port:R-GenomeInfoDb \
+                    port:R-GenomicRanges \
+                    port:R-IRanges \
+                    port:R-matrixStats \
+                    port:R-Rsamtools \
+                    port:R-rtracklayer \
+                    port:R-S4Vectors \
+                    port:R-XVector

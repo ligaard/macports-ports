@@ -6,12 +6,11 @@ PortGroup           github 1.0
 PortGroup           boost 1.0
 
 github.setup        schrodinger pymol-open-source 2.5.0 v
-revision            1
+revision            6
 name                pymol
 conflicts           pymol-devel
 
 categories          science chemistry
-platforms           darwin
 universal_variant   no
 license             PSF
 maintainers         {gmail.com:howarth.at.macports @jwhowarth} openmaintainer
@@ -28,35 +27,36 @@ checksums           rmd160  6432d47616aee1e5d9d40cc2a74425b33159d7a0 \
                     size    10471287
 
 subport pymol-devel {
-    github.setup    schrodinger pymol-open-source a1ff1459f5b2d74c51477c6a7cb8998e8c89daa7
-    version         20211110-[string range ${github.version} 0 7]
+    github.setup    schrodinger pymol-open-source 3faec30816c8fe4d5cbe3ddf
+    version         20240131-[string range ${github.version} 0 7]
     conflicts       pymol
     revision        0
     maintainers     {reneeotten @reneeotten} openmaintainer
-    checksums       rmd160  871c4a54bee18c6aa754d4c9a63c53217b3cc8f4 \
-                    sha256  720b4272bd34fdbcfb9cd4b6826c08d3ace1928dded5455b8c1a0f96212e5166 \
-                    size    10479063
+    checksums       rmd160  204a1b31beaa87e5d275b9bd7a4b6df82e09f9a3 \
+                    sha256  c4f4f11fe66ed9d030796cd1d629431599de1faf4376070ac466b9966179a8d2 \
+                    size    29465933
+    compiler.cxx_standard 2017
 }
 
-variant python36 conflicts python37 python38 python39 python310 description {Use Python 3.6} {}
-variant python37 conflicts python36 python38 python39 python310 description {Use Python 3.7} {}
-variant python38 conflicts python36 python37 python39 python310 description {Use Python 3.8} {}
-variant python39 conflicts python36 python37 python38 python310 description {Use Python 3.9} {}
-variant python310 conflicts python36 python37 python38 python39 description {Use Python 3.10} {}
+variant python38 conflicts python39 python310 python311 python312 description {Use Python 3.8} {}
+variant python39 conflicts python38 python310 python311 python312 description {Use Python 3.9} {}
+variant python310 conflicts python38 python39 python311 python312 description {Use Python 3.10} {}
+variant python311 conflicts python38 python39 python310 python312 description {Use Python 3.11} {}
+variant python312 conflicts python38 python39 python310 python311 description {Use Python 3.12} {}
 
-if {[variant_isset python36]} {
-    python.default_version 36
-} elseif {[variant_isset python37]} {
-    python.default_version 37
-} elseif {[variant_isset python38]} {
-    python.default_version 38
-} elseif {[variant_isset python310]} {
-    python.default_version 310
-} else {
-    default_variants +python39
-    python.default_version 39
+if {![variant_isset python38] && ![variant_isset python39] && ![variant_isset python310] && ![variant_isset python311]} {
+    default_variants +python312
 }
+
+foreach pv {312 311 310 39 38} {
+    if {[variant_isset python${pv}]} {
+        python.default_version ${pv}
+        break
+    }
+}
+
 python.link_binaries no
+python.pep517   no
 
 boost.depends_type build
 
@@ -64,7 +64,14 @@ compiler.cxx_standard 2011
 
 variant vtkm description {Use VTK-m for isosurface generation} {
     depends_lib-append  port:vtk-m
-    build.args-append   --use-vtkm 1.6
+    build.args-append   --use-vtkm 1.7
+}
+
+variant openmp description {Enable OpenMP support} {
+    build.args-append   --use-openmp yes
+
+    compiler.openmp_version 4.0
+    patchfiles-append   patch-openmp.diff
 }
 
 depends_lib-append  port:freetype \

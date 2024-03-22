@@ -3,8 +3,11 @@
 PortSystem          1.0
 
 name                vile
-version             9.8u
+version             9.8z
 revision            0
+checksums           rmd160  b1d04a30eea056de1b3ce8ec95052de1c1213920 \
+                    sha256  0b3286c327b70a939f21992d22e42b5c1f8a6e953bd9ab9afa624ea2719272f7 \
+                    size    2491799
 
 categories          editors
 platforms           darwin
@@ -21,23 +24,14 @@ long_description    vile is a text editor which is extremely compatible \
                     interpreter, and robust support for non-Unix hosts.
 
 homepage            https://invisible-island.net/vile/
-master_sites        ftp://ftp.invisible-island.net/pub/${name}/current/ \
+master_sites        https://invisible-island.net/archives/${name}/current/ \
                     https://invisible-mirror.net/archives/${name}/current/
-
-# Ignore stealth update of 9.8u that added an irrelevant revlist.bak file.
-master_sites        macports_distfiles
-
 extract.suffix      .tgz
-
-checksums           rmd160  f4eb3b934fab92cc75fe1dc83ec03b358d827d7d \
-                    sha256  a0ba7631bc510b0106c8e46f05f4364934af90418133a93044303ed434b9b251 \
-                    size    2381865
 
 depends_build       port:reflex
 
 depends_lib         port:ncurses port:libiconv
 
-configure.args      --mandir=${prefix}/share/man \
-                    --with-ncurses
+configure.args      --with-ncurses
 
 livecheck.regex     ${name}-(.*)${extract.suffix}

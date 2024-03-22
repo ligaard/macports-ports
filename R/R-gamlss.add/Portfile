@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran d.stasinopoulos gamlss.add 5.1-12
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             {GPL-2 GPL-3}
+description         Extra additive terms for generalized additive models for location scale and shape
+long_description    Interface for extra smooth functions including tensor products, \
+                    neural networks and decision trees.
+checksums           rmd160  6cb580ba1c037988f6d9b751d41fd38d93d808b8 \
+                    sha256  ac0f54c1b243e578d9ccad8417198abfeb579205fbfc571f94196c4b3963f9f6 \
+                    size    36175
+supported_archs     noarch
+
+depends_lib-append  port:R-gamlss \
+                    port:R-gamlss.dist
+
+test.run            yes

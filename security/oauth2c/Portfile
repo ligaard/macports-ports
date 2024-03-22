@@ -1,0 +1,32 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/cloudentity/oauth2c 1.13.0 v
+go.offline_build    no
+github.tarball_from archive
+revision            0
+
+description         User-friendly CLI for OAuth2
+
+long_description    ${name} is a command-line tool that simplifies the \
+                    process of experimenting with different grant types and \
+                    client authentication methods for OAuth 2.0.
+
+categories          security www
+installs_libs       no
+license             Apache-2
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  28da6e1dc44368b2aaa0b3701ee0b141d63e0576 \
+                    sha256  f5545e9aca8c79042080e8510ec77ac66ed3ac4acf976a8bbeb53e04fae02630 \
+                    size    48093
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+
+    xinstall -d ${destroot}${prefix}/share/${name}
+    copy ${worksrcpath}/docs/examples.md ${destroot}${prefix}/share/${name}/
+}

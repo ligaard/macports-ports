@@ -15,39 +15,33 @@ long_description        The goal of the ${description} is to provide easy access
                         molecular biology, medical imaging, robotics and\
                         motion planning, mesh generation, numerical methods...
 
-platforms               darwin
-
-github.setup            CGAL cgal 5.2.1 v
-revision                1
+github.setup            CGAL cgal 5.6.1 v
+revision                0
 conflicts               cgal4
 github.tarball_from     releases
 name                    cgal5
 license                 LGPL-3+ GPL-3+
 categories              gis science
+platforms               any
+supported_archs         noarch
 maintainers             {vince @Veence}
 use_xz                  yes
-# switch to this (and remove worksrcdir) with the next version update
-#distname                CGAL-${version}
+distname                CGAL-${version}
 
 homepage                http://www.cgal.org/
 
-checksums               rmd160  58a1632cce68c0f06830434158d9d5e6af47b452 \
-                        sha256  7e80b710a2b05cf7c22ce6fd8000905957c2263ab0048185b5010172b5bc19e6 \
-                        size    23256952
+checksums               rmd160  54c3b5255cf24f88eec75b2f98fcbeaf0f28602e \
+                        sha256  cdb15e7ee31e0663589d3107a79988a37b7b1719df3d24f2058545d1bcdd5837 \
+                        size    24893904
 
-worksrcdir              CGAL-${version}
+boost.version           1.81
+
 depends_lib-append      port:mpfr \
                         port:zlib \
                         port:gmp \
-                        path:include/eigen3/Eigen/Eigen:eigen3
+                        path:share/pkgconfig/eigen3.pc:eigen3
 
 compiler.cxx_standard   2014
 compiler.thread_local_storage yes
-
-configure.args-append   -DCGAL_HEADER_ONLY=OFF
-
-variant headers_only description "Install only the headers" {
-    configure.args-replace   -DCGAL_HEADER_ONLY=OFF -DCGAL_HEADER_ONLY=ON
-}
 
 github.livecheck.regex  {([0-9.]+)}

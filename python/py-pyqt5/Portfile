@@ -5,12 +5,11 @@ PortGroup           python 1.0
 
 name                py-pyqt5
 python.rootname     PyQt5
-version             5.15.6
+version             5.15.10
 revision            0
 
 categories-append   devel
-platforms           darwin
-license             GPL-3
+license             {GPL-3 OpenSSLException}
 maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         PyQt5 is a set of Python bindings for the Qt5 toolkit
@@ -18,14 +17,23 @@ long_description    ${description}. The bindings are implemented as a set of Pyt
 
 homepage            https://www.riverbankcomputing.com/software/pyqt/intro
 
-checksums           rmd160  c4074e205191d62584d7c1a28447baef40a15579 \
-                    sha256  80343bcab95ffba619f2ed2467fd828ffeb0a251ad7225be5fc06dcc333af452 \
-                    size    3239505
+checksums           rmd160  1e6f42643739e99bc47c4431aa045634e358f2b1 \
+                    sha256  d46b7804b1b10a4ff91753f8113e5b5580d2b4462f3226288e2d84497334898a \
+                    size    3242654
 
-python.versions     35 36 37 38 39 310
+python.versions     35 36 37 38 39 310 311 312
+
+supported_archs     arm64 x86_64
 
 if {${name} ne ${subport}} {
     PortGroup       qmake5 1.0
+
+    python.pep517   no
+
+    # https://trac.macports.org/ticket/65410
+    if { ${os.platform} eq "darwin" && (( ${os.major} >= 15 && ${os.major} <= 16 ) || ${os.major} >= 20 ) } {
+        use_xcode   yes
+    }
 
     patchfiles      patch-project.py.diff
 
@@ -35,6 +43,7 @@ if {${name} ne ${subport}} {
 
     compiler.cxx_standard 2011
 
+    qt5.min_version 5.6
     qt5.depends_component \
                     qtscript \
                     qt3d \
@@ -42,7 +51,7 @@ if {${name} ne ${subport}} {
 
     depends_build-append \
                     port:py${python.version}-pyqt-builder \
-                    port:py${python.version}-sip
+                    path:${python.prefix}/bin/sip-build:py${python.version}-sip
 
     depends_lib-append \
                     port:dbus-python${python.version}
@@ -71,8 +80,8 @@ if {${name} ne ${subport}} {
 
     variant webkit description {Build QtWebKit module} {
         qt5.depends_component   qtwebkit
-        build.args-delete       --disable=QtWebKit \
-                                --disable=QtWebKitWidgets
+        build.args-delete       --disable QtWebKit \
+                                --disable QtWebKitWidgets
     }
 
     variant debug description "Build debug libraries" {

@@ -3,14 +3,13 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        maxmind libmaxminddb 1.6.0
+github.setup        maxmind libmaxminddb 1.8.0
 revision            0
-checksums           rmd160  85fe2385d5811a4fbe4ab5e6cb1cfff243daefca \
-                    sha256  7620ac187c591ce21bcd7bf352376a3c56a933e684558a1f6bef4bd4f3f98267 \
-                    size    605099
+checksums           rmd160  8bad406fa68bc55f43f3ffc21e8597f726cce967 \
+                    sha256  1107799f77be6aa3b9796ad0eed8ffcc334bf45f8bd18e6a984d8adf3e719c6d \
+                    size    612176
 
 categories          devel net
-platforms           darwin
 license             Apache-2
 maintainers         nomaintainer
 
@@ -29,12 +28,18 @@ long_description    {*}${description} This is a custom binary format designed to
 homepage            https://maxmind.github.io/libmaxminddb/
 github.tarball_from releases
 
-depends_build       port:automake port:autoconf port:libtool
+depends_build-append \
+                    port:autoconf \
+                    port:automake \
+                    port:libtool
 
 # For the t/libtap subdirectory.
 build.env-append    CC=${configure.cc} \
                     "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
                     "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]"
+
+depends_test-append \
+                    port:p5-ipc-run3
 
 test.run            yes
 test.target         check

@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-josepy
-version             1.11.0
+version             1.14.0
 revision            0
 categories-append   security
 license             Apache-2
@@ -12,16 +12,16 @@ maintainers         {mps @Schamschula} openmaintainer
 homepage            https://github.com/certbot/josepy
 description         JOSE protocol implementation in Python using cryptography
 long_description    {*}${description}
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311 312
 
-checksums           rmd160  d7fcace426930402b1f6f41ae6ef66392ebdd578 \
-                    sha256  40ef59f2f537ec01bafe698dad66281f6ccf4642f747411647db403ab8fa9a2d \
-                    size    59198
+checksums           rmd160  73a1b89ea2dcb8701c149db27804bacf11ce93cc \
+                    sha256  308b3bf9ce825ad4d4bba76372cf19b5dc1c2ce96a9d298f9642975e64bd13dd \
+                    size    58794
 
 if {${name} ne ${subport}} {
-    depends_lib-append  port:py${python.version}-setuptools
-
-    livecheck.type  none
+    python.pep517           yes
+    python.pep517_backend   poetry
 }

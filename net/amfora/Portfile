@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/makeworld-the-better-one/amfora 1.9.1 v
+go.setup            github.com/makeworld-the-better-one/amfora 1.10.0 v
+go.offline_build    no
 github.tarball_from archive
 revision            0
 
@@ -15,17 +16,13 @@ long_description    {*}${description} Amfora aims to be the best looking \
 
 categories          net
 installs_libs       no
-license             GPL-3.0
+license             GPL-3
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  8c4b4ca9c894f8eeeb5c4acc081fd5673f840240 \
-                    sha256  f10811cee8a4e45cac13a1f6ff883b576e2daca2871ac6844ad5046b17269c16 \
-                    size    2334340
-
-
-# Allow Go to download deps at runtime.
-build.env-delete    GO111MODULE=off GOPROXY=off
+checksums           rmd160  cae7b1bd7d45af9f15ae823bb3f34ba3619aebb0 \
+                    sha256  0bc9964ccefb3ea0d66944231492f66c3b0009ab0040e19cc115d0b4cd9b8078 \
+                    size    2342797
 
 build.cmd           make
 build.pre_args-append \

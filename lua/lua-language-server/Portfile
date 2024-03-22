@@ -4,51 +4,43 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           legacysupport 1.1
 
-# Patch for remove test "filesystem.test_appdata_path" can be removed in the
-# next release.
-github.setup        sumneko lua-language-server 2.5.3
-fetch.type          git
+github.setup        LuaLS lua-language-server 3.7.4
+github.tarball_from releases
 revision            0
 
 categories          lua devel
-platforms           darwin
 license             MIT
 maintainers         {judaew @judaew} openmaintainer
 
-description         Lua Language Server coded by Lua
+description         A language server that offers Lua language support
 long_description    {*}${description}
 
-post-fetch {
-    system -W ${worksrcpath} "git submodule update --init"
-    system -W ${worksrcpath}/3rd/luamake "git submodule update --init"
+use_zip             yes
+extract.mkdir       yes
+distname            ${name}-${version}-submodules
 
-    copy ${filespath}/wrapper ${worksrcpath}
-    reinplace "s,@@PREFIX@@,${prefix},g" ${worksrcpath}/wrapper
-    reinplace "s,cc = clang,cc = ${configure.cc},g" \
-        ${worksrcpath}/3rd/luamake/compile/ninja/macos.ninja
-}
+checksums           rmd160  dd1b98bdcf9a76e5850d98485065466b27109666 \
+                    sha256  4993365d2fd34ea460d5614927c752f27294181a6304901c3198a9defced673b \
+                    size    31527026
 
-# Disable `filesystem.test_appdata_path`.
-#
-# This test is to run the application as expected uses the user's ${HOME}. But
-# it looks like the environment in which MacPorts builds port is not compatible
-# with the test. In any case, the application will not run from the `macports`
-# user.
-#
-# See https://github.com/actboy168/bee.lua/issues/21
-patchfiles          patch-disable-filesystem-test_appdata_path-test.diff
-
-depends_build       port:ninja
-use_configure       no
+depends_build       port:luamake
 compiler.c_standard 2011
 compiler.cxx_standard 2017
 
-pre-build {
-    system -W ${worksrcpath} "${prefix}/bin/ninja -C 3rd/luamake -f \
-        compile/ninja/macos.ninja"
+configure {
+    # see https://trac.macports.org/wiki/UsingTheRightCompiler
+    set makefile    [open "${worksrcpath}/make.lua" "a"]
+    puts $makefile  ""
+    puts $makefile  "lm.cc = '${configure.cc}'"
+    close $makefile
 }
 
-build.cmd ${worksrcpath}/3rd/luamake/luamake rebuild
+pre-build {
+    copy ${filespath}/wrapper ${worksrcpath}
+    reinplace "s,@@PREFIX@@,${prefix},g" ${worksrcpath}/wrapper
+}
+
+build.cmd ${prefix}/bin/luamake rebuild
 
 destroot {
     xinstall -m 0755 ${worksrcpath}/wrapper ${destroot}${prefix}/bin/${name}
@@ -68,7 +60,7 @@ destroot {
 notes "
     To use in Neovim, it is sufficient to specify cmd in lspconfig:
 
-        require'lspconfig'.sumneko_lua.setup \{
+        require'lspconfig'.lua_ls.setup \{
             cmd = \{\"${prefix}/bin/${name}\"\};
         \}
 

@@ -1,0 +1,19 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github hughjonesd rcheology 4.3.3.0 v
+revision            0
+maintainers         nomaintainer
+license             public-domain
+description         Data on base packages for current and previous versions of R
+long_description    {*}${description}
+checksums           rmd160  8ad198d8c2f815c77351d976618d7f71cdb26aa5 \
+                    sha256  40e28b2e603ca98650eb14929dc72e7c320302aaa34c10f6ee6137df8d738c7b \
+                    size    9540154
+supported_archs     noarch
+
+depends_test-append port:R-testthat
+
+test.run            yes

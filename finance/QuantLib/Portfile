@@ -5,14 +5,13 @@ PortGroup           github 1.0
 PortGroup           compiler_blacklist_versions 1.0
 PortGroup           boost 1.0
 
-github.setup        lballabio QuantLib 1.24 QuantLib-v
+github.setup        lballabio QuantLib 1.33 v
 revision            0
-checksums           rmd160  6b1a1336bb84faa8b30e36e225421abe0d07ba5a \
-                    sha256  ddda3707002b5af3103bf8b9ac250b233bd06de111c0faca031f2931d884b2e7 \
-                    size    9299324
+checksums           rmd160  52706c347f839f0f2e89aeca5b863fe58999ae58 \
+                    sha256  4810d789261eb36423c7d277266a6ee3b28a3c05af1ee0d45544ca2e0e8312bd \
+                    size    9367983
 
 categories          finance
-platforms           darwin
 maintainers         {ryandesign @ryandesign} openmaintainer
 license             BSD
 
@@ -27,11 +26,17 @@ homepage            https://www.quantlib.org
 github.tarball_from releases
 
 compiler.cxx_standard \
-                    2011
+                    2014
 
 # https://github.com/lballabio/QuantLib/issues/1091
 # error: default initialization of an object of const type 'const ext::function<Real (Real)>' (aka 'const function<double (double)>') without a user-provided default constructor
+# https://github.com/lballabio/QuantLib/issues/1883
+# Undefined symbols "std::__1::vector<QuantLib::Handle<QuantLib::Quote>, std::__1::allocator<QuantLib::Handle<QuantLib::Quote> > >::~vector()"
 compiler.blacklist-append {clang < 900}
 
-configure.args      --with-boost-include=[boost::include_dir] \
-                    --with-boost-lib=[boost::lib_dir]
+boost.version       1.81
+boost.depends_type  build
+
+configure.args      --with-boost-include=[boost::include_dir]
+
+github.livecheck.regex {([0-9.]+)}

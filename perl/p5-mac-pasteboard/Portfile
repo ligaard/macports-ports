@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         Mac-Pasteboard 0.101
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Mac-Pasteboard 0.104
 revision            0
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
@@ -14,10 +14,6 @@ long_description    ${name} is a perl module to ${description}.
 
 platforms           darwin
 
-checksums           rmd160  83bcedecdae23688cec80faf5788c8027c4046ae \
-                    sha256  9e8ae448009ae6781c8e91c590ea1fe122a5324dd03d74e6f71d4357ad5c3e8c \
-                    size    101874
-
-if {${perl5.major} != ""} {
-    patchfiles      disable-unnecessary-developer-code.patch
-}
+checksums           rmd160  bec723748b3a1ae8b66580aab7e95412dc0db5e8 \
+                    sha256  c55a4431188bec4873212a7c308f835fd1f0e3ba1958173037b5e2d0100fca40 \
+                    size    225287

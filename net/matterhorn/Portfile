@@ -4,11 +4,11 @@ PortSystem          1.0
 PortGroup           haskell_cabal 1.0
 
 name                matterhorn
-version             50200.14.1
+version             90000.0.0
 revision            0
-checksums           rmd160  4f0b95b7e474d273b5594154e94d07bb83b95682 \
-                    sha256  e2c0cee0f2e24da07cc0798a18f946e00833a6ceaa332532e7d7df801029bf2f \
-                    size    964313
+checksums           rmd160  b5a2eaf4f0bf466e665ac1f81f8b1c49f6c42ebf \
+                    sha256  57838f85c6740e8fb17c6e96c716c657931e163546658e1043a73cd6031c866d \
+                    size    1057207
 
 master_sites        https://hackage.haskell.org/package/${name}-${version}
 
@@ -23,5 +23,7 @@ platforms           darwin
 supported_archs     noarch
 maintainers         {isi.edu:calvin @cardi} openmaintainer
 license             BSD
+
+build.target        exe:matterhorn
 
 test.run            yes

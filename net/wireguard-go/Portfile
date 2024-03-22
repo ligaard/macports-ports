@@ -3,11 +3,11 @@
 PortSystem          1.0
 
 name                wireguard-go
-version             0.0.20211016
+version             0.0.20230223
 revision            0
-checksums           rmd160  1920b4ac0ea2bff8df27f28cb8768f2ced319df9 \
-                    sha256  25c9ec596adc714fa456f88b61704bb069f17be3604d1c9cfae96579c924361d \
-                    size    97948
+checksums           rmd160  d1634ffe84be9f2d49edc8ded00f0fb161c7215e \
+                    sha256  ed3694e808d96720e79e17ae396f89f7c2024da07f3449ff0af8fbc6dbfa7f6a \
+                    size    77552
 
 categories          net
 platforms           darwin

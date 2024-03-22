@@ -4,28 +4,25 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                pyupgrade
-version             2.29.1
+version             3.15.1
 revision            0
 
 categories-append   devel
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
 license             MIT
 maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         A tool to automatically upgrade syntax for newer versions.
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://github.com/asottile/pyupgrade
 
-checksums           rmd160  d9a857b0bed6ec10d69050e45886f1129db3e83c \
-                    sha256  737e02bed0de70247df5d2a0c3edba6b4529adf44f5ef588ecda4a69f14bf694 \
-                    size    41093
+checksums           rmd160  f67f0aed25fcbc83149f3e74bf6ccad089f84610 \
+                    sha256  7690857cae0f6253f39241dcd2e57118c333c438b78609fc3c17a5aa61227b7d \
+                    size    44925
 
-python.default_version  39
-
-depends_build-append \
-                    port:py${python.version}-setuptools
+python.default_version  312
 
 depends_lib-append  port:py${python.version}-tokenize-rt
 

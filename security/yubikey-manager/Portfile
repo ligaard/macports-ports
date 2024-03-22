@@ -4,26 +4,31 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                yubikey-manager
-version             4.0.7
+version             5.3.0
 revision            0
 categories-prepend  security
-platforms           darwin
+platforms           {darwin any}
+supported_archs     noarch
 license             BSD
 maintainers         {amake @amake} openmaintainer
 
 description         Tool ("ykman") for managing your YubiKey configuration.
 long_description    Python library and command line tool for configuring any YubiKey over all USB interfaces.
 
+conflicts           yubikey-manager4
+
+python.rootname     yubikey_manager
+
 homepage            https://developers.yubico.com/yubikey-manager/
 
-checksums           rmd160  fe9e883187fcf50a94f28ebe43fd7ca08ad187d5 \
-                    sha256  9972db8a1c7c13eb1a618015a8ad8011c03a045a08fee248e5de4f120f55fc4f \
-                    size    143622
+checksums           rmd160  abbeb6539a766c3f8f1c4efaf4aae4041b4bfb84 \
+                    sha256  5492c36a10ce6a5995b8ea1d32cf5bd60db7587201b2aa3e63e0c1da2334b8b6 \
+                    size    188418
 
-# This must be bumped in step with the yubico-authenticator port's Python
-# version. The full, built app must be tested: Python 3.8 previously failed at
-# runtime.
-python.default_version 39
+python.default_version 312
+
+python.pep517           yes
+python.pep517_backend   poetry
 
 depends_lib-append \
     port:py${python.version}-setuptools
@@ -34,6 +39,7 @@ depends_run-append \
     port:py${python.version}-fido2 \
     port:py${python.version}-openssl \
     port:py${python.version}-pyscard \
+    port:py${python.version}-keyring \
     port:swig
 
 depends_test-append \

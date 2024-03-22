@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github 2005m kit 0.0.16 v
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3
+description         Data manipulation functions implemented in C
+long_description    {*}${description}
+checksums           rmd160  22d507c25f4f4f3608cfe33007f30dad91d8da88 \
+                    sha256  1edbca07b6e162603bec366e54789264fd881995b0a52feba2845df90591466b \
+                    size    106485
+
+compiler.openmp_version 3.0
+
+post-patch {
+    # https://github.com/2005m/kit/issues/36
+    if {[string match macports-clang* ${configure.compiler}]} {
+        reinplace "s,-Xpreprocessor -fopenmp,-Xpreprocessor -I${prefix}/include/libomp -fopenmp," ${worksrcpath}/configure
+        reinplace "s,-lomp,-L${prefix}/lib/libomp -lomp,g" ${worksrcpath}/configure
+    }
+}
+
+test.run            yes

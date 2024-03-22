@@ -19,7 +19,6 @@ set aarnet.au   http
 set atl.us      http
 set cph.dk      ${letsencrypt_https_or_http}
 set cjj.kr      http
-set ema.uk      ${letsencrypt_https_or_http}
 # cert doesn't have macports.org SANs; admin notified
 #set fco.it      ${letsencrypt_https_or_http}
 set fco.it      http
@@ -34,14 +33,15 @@ set pek.cn      ${letsencrypt_https_or_http}
 #set ykf.ca      ${letsencrypt_https_or_http}
 set ykf.ca      http
 set ywg.ca      ${letsencrypt_https_or_http}
+set fcix.net    http
 
 # Keep the primary packages server first in the list
 set portfetch::mirror_sites::sites(macports_archives) [lsearch -all -glob -inline -not "
     ${fastly}://packages.macports.org/:nosubdir
     ${nue.de}://nue.de.packages.macports.org/:nosubdir
+    ${fcix.net}://mirror.fcix.net/macports/packages/:nosubdir
     ${atl.us}://atl.us.packages.macports.org/:nosubdir
     ${cph.dk}://cph.dk.packages.macports.org/:nosubdir
-    ${ema.uk}://ema.uk.packages.macports.org/:nosubdir
     ${fco.it}://fco.it.packages.macports.org/:nosubdir
     ${fra.de}://fra.de.packages.macports.org/:nosubdir
     ${jnb.za}://jnb.za.packages.macports.org/packages/:nosubdir

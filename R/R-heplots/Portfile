@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran friendly heplots 1.6.2
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2+
+description         Visualizing hypothesis tests in multivariate linear models
+long_description    {*}${description}
+homepage            https://friendly.github.io/heplots
+checksums           rmd160  c886f4ea2a9d3e777f2f7b5f787a93b0d7afd30e \
+                    sha256  b4c695e007a7713d16676031eef6846bbae807fa9bb7a4bef23f9b2b82f64327 \
+                    size    2452012
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-car \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-rgl \
+                    port:R-tibble

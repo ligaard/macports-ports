@@ -1,9 +1,10 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           golang 1.0
+PortGroup           github 1.0
 
-go.setup            github.com/traefik/traefik 2.5.4 v
+github.setup        traefik traefik 2.11.0 v
+github.tarball_from releases
 revision            0
 
 categories          net security devel
@@ -19,28 +20,31 @@ long_description    \
     automatically and dynamically. Pointing Traefik at your orchestrator \
     should be the only configuration step you need.
 
-checksums           rmd160  e4470fec5e5f195371617879ae7c872532ba3aa0 \
-                    sha256  226d023838fe556f693fe7c538eae934a67dbe4963047303878774b0d0abb894 \
-                    size    8527622
+set arch ${build_arch}
 
-depends_build-append \
-                    port:go-bindata
-
-set build_sh        ${worksrcpath}/build.sh
-
-post-extract {
-    set bfile [open ${build_sh} w]
-    puts ${bfile} "#!/bin/sh"
-    puts ${bfile} "${go.bin} generate && ${go.bin} build -ldflags '-X ${go.package}/v2/pkg/version.Version=${version}' ./cmd/${name}"
-    close ${bfile}
-
-    file attributes ${build_sh} -permissions 0755
+if {${build_arch} eq "x86_64"} {
+    set arch "amd64"
 }
 
-# FIXME: This port currently can't be built without allowing go mod to fetch
-build.env-delete    GOPROXY=off GO111MODULE=off
+distfiles           traefik_v${version}_darwin_${arch}${extract.suffix} \
+                    traefik-v${version}.src${extract.suffix}
 
-build.cmd           ${build_sh}
+checksums           traefik_v${version}_darwin_amd64${extract.suffix} \
+                        rmd160  e0c8caa1ab50f0bb1070f157e0a398c18add093d \
+                        sha256  9fb706a29fedcaec4046fbfb3799ae8546083b2112539fc22d80cdff0a9fc70f \
+                        size    41566458 \
+                    traefik_v${version}_darwin_arm64${extract.suffix} \
+                        rmd160  73b3ba3de2f9e55e9c4c26ed9da7973bc3d39084 \
+                        sha256  b845fd1617f530574908851f5b2838060d2a4fe1541d4562bab69c54d21af14b \
+                        size    39694581 \
+                    traefik-v${version}.src${extract.suffix} \
+                        rmd160  3924180a6ee70f2e6a2f9e74788e076481a28a12 \
+                        sha256  b431d4a802d7c06912427b3e876c44fc4cc0284bb05268c466dd6a0fbb59e9c2 \
+                        size    11500258
+
+extract.mkdir       yes
+use_configure       no
+build {}
 
 destroot {
     xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
@@ -51,8 +55,8 @@ destroot {
         ${destroot}${prefix}/share/examples/${name}
 
     xinstall -d ${destroot}${prefix}/etc/${name}
-    destroot.keepdirs ${destroot}${prefix}/etc/${name}
 }
+destroot.keepdirs ${destroot}${prefix}/etc/${name}
 
 startupitem.create  yes
 startupitem.start   \

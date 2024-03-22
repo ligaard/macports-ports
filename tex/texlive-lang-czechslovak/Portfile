@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           texlive 1.0
 
 name                texlive-lang-czechslovak
-version             58609
+version             69910
 revision            0
 
 categories          tex
@@ -13,24 +13,24 @@ license             Copyleft Permissive
 description         TeX Live: Czech/Slovak
 long_description    Support for Czech/Slovak.
 
-checksums           texlive-lang-czechslovak-58609-run.tar.xz \
-                    rmd160  fe1c97799ac10df611ca85cb91cc06a0eb499dad \
-                    sha256  ba919a7fcd9a55067062131cd6d7234ec2753adf812d1311baf39bc22cda50eb \
-                    size    10917472 \
-                    texlive-lang-czechslovak-58609-doc.tar.xz \
-                    rmd160  34c285d4fb86b64346395ea72df17a82455102f2 \
-                    sha256  17d2a50e3b968a94b16f5b98c5739f8bd8130dbc2ee833603daa1f26f4e7a34d \
-                    size    8918284 \
-                    texlive-lang-czechslovak-58609-src.tar.xz \
-                    rmd160  d023bdc9c723803baabad669d7b70a4ed1958c8e \
-                    sha256  06427b299c9188c5b0379ff2e1766507f502b5849c5704f2de7d19b0849fc443 \
-                    size    37284
+checksums           texlive-lang-czechslovak-69910-run.tar.xz \
+                    rmd160  c9e4970e6b6856ee9d43d8f9cab5067bc10f4da0 \
+                    sha256  45b77f1377ff60ada489e875dedc06ded48487dc9798db8cab9e7435d136a7aa \
+                    size    10961188 \
+                    texlive-lang-czechslovak-69910-doc.tar.xz \
+                    rmd160  f90b547291ad589c471f4f926441b546cf3bd9a4 \
+                    sha256  41082d1bd2d2dbb6e4fd4b6dd44ad11fef5c6c345d43977584263bec653443b6 \
+                    size    8968524 \
+                    texlive-lang-czechslovak-69910-src.tar.xz \
+                    rmd160  e331b860d48dc6ad97f4d4f9110ced08865cce4c \
+                    sha256  b1ca291ab7fa6881edf49ce69a732ce1ee12ab77cc10e57b039e27cc6113c182 \
+                    size    37064
 
 depends_lib         port:texlive-basic port:texlive-latex
 
 texlive.formats      \
-    {1 cslatex pdftex - {-etex cslatex.ini}} \
-    {1 pdfcslatex pdftex - {-etex cslatex.ini}} \
+    {0 cslatex pdftex - {-etex cslatex.ini}} \
+    {0 pdfcslatex pdftex - {-etex cslatex.ini}} \
     {1 csplain pdftex - {-etex -enc csplain-utf8.ini}} \
     {1 luacsplain luatex - {-etex csplain.ini}} \
     {1 pdfcsplain luatex - {-etex csplain.ini}} \
@@ -45,7 +45,7 @@ texlive.maps      \
     {Map cs-charter.map} \
     {Map csfonts.map}
 
-texlive.binaries    cslatex csplain luacsplain pdfcslatex pdfcsplain vlna
+texlive.binaries    csplain luacsplain pdfcsplain vlna
 
 depends_lib-append port:texlive-luatex
 

@@ -4,9 +4,8 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-pooch
-version             1.5.2
+version             1.8.1
 revision            0
-platforms           darwin
 license             BSD
 maintainers         {mps @Schamschula} openmaintainer
 
@@ -14,22 +13,25 @@ description         Pooch manages your Python library's sample data files it \
                     automatically downloads and stores them in a local directory with \
                     support for versioning and corruption checks.
 long_description    {*}${description}
-
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://github.com/fatiando/pooch
 
-checksums           rmd160  cb352ada8b8ba8600f9d1adcd974f62769f85bdf \
-                    sha256  5969b2f1defbdc405df932767e05e0b536e2771c27f1f95d7f260bc99bf13581 \
-                    size    61167
+checksums           rmd160  e2efc6fb223431628bd22352e5e4ab6cc746e135 \
+                    sha256  27ef63097dd9a6e4f9d2694f5cfbf2f0a5defa44fccafec08d601e731d746270 \
+                    size    59614
 
-python.versions     37 38 39
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
+    python.pep517   yes
+
     depends_build-append \
-                    port:py${python.version}-setuptools_scm
+                    port:py${python.version}-setuptools_scm \
+                    port:py${python.version}-wheel
 
     depends_lib     port:py${python.version}-appdirs \
                     port:py${python.version}-requests \
-                    port:py${python.version}-packaging
-
-    livecheck.type  none
+                    port:py${python.version}-packaging \
+                    port:py${python.version}-tqdm
 }

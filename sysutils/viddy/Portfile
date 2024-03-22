@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/sachaos/viddy 0.3.4 v
+go.setup            github.com/sachaos/viddy 0.4.0 v
 github.tarball_from archive
 revision            0
 
@@ -23,12 +23,12 @@ license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  5510e78a3b18ac672de0916170624f0463ab60ae \
-                    sha256  9a66db51e729713df102def0c2c02b786bb09c2b024204c515f9c0dd721382aa \
-                    size    9403035
+checksums           rmd160  bcc4cebfd02f6f954dc32ccf76b02ee8b18efa5b \
+                    sha256  b64cca44ef6367397498faae92296fc005156e6e5a7518b6f64ac2bc912044d0 \
+                    size    9404667
 
 # Allow Go to fetch deps at build time
-build.env-delete    GO111MODULE=off GOPROXY=off
+go.offline_build no
 
 build.pre_args-append \
     -ldflags \"-s -w -X main.version=${github.tag_prefix}${version}\"

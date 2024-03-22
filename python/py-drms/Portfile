@@ -4,31 +4,30 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-drms
-version             0.6.2
+version             0.7.1
 revision            0
-categories          python
 license             BSD
 maintainers         {mps @Schamschula} openmaintainer
 description         The drms module provides an easy-to-use interface for accessing HMI, \
                     AIA and MDI data with Python.
 long_description    {*}${description} It uses the publicly accessible JSOC DRMS server \
                     by default, but can also be used with local NetDRMS sites.
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://sunpy.org
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311 312
 
-checksums           rmd160  20fdcf61850f96080fccc56ff4e63b950f575be7 \
-                    sha256  21df2b3caf2aabbd601e7e432a7122ecba74f351856dc16d194faff3d565b7da \
-                    size    53808
+checksums           rmd160  b87dacc1de647879238711a57a2c823272eb0e50 \
+                    sha256  d95b40191c743a761d0132bf9e03617df9900e365f10b61e4d33c275f9070007 \
+                    size    57267
 
 if {${name} ne ${subport}} {
     depends_build-append \
+                    port:py${python.version}-oldest-supported-numpy \
                     port:py${python.version}-setuptools_scm
 
     depends_lib-append \
                     port:py${python.version}-numpy \
                     port:py${python.version}-pandas
-
-    livecheck.type  none
 }

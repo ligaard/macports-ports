@@ -5,10 +5,9 @@ PortGroup           clang_dependency 1.0
 
 name                sqlite3
 # don't forget to update the checksums for sqlite3-tools when updating sqlite3
-version             3.37.0
+version             3.45.2
 revision            0
 categories          databases
-platforms           darwin
 license             public-domain
 
 maintainers         {mps @Schamschula} openmaintainer
@@ -24,14 +23,14 @@ long_description    SQLite3 is an SQL database engine in a C library. \
                     an example of how to use the SQLite3 library.
 
 homepage            https://www.sqlite.org/
-master_sites        ${homepage}2021
+master_sites        ${homepage}2024
 
 set padded_ver      [string range [subst [regsub -all {\.([0-9]+)} "${version}.0.0" {[format %02d \1]}]] 0 6]
 distname            sqlite-autoconf-${padded_ver}
 
-checksums           rmd160  0fd1bd8fe1205a5055844dbb71339805effc017d \
-                    sha256  731a4651d4d4b36fc7d21db586b2de4dd00af31fd54fb5a9a4b7f492057479f7 \
-                    size    3001298
+checksums           rmd160  6b97d7343603bdbbf4669f786c1bd330c99fb520 \
+                    sha256  bc9067442eedf3dd39989b5c5cfbfff37ae66cc9c99274e0c3052dc4d4a8f6ae \
+                    size    3234010
 
 depends_lib         port:libedit \
                     port:ncurses \
@@ -40,6 +39,17 @@ depends_lib         port:libedit \
 if {${os.platform} eq "darwin" && ${os.major} < 11 && ${cxx_stdlib} eq "libc++"} {
     # This port is in the dependency chain for clang 3.7 and later
     clang_dependency.extra_versions 3.7
+}
+
+# Drop defines-ppc patches with 3.46.0: https://sqlite.org/forum/forumpost/fc4bfa307db74d04
+if {${subport} ne "${name}-tools"} {
+    configure.checks.implicit_function_declaration.whitelist-append strchr
+
+    patchfiles      patch-sqlite3_fix-atomic-clang-4.diff \
+                    patch-sqlite3_fix-defines-ppc.diff
+} else {
+    patchfiles      patch-sqlite3-tools_fix-atomic-clang-4.diff \
+                    patch-sqlite3-tools_fix-defines-ppc.diff
 }
 
 configure.args      --enable-threadsafe \
@@ -94,22 +104,28 @@ subport ${name}-tcl {
                     --with-tclinclude=${prefix}/include
 
     configure.cppflags-prepend  -I${worksrcpath}
+
+    platform darwin {
+        if {${os.major} < 11} {
+            patch.dir   ${configure.dir}
+            patchfiles  patch-tea-configure.diff
+        }
+    }
 }
 
 subport ${name}-tools {
+    revision                0
+
     distname                sqlite-src-${padded_ver}
+
     description             A bundle of command-line tools for managing SQLite \
                             database files
-
-    long_description        A bundle of command-line tools for managing SQLite \
-                            database files, including the sqldiff program and the \
+    long_description        {*}${description}, including the sqldiff program and the \
                             sqlite3_analyzer program.
 
-    checksums       rmd160  528a166fb619b635787dfec1a0abd5471e919179 \
-                    sha256  70977fb3942187d4627413afde9a9492fa02b954850812b53974b6a31ece8faf \
-                    size    13141152
-
-
+    checksums       rmd160  73ccafa4a992499120e54091aa192d1b8084dcef \
+                    sha256  4a45a3577cc8af683c4bd4c6e81a7c782c5b7d5daa06175ea2cb971ca71691b1 \
+                    size    14156848
 
     use_zip                 yes
     depends_lib             port:tcl \

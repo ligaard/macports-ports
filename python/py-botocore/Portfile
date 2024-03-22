@@ -4,11 +4,11 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-botocore
-version             1.23.22
+version             1.34.66
 revision            0
 
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             Apache-2
 maintainers         {judaew @judaew} \
                     {emcrisostomo @emcrisostomo} openmaintainer
@@ -20,25 +20,20 @@ long_description    A low-level interface to a growing number of Amazon Web \
 
 homepage            https://github.com/boto/botocore
 
-checksums           rmd160  ff8c5f3b7b8829eca6187dbbd6b0c06f7439cd62 \
-                    sha256  6738e87baa48e4befc447dded787fcadb87a23efb3a5ee6bfe78177bc9630516 \
-                    size    8674742
+checksums           rmd160  32ac900795c9c01fb3b353974cdf541ca370dcb2 \
+                    sha256  fd7d8742007c220f897cb126b8916ca0cf3724a739d4d716aa5385d7f9d8aeb1 \
+                    size    12237825
 
-python.versions     36 37 38 39 310
+python.versions     37 38 39 310 311 312
 
 if {${name} ne ${subport}} {
-    depends_build-append \
-                    port:py${python.version}-setuptools
-
     depends_lib-append \
                     port:py${python.version}-dateutil \
                     port:py${python.version}-jmespath \
                     port:py${python.version}-urllib3
 
     test.run        yes
-    test.env        PYTHONPATH=${worksrcpath}/build/lib
+    python.test_framework
     test.cmd        ${python.bin} -c
     test.target     \"import botocore\"
-
-    livecheck.type  none
 }

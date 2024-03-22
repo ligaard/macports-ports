@@ -3,10 +3,10 @@
 PortSystem 1.0
 
 name                file
-version             5.41
-checksums           rmd160  77076d8acaf5fe205d5ba6720d6531a67f6085e6 \
-                    sha256  13e532c7b364f7d57e23dfeea3147103150cb90593a57af86c10e4f6e411603f \
-                    size    1064097
+version             5.45
+checksums           rmd160  b06bba10ac38cfa3fbc9811633b97ed760f5cf4a \
+                    sha256  fc97f51029bb0e2c9f4e3bffefdaf678f0e039ee872b9de5c002a6d09c784d82 \
+                    size    1246503
 
 categories          sysutils
 license             BSD
@@ -21,39 +21,45 @@ long_description \
     `otool -fv`.
 
 homepage            http://www.darwinsys.com/file/
-platforms           darwin
 master_sites        freebsd \
                     gentoo \
                     ftp://ftp.fu-berlin.de/unix/tools/${name}/ \
                     ftp://ftp.astron.com/pub/${name}/ \
                     ftp://ftp.gw.com/mirrors/pub/unix/${name}/
 
-patchfiles          patch-magic-Makefile.am.diff \
-                    patch-getline.diff \
-                    implicit.patch
+patchfiles          patch-magic-Makefile.am.diff
 
-configure.args      --disable-silent-rules \
-                    --enable-fsect-man5
+configure.args      --disable-libseccomp \
+                    --disable-lzlib \
+                    --disable-silent-rules \
+                    --enable-bzlib \
+                    --enable-shared \
+                    --enable-static \
+                    --enable-fsect-man5 \
+                    --enable-xzlib \
+                    --enable-zlib \
+                    --enable-zstdlib
 
-depends_lib         port:zlib
+depends_lib         port:bzip2 \
+                    port:xz \
+                    port:zlib \
+                    port:zstd
 
 # We patch Makefile.am files.
 use_autoreconf      yes
 autoreconf.args     -fvi
-if {[vercmp [macports_version] 2.6.99] >= 0} {
 configure.checks.implicit_function_declaration.whitelist-append strchr
-}
 
 if {${name} eq ${subport}} {
     revision            0
 
     depends_lib-append port:libmagic
-    
+
     destroot {
         xinstall -W ${worksrcpath}/src/.libs file ${destroot}${prefix}/bin
         xinstall -m 0644 -W ${worksrcpath}/doc file.1 ${destroot}${prefix}/share/man/man1
     }
-    
+
     livecheck.type      regex
     livecheck.url       ftp://ftp.astron.com/pub/${name}/
     livecheck.regex     ${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}

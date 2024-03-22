@@ -5,11 +5,12 @@ PortGroup           github  1.0
 PortGroup           meson   1.0
 PortGroup           openssl 1.0
 
-github.setup        rizinorg rizin 0.3.1 v
-revision            0
 epoch               1
+github.setup        rizinorg rizin 0.7.2 v
+github.tarball_from releases
+revision            0
 
-homepage            https://rizin.re/
+homepage            https://rizin.re
 
 description         UNIX-like reverse engineering framework and command-line \
                     toolset
@@ -23,19 +24,24 @@ license             LGPL-3
 maintainers         {l2dy @l2dy} \
                     {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-platforms           darwin
 
-fetch.type          git
+distname            ${github.project}-src-v${github.version}
+worksrcdir          ${github.project}-v${github.version}
+use_xz              yes
+
+checksums           rmd160  195a7008fa6a3240aebdb9a04d9c83041368db25 \
+                    sha256  fcff3fb45ae2b75e3f604bc7a08076e322e6e14def79098186378065ccb3582a \
+                    size    18940872
 
 depends_build-append \
                     port:pkgconfig
 
-depends_lib         port:capstone \
+depends_lib-append  port:capstone \
                     port:libzip \
                     port:zlib \
                     port:lz4 \
-                    port:tree-sitter \
-                    port:libuv
+                    port:zstd \
+                    port:tree-sitter
 
 configure.args-append \
                     -Duse_sys_capstone=enabled \
@@ -45,5 +51,5 @@ configure.args-append \
                     -Duse_sys_lz4=enabled \
                     -Duse_sys_xxhash=disabled \
                     -Duse_sys_openssl=enabled \
-                    -Duse_sys_tree_sitter=enabled \
-                    -Duse_sys_libuv=enabled
+                    -Duse_sys_libzstd=enabled \
+                    -Duse_sys_tree_sitter=enabled

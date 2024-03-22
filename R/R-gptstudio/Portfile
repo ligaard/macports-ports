@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github MichelNivard gptstudio 0.3.0 v
+revision            0
+categories-append   www
+maintainers         nomaintainer
+license             MIT
+description         Use large language models directly in your development environment
+long_description    {*}${description}
+homepage            https://michelnivard.github.io/gptstudio
+checksums           rmd160  465524e258a44934fb5f4f7228e2263b6390327b \
+                    sha256  ed622ff2a4ef60a421b8b007efcfff67380e63fcea8337e93a39db90ae66208f \
+                    size    1994621
+supported_archs     noarch
+
+depends_lib-append  port:R-assertthat \
+                    port:R-bslib \
+                    port:R-callr \
+                    port:R-cli \
+                    port:R-colorspace \
+                    port:R-glue \
+                    port:R-htmltools \
+                    port:R-htmlwidgets \
+                    port:R-httr2 \
+                    port:R-jsonlite \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-rstudioapi \
+                    port:R-shiny \
+                    port:R-shiny.i18n \
+                    port:R-stringr \
+                    port:R-waiter \
+                    port:R-yaml
+
+patchfiles          patch-no-shinytest2.diff
+
+depends_test-append port:R-mockr \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-uuid \
+                    port:R-withr
+
+# Tests do not run now due to missing R-shinytest2, which in turn depends on Google Chrome.
+test.run            no

@@ -1,0 +1,44 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github tidymodels infer 1.0.6 v
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Tidy statistical inference
+long_description    {*}${description}
+homepage            https://infer.tidymodels.org
+checksums           rmd160  61c733bea1084b340a61b20c85399ab85394630a \
+                    sha256  88461380c618da8f18f0028814780ab3c98530856252680df3281faf5777035d \
+                    size    2360075
+supported_archs     noarch
+
+depends_lib-append  port:R-broom \
+                    port:R-cli \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggplot2 \
+                    port:R-glue \
+                    port:R-magrittr \
+                    port:R-patchwork \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-vctrs
+
+depends_test-append port:R-covr \
+                    port:R-devtools \
+                    port:R-fs \
+                    port:R-knitr \
+                    port:R-nycflights13 \
+                    port:R-parsnip \
+                    port:R-rmarkdown \
+                    port:R-stringr \
+                    port:R-testthat \
+                    port:R-vdiffr
+
+test.run            yes

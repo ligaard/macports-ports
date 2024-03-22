@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-hdf5plugin
-version             3.1.1
+version             4.2.0
 revision            0
 
 platforms           darwin
@@ -18,21 +18,24 @@ long_description    \
 
 homepage            https://www.silx.org/doc/hdf5plugin/latest/
 
-checksums           rmd160  3c1b023c69a27f3ba72e08043a8737fd8ed6d479 \
-                    sha256  4600dbdbed8b5f8afe81f086b0ee256ca1aea47a17e5431ddd2f136510a9e02f \
-                    size    11276438
+checksums           rmd160  06e9d0dba15da0fa8bcfdc37b424f449617982a9 \
+                    sha256  500c3de00fb80b3a588808776e89a90e8f2fc5353f0b5e921750c93030ed2d36 \
+                    size    26024915
 
 compiler.cxx_standard 2011
 
-python.versions     37 38 39
+python.versions     38 39 310 311
 
 if {${name} ne ${subport}} {
+    patchfiles  pyproject.toml.patch
+
     depends_build-append \
         port:py${python.version}-cython \
         port:py${python.version}-setuptools
-    
+
     depends_run-append \
-        port:py${python.version}-h5py
-    
+        port:py${python.version}-h5py \
+        port:py${python.version}-cpuinfo
+
     livecheck.type  none
 }

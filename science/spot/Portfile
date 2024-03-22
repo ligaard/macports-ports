@@ -2,30 +2,26 @@
 
 PortSystem          1.0
 PortGroup           compiler_blacklist_versions 1.0
-PortGroup           boost 1.0
 
 name                spot
-version             2.10.1
+version             2.11.6
 revision            0
-checksums           rmd160  2f507b42a73114494a55616d3577b52ada897746 \
-                    sha256  38002989fc8e3725841a0537665bb2d5dfc259d2e09358100322c38f4c7481ad \
-                    size    7587978
+checksums           rmd160  4bc9b4e1f68b0d92e9cf2be40858e7998a5e1bbf \
+                    sha256  a692794f89c0db3956ba5919bdd5313e372e0de34000a9022f29e1c6e91c538a \
+                    size    7573694
 
 categories          science math
 maintainers         nomaintainer
 description         Spot is an object-oriented model checking library written in C++.
 long_description    ${description}
 homepage            https://spot.lrde.epita.fr/index.html
-platforms           darwin
 license             GPL-3
 master_sites        http://www.lrde.epita.fr/dload/spot/
-
-patchfiles          dynamic_lookup-11.patch
 
 compiler.cxx_standard 2014
 configure.args-append --disable-python
 
-set pythons_suffixes {35 36 37 38 39 310}
+set pythons_suffixes {39 310 311 312}
 
 set pythons_ports {}
 foreach s ${pythons_suffixes} {
@@ -61,7 +57,7 @@ foreach s ${pythons_suffixes} {
 }
 
 # enable one python variant so that the python bindings can be compiled
-set selected_python python39
+set selected_python python311
 foreach s ${pythons_suffixes} {
     if {[variant_isset python${s}]} {
         set selected_python python${s}

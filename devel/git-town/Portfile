@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/git-town/git-town 12.1.0 v
+github.tarball_from archive
+revision            0
+
+description         High-level command-line interface for Git
+long_description    {*}${description}
+
+categories          devel
+installs_libs       no
+license             MIT
+maintainers         {karpenko.ca:alexei @akarpenko} \
+                    {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+homepage            https://www.git-town.com/
+
+checksums           sha256  807eb2e3340ff4b509e8cc3157f98ec4550ecf0a8581da331e60f0ce9b43c847 \
+                    rmd160  9d35d611e036a44f2c19a498f28d84783477d519 \
+                    size    4199716
+
+build.pre_args-append \
+    -ldflags \"-X ${go.package}/src/cmd.version=v${version}\"
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/
+}

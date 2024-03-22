@@ -2,17 +2,15 @@
 
 PortSystem          1.0
 PortGroup           python 1.0
-PortGroup           github 1.0
 
 name                py-shapely
-github.setup        Toblerity Shapely 1.8.0
-python.versions     36 37 38 39 310
+version             2.0.2
+revision            0
+python.versions     37 38 39 310 311 312
 categories-append   devel
-platforms           darwin
-supported_archs     noarch
 maintainers         {snc @nerdling} openmaintainer
 license             BSD
-homepage            http://toblerity.org/shapely/
+homepage            https://shapely.readthedocs.io/en/stable/
 description         Shapely is a Python package for manipulation \
                     and analysis of 2D geospatial geometries
 
@@ -23,28 +21,13 @@ long_description \
                     concerned with data formats or coordinate reference \
                     systems.
 
-#distname           Shapely-${version}
-#master_sites       pypi:S/Shapely
-
-checksums           md5     842ff3b3971bdf4d480c6345b76859f3 \
-                    rmd160  a7eb8018274780a7d54da360858cbded1d4bd238 \
-                    sha256  cb1a8c818f20c2b486038a3e26d3edb68f9ac62563bbd4ba1cc67a519b3e93d1 \
-                    size    310904
+checksums           md5    859665236b2525aa80bb33cb4a44252b \
+                    rmd160 b22c88145a8ab1f5080b36b4612f4f47eb6a0290 \
+                    sha256 1713cc04c171baffc5b259ba8531c58acc2a301707b7f021d88a15ed090649e7 \
+                    size   279727
 
 if {${name} ne ${subport}} {
-    depends_lib-append      port:geos
-    depends_build-append    port:py${python.version}-cython \
-                            port:py${python.version}-numpy \
-                            port:py${python.version}-setuptools
-
-    post-patch {
-        reinplace "s|@PREFIX@|${prefix}|g" ${worksrcpath}/shapely/geos.py
-        reinplace s|\\\"cython\\\"|"${python.prefix}/bin/cython"| ${worksrcpath}/setup.py
-    }
-
-    livecheck.type  none
-} else {
-    livecheck.type  regex
-    livecheck.url   https://pypi.python.org/pypi/Shapely/json
-    livecheck.regex {Shapely-(\d+(?:\.\d+)*)\.[tz]}
+    depends_lib-append      port:geos \
+                            port:py${python.version}-numpy
+    depends_build-append    port:py${python.version}-cython
 }

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran bssherwood rqPen 3.2.2
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             MIT
+description         Penalized quantile regression
+long_description    {*}${description}
+checksums           rmd160  2988cfdbfed28622dca0797cbf46170eb4cd61bd \
+                    sha256  c8e879b29faaa4633d3c00603c249eacfb2be359dbb6e58041c4747d627933d1 \
+                    size    116479
+
+depends_lib-append  port:R-data.table \
+                    port:R-hqreg \
+                    port:R-hrqglas \
+                    port:R-lifecycle \
+                    port:R-plyr \
+                    port:R-quantreg \
+                    port:R-Rdpack
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr
+
+test.run            yes

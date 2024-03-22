@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# Revert to GitHub once updated there.
+R.setup             cran VNNikolaidis nnlib2Rcpp 0.2.5
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             MIT
+description         Tool for creating custom neural networks in C++ and using them in R
+long_description    {*}${description}
+homepage            https://github.com/VNNikolaidis/nnlib2Rcpp
+checksums           rmd160  6f1c3ccdaf133be791b16bf1bfb0711117ac4259 \
+                    sha256  42e3ff4ced4ffb22acda073dadab450f401f8cfb5b4b325a40367ff2b6e9bcf6 \
+                    size    568894
+
+depends_lib-append  port:R-Rcpp
+
+depends_test-append port:R-R.rsp
+
+test.run            yes

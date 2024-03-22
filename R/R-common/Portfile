@@ -1,0 +1,26 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran dbosak01 common 1.1.2
+revision            0
+maintainers         nomaintainer
+license             public-domain
+description         Solutions for common problems in the base R
+long_description    {*}${description}
+homepage            https://common.r-sassy.org
+checksums           rmd160  8003b2d071593bd029e23bff2716baa0f6942ed1 \
+                    sha256  0b1cfd711e9c0d424797769399e2462bae20934a77b9972b4c89902b3575e0f1 \
+                    size    508001
+supported_archs     noarch
+
+depends_test-append port:R-box \
+                    port:R-glue \
+                    port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-rstudioapi \
+                    port:R-testthat
+
+test.run            yes

@@ -5,15 +5,14 @@ PortGroup           active_variants 1.1
 PortGroup           conflicts_build 1.0
 
 name                magic
-version             8.3.239
+version             8.3.464
 revision            0
-checksums           rmd160  af0559801cd249b7ce22ce3344e7615e73b6a971 \
-                    sha256  3adc228809f73601c339d891a7a94ee570addf104b341ab8e3fd96882a4493e7 \
-                    size    4094460
+checksums           rmd160  9015bfa4ea39258d8c37fb92776abe5ed99e430f \
+                    sha256  2025c5b24a01fe6a8a3e08d6788a09f351f67a0e1d3d28f46c763b4b9fc0f39f \
+                    size    4239397
 
 set branch          [join [lrange [split ${version} .] 0 1] .]
 categories          science
-platforms           darwin
 # mostly very permissively licensed, but includes a copy of GNU readline
 license             GPL-2+
 maintainers         {ryandesign @ryandesign} openmaintainer
@@ -36,7 +35,11 @@ depends_lib         port:blt \
                     port:libGLU \
                     port:mesa \
                     port:tcl \
-                    port:tk
+                    port:tk \
+                    port:xorg-libice \
+                    port:xorg-libXi \
+                    port:xorg-libXmu \
+                    port:zlib
 
 require_active_variants tk x11
 
@@ -46,13 +49,19 @@ conflicts_build     gnome-keyring
 
 configure.dir       ${worksrcpath}/scripts
 
-# Massive implicit declaration of function problems beyond my interest
-# to fix at present; leaving it to the developers to fix. Therefore,
-# incompatible with arm64 at present.
-# https://github.com/RTimothyEdwards/magic/issues/69
-supported_archs     i386 ppc ppc64 x86_64
-configure.cflags-append \
-                    -Wno-error=implicit-function-declaration
+if {${os.platform} eq "darwin" && ${os.major} < 19} {
+    set python_version 3.12
+    depends_build-append \
+                    port:python[string map {. {}} ${python_version}]
+    configure.python \
+                    ${prefix}/bin/python${python_version}
+} else {
+    configure.python \
+                    /usr/bin/python3
+}
+
+configure.args-append \
+                    ac_cv_path_PYTHON3=${configure.python}
 
 use_parallel_build  no
 

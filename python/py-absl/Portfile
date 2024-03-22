@@ -4,11 +4,12 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-absl
-version             0.15.0
-revision            0
+version             1.4.0
+revision            1
 python.rootname     absl-py
-platforms           darwin
+
 supported_archs     noarch
+platforms           {darwin any}
 license             Apache-2
 maintainers         {emcrisostomo @emcrisostomo} openmaintainer
 
@@ -21,23 +22,14 @@ long_description    ${python.rootname} is a collection of Python \
 
 homepage            https://github.com/abseil/abseil-py
 
-checksums           rmd160  b298068a45dee20524d16cc23a326ace69922379 \
-                    sha256  72d782fbeafba66ba3e525d46bccac949b9a174dbf66233e50ece09ee688dc81 \
-                    size    114674
+checksums           rmd160  4aafaa3b512739b0279a30e1eccd44c884a7cc90 \
+                    sha256  d2c244d01048ba476e7c080bd2c6df5e141d211de80223460d5b3b8a2a58433d \
+                    size    112028
 
-python.versions     27 36 37 38 39 310
+python.versions     37 38 39 310 311
+python.pep517       yes
 
 if {${name} ne ${subport}} {
     depends_build-append \
-        port:py${python.version}-setuptools \
         port:py${python.version}-setuptools_scm
-
-    depends_lib-append \
-        port:py${python.version}-six
-
-    if {${python.version} == 27} {
-        depends_lib-append port:py${python.version}-enum34
-    }
-
-    livecheck.type  none
 }

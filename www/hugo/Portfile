@@ -3,29 +3,40 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/gohugoio/hugo 0.89.4 v
+go.setup            github.com/gohugoio/hugo 0.124.1 v
+github.tarball_from archive
 revision            0
-checksums           rmd160  ddc5481eb7abb0ad52efd699e40ca773755805a5 \
-                    sha256  a4b0246abc310f032b324f80983c6cb8ab4bbf3bb8b6da740b35735ae8514565 \
-                    size    37375481
+
+checksums           rmd160  9b87fd9e6cd7db3f78045eba970781dbffcece73 \
+                    sha256  0beb0436f6bd90abb425523229a37f1d31e2e9c7ba9fac4556a72aab3b11bfef \
+                    size    21052060
 
 categories          www
-platforms           darwin
+installs_libs       no
 license             Apache-2
-maintainers         {isi.edu:calvin @cardi} openmaintainer
-description         A Fast and Flexible Static Site Generator built with love in GoLang
-long_description    ${description}
+maintainers         {isi.edu:calvin @cardi} \
+                    {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
 
-build.env-append    GO111MODULE=on
+description         A Fast and Flexible Static Site Generator built with love in GoLang
+long_description    {*}${description}
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
 # https://trac.macports.org/ticket/61192
-build.env-delete    GOPROXY=off GO111MODULE=off
+go.offline_build    no
+
+build.pre_args-append \
+    -ldflags \"-X ${go.package}/common/hugo.vendorInfo=macports\"
+
+# build hugo extended with Sass/SCSS support by default
+build.args-append   --tags extended
+
+depends_run-append  path:etc/bash_completion:bash-completion
 
 destroot {
     xinstall -d ${destroot}${prefix}/bin
-    xinstall -m 755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/${name}
+    xinstall -m 0755 ${worksrcpath}/${name} ${destroot}${prefix}/bin/${name}
 }
 
 post-destroot {
@@ -33,21 +44,19 @@ post-destroot {
     system -W ${worksrcpath} "${worksrcpath}/${name} gen man"
     xinstall -d -m 0755 ${destroot}${prefix}/share/man/man1
     xinstall -m 0644 {*}[glob ${worksrcpath}/man/*.1] ${destroot}${prefix}/share/man/man1/
-}
 
-variant bash_completion {
-    depends_run-append path:etc/bash_completion:bash-completion
+    # generate bash completion then install them
+    system -W ${worksrcpath} "${worksrcpath}/${name} completion bash > hugo.sh"
+    xinstall -d ${destroot}${prefix}/share/bash-completion/completions/
+    xinstall -m 0644 ${worksrcpath}/hugo.sh ${destroot}${prefix}/share/bash-completion/completions/${name}
 
-    post-build {
-        system -W ${worksrcpath} "${worksrcpath}/${name} gen autocomplete --completionfile=hugo.sh"
-    }
+    # generation fish completion then install them
+    system -W ${worksrcpath} "${worksrcpath}/${name} completion fish > hugo.fish"
+    xinstall -d ${destroot}${prefix}/share/fish/vendor_completions.d/
+    xinstall -m 644 ${worksrcpath}/hugo.fish ${destroot}${prefix}/share/fish/vendor_completions.d/
 
-    post-destroot {
-        xinstall -d ${destroot}${prefix}/share/bash-completion/completions/
-        xinstall -m 644 ${worksrcpath}/hugo.sh ${destroot}${prefix}/share/bash-completion/completions/${name}
-    }
-}
-
-variant extended description {Builds Hugo Extended with Sass/SCSS support} {
-    build.args-append --tags extended
+    # generation zsh completion then install them
+    system -W ${worksrcpath} "${worksrcpath}/${name} completion zsh > _hugo"
+    xinstall -d ${destroot}${prefix}/share/zsh/site-functions/
+    xinstall -m 644 ${worksrcpath}/_hugo ${destroot}${prefix}/share/zsh/site-functions/
 }

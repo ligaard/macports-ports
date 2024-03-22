@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github davidhodge931 ggblanket 6.0.0 v
+revision            0
+categories-append   graphics
+maintainers         nomaintainer
+license             MIT
+description         Simplify ggplot2 visualisation with ggblanket wrapper functions
+long_description    {*}${description}
+homepage            https://davidhodge931.github.io/ggblanket
+checksums           rmd160  aa69c4da03bba8d703db6605b3bb7ef45562c5b0 \
+                    sha256  8b9d4d3517228f71c8811e69c126375b148e9ba996b7f165ec64c337ec21dea3 \
+                    size    3714425
+supported_archs     noarch
+
+depends_lib-append  port:R-dplyr \
+                    port:R-farver \
+                    port:R-forcats \
+                    port:R-ggplot2 \
+                    port:R-hms \
+                    port:R-lubridate \
+                    port:R-magrittr \
+                    port:R-purrr \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-snakecase \
+                    port:R-stringr \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-viridisLite
+
+depends_test-append port:R-hexbin \
+                    port:R-isoband \
+                    port:R-knitr \
+                    port:R-palmerpenguins \
+                    port:R-patchwork \
+                    port:R-rmarkdown \
+                    port:R-sf \
+                    port:R-testthat \
+                    port:R-tibble \
+                    port:R-vdiffr
+
+test.run            yes

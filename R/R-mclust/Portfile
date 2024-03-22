@@ -1,0 +1,24 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran mclust-org mclust 6.1
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-2+
+description         Gaussian mixture modelling for model-based clustering, classification and density estimation
+long_description    {*}${description}
+homepage            https://mclust-org.github.io/mclust
+checksums           rmd160  067465baa92c454a1866792bfc3ae02bd54b2338 \
+                    sha256  5df469cc4aa2e86bf4282cb83eaa53f90f671aa6567e8778331bf8c1666f9055 \
+                    size    2765353
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-geometry \
+                    port:R-knitr \
+                    port:R-mix \
+                    port:R-rmarkdown
+
+test.run            yes

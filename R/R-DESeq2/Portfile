@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor mikelove DESeq2 1.42.1
+revision            0
+maintainers         nomaintainer
+license             LGPL-3+
+description         Differential gene expression analysis based on the negative binomial distribution
+long_description    {*}${description}
+checksums           rmd160  fe91dcc24ad81544c7a5c2ee8c75f123c30e9637 \
+                    sha256  f79b5a96ee27f0243791f85acea635e1c447a217dc9b32b39c671532d32220e8 \
+                    size    2098789
+
+depends_lib-append  port:R-Biobase \
+                    port:R-BiocGenerics \
+                    port:R-BiocParallel \
+                    port:R-GenomicRanges \
+                    port:R-ggplot2 \
+                    port:R-IRanges \
+                    port:R-locfit \
+                    port:R-matrixStats \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-S4Vectors \
+                    port:R-SummarizedExperiment
+
+compilers.setup     require_fortran

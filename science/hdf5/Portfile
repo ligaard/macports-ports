@@ -4,11 +4,13 @@ PortSystem          1.0
 PortGroup           muniversal 1.0
 PortGroup           mpi 1.0
 PortGroup           legacysupport 1.1
+PortGroup           compiler_blacklist_versions 1.0
 
 name                hdf5
-version             1.12.1
-revision            0
-set shortversion    [join [lrange [split ${version} .] 0 1] .]
+version             1.14.3
+set mainversion     [lrange [split ${version} -] 0 0]
+revision            4
+set shortversion    [join [lrange [split ${mainversion} .] 0 1] .]
 categories          science
 maintainers         {eborisch @eborisch} openmaintainer
 
@@ -22,46 +24,64 @@ long_description    HDF5 is a data model, library, and file format for storing\
                     of HDF5. The HDF5 Technology suite includes tools and\
                     applications for managing, manipulating, viewing, and\
                     analyzing data in the HDF5 format.
-homepage            https://portal.hdfgroup.org/display/HDF5
+homepage            https://www.hdfgroup.org/solutions/hdf5/
 platforms           darwin
+
+distfiles           ${name}-${version}.tar.bz2
 master_sites \
-    https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${shortversion}/hdf5-${version}/src
+    https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${shortversion}/hdf5-${mainversion}/src
 checksums \
-    rmd160  3b37d7cd6ce728036119311d9bf61956332d44b1 \
-    sha256  aaf9f532b3eda83d3d3adc9f8b40a9b763152218fa45349c3bc77502ca1f8f1c \
-    size    9724309
+    rmd160  4038e67868ffa4d5bde3ed02a5cd03f24056b072 \
+    sha256  9425f224ed75d1280bb46d6f26923dd938f9040e7eaebf57e66ec7357c08f917 \
+    size    16320137
 mpi.setup           -gcc44 -gcc45
 
 use_bzip2           yes
-depends_lib         port:zlib
+depends_lib         port:zlib port:libaec
 use_parallel_build  yes
 
 patchfiles          patch-tools-src-misc-h5cc.in.diff
 
 # llvm-gcc-4.2 produced code fails type conversion tests
 # Upstream suggestion is use -O0. Clang-produced code passes all tests.
-compiler.blacklist  llvm-gcc-4.2
+compiler.blacklist-append \
+                    llvm-gcc-4.2
 
 # #pragma pack() results in "too many #pragma options align=reset"
-compiler.blacklist-append gcc-3.3 gcc-4.0 gcc-4.2 apple-gcc-4.2
-if {[vercmp ${xcodeversion} 4.0] < 0} {
-    # configure.cxx is still /usr/bin/llvm-g++-4.2
-    compiler.blacklist-append clang
-}
+compiler.blacklist-append \
+                    gcc-3.3 gcc-4.0 gcc-4.2 apple-gcc-4.2
+
+# <stdin>:2115:2: error: invalid instruction mnemonic 'cvtsi2ssl'
+compiler.blacklist-append \
+                    {clang < 500}
+
+compiler.c_standard 1999
+
+# Avoid duplicate LC_RPATH's in dylibs, satisfy Xcode 15 linker.
+compilers.add_gcc_rpath_support no
 
 # Use lib/hdf5 rather than hdf5/lib plugin directory
-configure.args      --with-zlib=yes \
+configure.args \
+                    --disable-cxx \
+                    --disable-fortran \
+                    --disable-hl \
+                    --disable-parallel \
                     --disable-silent-rules \
-                    --enable-build-mode=production --disable-fortran \
-                    --disable-cxx --disable-hl --enable-shared --enable-static \
-                    --disable-parallel --disable-threadsafe \
+                    --disable-threadsafe \
+                    --enable-build-mode=production \
+                    --enable-shared \
+                    --enable-static \
                     --with-default-plugindir=${prefix}/lib/hdf5 \
-                    --with-default-api-version=v110
+                    --with-szlib=${prefix}/lib/libaec \
+                    --with-zlib=yes
+
+# Actively checks how to get clang to warn on implicit functions with this.
+configure.checks.implicit_function_declaration.whitelist-append strchr
 
 # http://mail.hdfgroup.org/pipermail/hdf-forum_hdfgroup.org/2010-March/002682.html
 license             NCSA
 
-default_variants    +cxx +hl
+default_variants    +cxx +hl +fortran
 
 post-configure {
     if {[variant_exists universal] && [variant_isset universal]} {
@@ -88,16 +108,22 @@ post-destroot {
     xinstall -d ${destroot}${prefix}/share/hdf5/
     xinstall -m 444 ${worksrcpath}/COPYING\
       ${destroot}${prefix}/share/hdf5/
+
+    # remove paths to libraries used to build HDF5 when packaging HDF5
+    system -W ${destroot}${prefix}/bin "${worksrcpath}/bin/pkgscrpts/h5rmflags -prefix=${prefix}"
+
+    # ensure libraries are found and that they are from MacPorts
+    # see https://trac.macports.org/ticket/67507
+    # Depending on build config, a number of different files need to be patched
+    # just let the system find which ones need it for this build.
+    system -W ${destroot}${prefix}/bin \
+        "grep -Il --null -- '-lsz -lz' * | xargs -0 sed -i '' \
+          -e 's^-lsz^${prefix}/lib/libaec/lib/libsz.dylib^' \
+          -e 's^-lz^${prefix}/lib/libz.dylib^'"
 }
 
 test.run            yes
 test.target         check
-
-variant szip description {Enable szip support. (Noncommercial license)} {
-    depends_lib-append          port:szip
-    configure.args-append       --with-szlib=yes
-    license                     Noncommercial
-}
 
 variant hl description {
     Enable High Level interface.
@@ -120,7 +146,7 @@ variant fortran description {
   +fortran is EXPERIMENTAL with +threadsafe
 } {
     configure.args-delete       --disable-fortran
-    configure.args-append       --enable-fortran --enable-fortran2003
+    configure.args-append       --enable-fortran
 }
 
 if {[variant_isset fortran] && ![fortran_variant_isset]} {
@@ -185,5 +211,5 @@ encountered.
 }
 
 livecheck.type      regex
-livecheck.url       https://www.hdfgroup.org/downloads/hdf5/
-livecheck.regex     5-(\[0-9.\]+\[0-9\]+)
+livecheck.url       https://www.hdfgroup.org/downloads/hdf5
+livecheck.regex     hdf5-(\[0-9.-\]+)-Std

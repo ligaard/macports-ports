@@ -5,11 +5,17 @@ PortGroup           github 1.0
 PortGroup           makefile 1.0
 PortGroup           compiler_blacklist_versions 1.0
 
-github.setup        enzo1982 BoCA 1.0.4 v
-github.tarball_from releases
+# Use commit for now due to several fixes from upstream, see:
+# https://github.com/enzo1982/BoCA/issues/12
+# https://github.com/enzo1982/BoCA/pull/13
+github.setup        enzo1982 BoCA 4ea79d518b508d43e16a0b86a313e99342efcc71
+version             1.0.7
+revision            0
+checksums           rmd160  c54406a93d4069536af90b1a15d012ffd2bd4331 \
+                    sha256  659bbc6e3d8c9807ae59a1ca61ef02c222606aea71f11eba4a2641680b254e00 \
+                    size    233601863
 
 categories          audio
-platforms           darwin
 license             GPL-2
 maintainers         {@janosch mailbox.org:janosch1} openmaintainer
 description         The component framework behind the fre:ac audio converter.
@@ -17,11 +23,11 @@ long_description    ${name} provides unified interfaces for components like \
                     encoders, decoders, taggers and extensions as well as code \
                     to support communication between the application \
                     and its components.
-homepage            https://www.freac.org/
 
-checksums           rmd160  1b5d4a94c5c4d9524da04c0d475acd58622606b5 \
-                    sha256  af01549c006ca5beeb3175178136a1598a25a1c856317ddc0c07355b0e713b6b \
-                    size    2616780
+homepage            https://www.freac.org
+
+# Revert with the next release.
+# github.tarball_from releases
 
 depends_lib         port:expat \
                     port:libcdio \
@@ -34,3 +40,5 @@ patchfiles          patch-set-install-path-runtime.diff \
 
 makefile.prefix_name        prefix
 compiler.blacklist-append   {clang < 600.0.57}
+
+github.livecheck.regex {([0-9.]+)}

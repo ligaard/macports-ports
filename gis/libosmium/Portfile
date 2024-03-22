@@ -5,15 +5,16 @@ PortGroup           cmake 1.1
 PortGroup           github 1.0
 PortGroup           boost 1.0
 
-github.setup        osmcode libosmium 2.17.0 v
+github.setup        osmcode libosmium 2.19.0 v
 github.tarball_from archive
-revision            0
+revision            6
 
 categories          gis
-platforms           darwin
 maintainers         {@frankdean fdsd.co.uk:frank.dean} openmaintainer
 
 license             Boost-1 public-domain
+platforms           any
+supported_archs     noarch
 
 description         A fast and flexible C++ library for working with OpenStreetMap data
 
@@ -26,11 +27,9 @@ long_description    Low-level: this is designed to be a building block \
                     generated with the Google Protobufs protoc \
                     program.
 
-checksums           rmd160  3923cb87ea091aa69a23ca2ee517ea438ac9fe56 \
-                    sha256  4a7672d7caf4da3bc68619912b298462370c423c697871a0be6273c6686e10d6 \
-                    size    513404
-
-installs_libs       no
+checksums           rmd160  a1c24ae0e4cf67eee1127cb4858703688638987a \
+                    sha256  6911a8ca8e81d49205357177982df908af11376919f93b814cccf02f1d4d63e3 \
+                    size    565486
 
 compiler.cxx_standard 2011
 
@@ -49,6 +48,7 @@ variant tests description {Build and run unit tests} {
                         port:bzip2 \
                         port:expat \
                         port:gdal \
+                        port:lz4 \
                         port:proj4 \
                         port:sparsehash \
                         port:zlib
@@ -63,5 +63,4 @@ variant tests description {Build and run unit tests} {
 
     test.run            yes
     test.cmd            ctest --output-on-failure
-
 }

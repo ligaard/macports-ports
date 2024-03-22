@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran Torsten.Hothorn mlt.docreg 1.1-7
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             GPL-2
+description         Additional documentation, a package vignette and regression tests for R-mlt
+long_description    {*}${description}
+checksums           rmd160  35c2c51dd3564ff812d1088de699d75332319613 \
+                    sha256  2104634c12e62b402b7f4bf899368d77ef975abc1eb70396615e48f25a7b7917 \
+                    size    733049
+
+depends_lib-append  port:R-eha \
+                    port:R-flexsurv \
+                    port:R-mlt \
+                    port:R-multcomp \
+                    port:R-numDeriv \
+                    port:R-truncreg

@@ -1,33 +1,63 @@
---- README.md.orig	2021-11-30 18:23:30.000000000 -0600
-+++ README.md	2021-12-05 04:01:41.000000000 -0600
-@@ -1005,7 +1005,7 @@
-     * `~/yt-dlp.conf.txt`
+--- README.md.orig	2024-03-10 14:41:57.000000000 -0500
++++ README.md	2024-03-10 20:54:08.000000000 -0500
+@@ -1100,9 +1100,9 @@
  
-     `%XDG_CONFIG_HOME%` defaults to `~/.config` if undefined. On windows, `%APPDATA%` generally points to (`C:\Users\<user name>\AppData\Roaming`) and `~` points to `%HOME%` if present, `%USERPROFILE%` (generally `C:\Users\<user name>`), or `%HOMEDRIVE%%HOMEPATH%`
--1. **System Configuration**: `/etc/yt-dlp.conf`
-+1. **System Configuration**: `@PREFIX@/etc/yt-dlp.conf`
+     See also: [Notes about environment variables](#notes-about-environment-variables)
+ 1. **System Configuration**:
+-    * `/etc/yt-dlp.conf`
+-    * `/etc/yt-dlp/config`
+-    * `/etc/yt-dlp/config.txt`
++    * `@PREFIX@/etc/yt-dlp.conf`
++    * `@PREFIX@/etc/yt-dlp/config`
++    * `@PREFIX@/etc/yt-dlp/config.txt`
  
- For example, with the following configuration file yt-dlp will always extract the audio, not copy the mtime, use a proxy and save all videos under `YouTube` directory in your home directory:
+ E.g. with the following configuration file yt-dlp will always extract the audio, not copy the mtime, use a proxy and save all videos under `YouTube` directory in your home directory:
  ```
---- yt-dlp.1.orig	2021-11-30 18:23:33.000000000 -0600
-+++ yt-dlp.1	2021-12-05 04:01:41.000000000 -0600
-@@ -1487,7 +1487,7 @@
- \f[C]%HOMEDRIVE%%HOMEPATH%\f[R]
- .RE
- .IP "5." 3
--\f[B]System Configuration\f[R]: \f[C]/etc/yt\-dlp.conf\f[R]
-+\f[B]System Configuration\f[R]: \f[C]@PREFIX@/etc/yt\-dlp.conf\f[R]
- .PP
- For example, with the following configuration file yt\-dlp will always
- extract the audio, not copy the mtime, use a proxy and save all videos
---- yt_dlp/options.py.orig	2021-11-30 18:23:03.000000000 -0600
-+++ yt_dlp/options.py	2021-12-05 04:01:41.000000000 -0600
-@@ -1647,7 +1647,7 @@
-             opts, _ = parser.parse_args(configs['portable'] + configs['custom'] + configs['command-line'])
-             if read_options('home', expand_path(opts.paths.get('home', '')).strip()):
-                 return
--            if read_options('system', '/etc'):
-+            if read_options('system', '@PREFIX@/etc'):
-                 return
-             if read_options('user', None, user=True):
-                 configs['system'], paths['system'] = [], None
+@@ -1860,8 +1860,8 @@
+       * `~/.yt-dlp/plugins/<package name>/yt_dlp_plugins/`
+       * `~/yt-dlp-plugins/<package name>/yt_dlp_plugins/`
+     * **System Plugins**
+-      * `/etc/yt-dlp/plugins/<package name>/yt_dlp_plugins/`
+-      * `/etc/yt-dlp-plugins/<package name>/yt_dlp_plugins/`
++      * `@PREFIX@/etc/yt-dlp/plugins/<package name>/yt_dlp_plugins/`
++      * `@PREFIX@/etc/yt-dlp-plugins/<package name>/yt_dlp_plugins/`
+ 2. **Executable location**: Plugin packages can similarly be installed in a `yt-dlp-plugins` directory under the executable location (recommended for portable installations):
+     * Binary: where `<root-dir>/yt-dlp.exe`, `<root-dir>/yt-dlp-plugins/<package name>/yt_dlp_plugins/`
+     * Source: where `<root-dir>/yt_dlp/__main__.py`, `<root-dir>/yt-dlp-plugins/<package name>/yt_dlp_plugins/`
+--- yt-dlp.1.orig	2024-03-10 14:41:58.000000000 -0500
++++ yt-dlp.1	2024-03-10 20:54:09.000000000 -0500
+@@ -1267,9 +1267,9 @@
+ 
+     See also: [Notes about environment variables](#notes-about-environment-variables)
+ 1. **System Configuration**:
+-    * \[ga]/etc/yt-dlp.conf\[ga]
+-    * \[ga]/etc/yt-dlp/config\[ga]
+-    * \[ga]/etc/yt-dlp/config.txt\[ga]
++    * \[ga]@PREFIX@/etc/yt-dlp.conf\[ga]
++    * \[ga]@PREFIX@/etc/yt-dlp/config\[ga]
++    * \[ga]@PREFIX@/etc/yt-dlp/config.txt\[ga]
+ 
+ E.g. with the following configuration file yt-dlp will always extract the audio, not copy the mtime, use a proxy and save all videos under \[ga]YouTube\[ga] directory in your home directory:
+ \f[R]
+@@ -2636,8 +2636,8 @@
+       * \[ga]\[ti]/.yt-dlp/plugins/<package name>/yt_dlp_plugins/\[ga]
+       * \[ga]\[ti]/yt-dlp-plugins/<package name>/yt_dlp_plugins/\[ga]
+     * **System Plugins**
+-      * \[ga]/etc/yt-dlp/plugins/<package name>/yt_dlp_plugins/\[ga]
+-      * \[ga]/etc/yt-dlp-plugins/<package name>/yt_dlp_plugins/\[ga]
++      * \[ga]@PREFIX@/etc/yt-dlp/plugins/<package name>/yt_dlp_plugins/\[ga]
++      * \[ga]@PREFIX@/etc/yt-dlp-plugins/<package name>/yt_dlp_plugins/\[ga]
+ 2. **Executable location**: Plugin packages can similarly be installed in a \[ga]yt-dlp-plugins\[ga] directory under the executable location (recommended for portable installations):
+     * Binary: where \[ga]<root-dir>/yt-dlp.exe\[ga], \[ga]<root-dir>/yt-dlp-plugins/<package name>/yt_dlp_plugins/\[ga]
+     * Source: where \[ga]<root-dir>/yt_dlp/__main__.py\[ga], \[ga]<root-dir>/yt-dlp-plugins/<package name>/yt_dlp_plugins/\[ga]
+--- yt_dlp/utils/_utils.py.orig	2024-03-10 14:41:19.000000000 -0500
++++ yt_dlp/utils/_utils.py	2024-03-10 20:54:09.000000000 -0500
+@@ -4665,7 +4665,7 @@
+ 
+ def get_system_config_dirs(package_name):
+     # /etc/package_name
+-    yield os.path.join('/etc', package_name)
++    yield os.path.join('@PREFIX@/etc', package_name)
+ 
+ 
+ def time_seconds(**kwargs):

@@ -4,12 +4,12 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-websocket-client
-version             1.1.0
+version             1.7.0
 revision            0
 
 categories-append   devel
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             LGPL-2.1
 maintainers         nomaintainer
 
@@ -21,11 +21,11 @@ long_description    websocket-client is a WebSocket client for Python. It provid
 
 homepage            https://websocket-client.readthedocs.io/
 
-checksums           rmd160  71adf207cb874be18ae3f001266f1f644eba6b0b \
-                    sha256  b68e4959d704768fa20e35c9d508c8dc2bbc041fd8d267c0d7345cffe2824568 \
-                    size    58890
+checksums           rmd160  015286c02db6b11cf8a9675bb494a95566466afc \
+                    sha256  10e511ea3a8c744631d3bd77e61eb17ed09304c413ad42cf6ddfa4c7787e8fe6 \
+                    size    54037
 
-python.versions     27 37 38 39
+python.versions     37 38 39 310 311 312
 
 if {${subport} ne ${name}} {
     depends_build-append \
@@ -34,14 +34,6 @@ if {${subport} ne ${name}} {
     depends_test-append \
                     port:py${python.version}-pytest \
                     port:py${python.version}-socks
-
-    if {${python.version} eq 27} {
-        version      0.59.0
-
-        checksums   rmd160  a6aea33de3d817b69b0d57062dc12edcad3450f6 \
-                    sha256  d376bd60eace9d437ab6d7ee16f4ab4e821c9dae591e1b783c58ebd8aaf80c5c \
-                    size    57897
-    }
 
     test.run        yes
     test.cmd        py.test-${python.branch}
@@ -54,6 +46,4 @@ if {${subport} ne ${name}} {
         xinstall -m 0644 -W ${worksrcpath} README.md LICENSE \
             ChangeLog ${destroot}${docdir}
     }
-
-    livecheck.type  none
 }

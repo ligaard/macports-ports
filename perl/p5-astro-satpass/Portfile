@@ -3,23 +3,24 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         Astro-satpass 0.122 ../../authors/id/W/WY/WYANT
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Astro-satpass 0.131 ../../authors/id/W/WY/WYANT
+revision            0
 maintainers         nomaintainer
-platforms           darwin
 license             {Artistic-1 GPL}
-
 description         Astro-satpass - Predict satellite passes over an observer.
-
 long_description    This package contains classes needed to predict \
                     satellite visibility, and an optional demonstration application \
                     (satpass) that makes use of these classes.
 
-homepage            https://metacpan.org/release/${perl5.module}
+homepage            https://metacpan.org/dist/${perl5.module}
 
-checksums           rmd160  27a70d818bbafda31b7188c5a7b7a1883ea21623 \
-                    sha256  9c480acb109d04739a63361307b0b15d2746d5d63a88bee11c19e242ab8bc05f \
-                    size    529095
+platforms           {darwin any}
+supported_archs     noarch
+
+checksums           rmd160  5d1dc9dabeeec0cce23b09b822d4068e40538fd4 \
+                    sha256  80146dc1f218263b42e28e433aba47949e88f81f7133b9545b2589c3dd0deb8d \
+                    size    534202
 
 variant script description {Install the deprecated satpass script and optional dependencies} {}
 
@@ -44,5 +45,4 @@ if {${perl5.major} != ""} {
     }
 
     perl5.use_module_build
-    supported_archs noarch
 }

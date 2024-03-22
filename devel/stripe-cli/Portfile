@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/stripe/stripe-cli 1.7.8 v
+go.setup            github.com/stripe/stripe-cli 1.19.2 v
+go.offline_build    no
 github.tarball_from archive
 revision            0
 
@@ -20,21 +21,20 @@ long_description    \
 
 categories          devel
 installs_libs       no
-license             Apache-2.0
+license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  147450b2bc52c253dc243a8e64ca375b4c5a6683 \
-                    sha256  269d42228e7b517917ca8b7fc26dd5233f26abe3f295c910175f1a22041d93db \
-                    size    1285307
+checksums           rmd160  229fd995c0c4386e2d9060748ce730853a0faabd \
+                    sha256  3f5773e595dd902c0d36b81f1e43bb3ada18655472b740075a00e3964d868018 \
+                    size    1576906
 
-# Allow Go to fetch dependencies at build time
-build.env-delete    GO111MODULE=off GOPROXY=off
+# disable stripe telemetry which is otherwise enabled by default
+patchfiles          patch-disable-telemetry.diff
 
 build.cmd           make
 build.target        build
 
 destroot {
-    set bin_name    stripe
-    xinstall -m 0755 ${worksrcpath}/${bin_name} ${destroot}${prefix}/bin/
+    xinstall -m 0755 ${worksrcpath}/stripe ${destroot}${prefix}/bin/
 }

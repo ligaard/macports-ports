@@ -4,12 +4,12 @@ PortSystem      1.0
 PortGroup       java 1.0
 
 name            groovy
-version         3.0.9
+version         4.0.20
 revision        0
 
 categories      lang java
 maintainers     {breun.nl:nils @breun} openmaintainer
-platforms       darwin
+platforms       {darwin any}
 license         Apache-2
 supported_archs noarch
 
@@ -41,16 +41,16 @@ master_sites    https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zi
 distname        apache-${name}-binary-${version}
 use_zip         yes
 
-checksums       rmd160  09b063a87cf11fa994f6bafcb125587ddae68127 \
-                sha256  eb34f4ee229b1a424adb87df5b999f66d1b1285694e5332d0800896744c2e421 \
-                size    44145611
+checksums       rmd160  24d1477dec54527d1b143ede44afd6986c6aaf1c \
+                sha256  fdf70cc57eff997f3fa5aee2b340d311593912e822ad810b3fd6ee403985eb75 \
+                size    29824179
 
 worksrcdir      ${name}-${version}
 
 use_configure   no
 
 java.version    1.8+
-java.fallback   openjdk8
+java.fallback   openjdk21
 
 build {}
 
@@ -61,7 +61,7 @@ destroot {
     xinstall -m 755 -d ${target}
 
     # Copy over the needed elements of our directory tree
-    foreach d { bin conf grooid indy lib } {
+    foreach d { bin conf grooid lib } {
         copy ${worksrcpath}/${d} ${target}
     }
 

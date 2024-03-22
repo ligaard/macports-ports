@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           boost 1.0
+PortGroup           R 1.0
+
+boost.version       1.81
+
+R.setup             cran eddelbuettel RQuantLib 0.4.21
+revision            0
+categories-append   finance
+maintainers         nomaintainer
+license             GPL-2+
+description         R interface to the QuantLib library
+long_description    {*}${description}
+homepage            https://dirk.eddelbuettel.com/code/rquantlib.html
+checksums           rmd160  4620e2cb57e95fe76a3f90e8936c925542483b6f \
+                    sha256  d2c2617a3b03b5626403a5188c29081305fb9b826136a4970c02c9132833b21b \
+                    size    195062
+
+depends_lib-append  port:QuantLib \
+                    port:R-Rcpp \
+                    port:R-zoo
+
+patchfiles          patch-cxx11.diff
+
+depends_test-append port:R-rgl \
+                    port:R-tinytest \
+                    port:R-shiny
+
+test.run            yes

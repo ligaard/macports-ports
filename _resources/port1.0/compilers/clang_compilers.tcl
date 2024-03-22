@@ -1,55 +1,70 @@
 # add all working Clang compilers to the variable compilers based on ${os.major}
+# (and temporarily compiler.cxx_standard)
 
 # When adding a new clang version here, make sure to update the
 # clang_dependency PortGroup, and add it to any new dependencies of the
 # new version.
 
-# clang 11  and older build on 10.6+  (darwin 10)
-# clang 7.0 and older build on 10.5+  (darwin 9)
-# clang 3.4 and older build on 10.4+  (darwin 8)
-# Clang 11 and newer only on Apple Silicon
-# Clang 9.0 and newer only on 11+ (Darwin 20)
+global os.platform
 
-global os.major os.arch
+# clang is useless on Darwin / PowerPC, let disable it globally
+if {${os.platform} eq "darwin" && [option configure.build_arch] in [list ppc ppc64]} {
+    return
+}
 
-#if { $${os.major} >= 10 } {
-    # TODO: evaluate compatibility of clang-{10,11} as defaults instead of 9.0
-    #lappend compilers macports-clang-11
-#}
-
-if { ${os.arch} ne "arm" && ${os.major} >= 10 } {
-    # TODO: evaluate compatibility of clang-{10,11} as defaults instead of 9.0
-    #lappend compilers macports-clang-10
-    lappend compilers macports-clang-9.0
-    if { ${os.major} < 20 } {
-        lappend compilers macports-clang-8.0
+if {${os.major} >= 11 || ${os.platform} ne "darwin"} {
+    if {${os.major} >= 22 || ${os.platform} ne "darwin"} {
+        # For now limit exposure of clang-17+ to macOS13+ due to issues like
+        # https://github.com/macports/macports-ports/pull/21051
+        # https://trac.macports.org/ticket/68640
+        if {[option compiler.cxx_standard] >= 2020} {
+            # Limit clang 18 to c++20 or newer
+            lappend compilers macports-clang-18
+        }
+        if {[option compiler.cxx_standard] >= 2014} {
+            # Limit clang 17 to c++14 or newer
+            lappend compilers macports-clang-17
+        }
+    }
+    lappend compilers macports-clang-16 \
+                      macports-clang-15 \
+                      macports-clang-14
+    if {${os.major} < 23 || ${os.platform} ne "darwin"} {
+        # https://trac.macports.org/ticket/68257
+        # Versions of clang older than clang-14 probably have build issues on
+        # macOS14+. Until resolved do not append to fallback list.
+        lappend compilers macports-clang-13 \
+                          macports-clang-12
     }
 }
 
-if { ${os.arch} ne "arm" && ${os.major} >= 9 && ${os.major} < 20 } {
-    lappend compilers macports-clang-7.0 \
-                      macports-clang-6.0 \
-                      macports-clang-5.0
-}
+if {${os.platform} eq "darwin"} {
 
-# Add 10+ as defaults *after* 9.0 - 5.0
-if { ${os.major} >= 11 } {
-    lappend compilers macports-clang-13 macports-clang-12
-}
-if { ${os.major} >= 10 } {
-    lappend compilers macports-clang-11 
-    if { ${os.arch} ne "arm" } {
-        lappend compilers macports-clang-10
+    if {${os.major} >= 9} {
+        lappend compilers macports-clang-11
+        if {[option build_arch] ne "arm64"} {
+            lappend compilers macports-clang-10 macports-clang-9.0
+            if {${os.major} < 20} {
+                lappend compilers macports-clang-8.0
+            }
+        }
     }
-}
 
-if { ${os.major} < 16 } {
-    # The Sierra SDK requires a toolchain that supports class properties
-    if { ${os.major} >= 9 } {
-        lappend compilers macports-clang-3.7
+    if {${os.major} >= 9 && ${os.major} < 20} {
+        lappend compilers macports-clang-7.0 \
+            macports-clang-6.0 \
+            macports-clang-5.0
     }
-    lappend compilers macports-clang-3.4
-    if { ${os.major} < 9 } {
-        lappend compilers macports-clang-3.3
+
+    if {${os.major} < 16} {
+        # The Sierra SDK requires a toolchain that supports class properties
+        if {${os.major} >= 9} {
+            lappend compilers macports-clang-3.7
+        }
+        lappend compilers macports-clang-3.4
+        if {${os.major} < 9} {
+            lappend compilers macports-clang-3.3
+        }
     }
+
 }

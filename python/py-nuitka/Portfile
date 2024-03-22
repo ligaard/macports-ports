@@ -5,13 +5,14 @@ PortGroup           python 1.0
 
 name                py-nuitka
 python.rootname     Nuitka
-version             0.6.17.3
+version             2.1.2
 revision            0
 categories-append   devel
-platforms           darwin
+platforms           {darwin any}
 license             Apache-2
+supported_archs     noarch
 
-python.versions     37 38 39
+python.versions     38 39 310 311
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -20,31 +21,11 @@ long_description    ${description}
 
 homepage            http://nuitka.net/
 
-checksums           rmd160  a39a01bd453d3632f7e36aaf8b494489d48031bd \
-                    sha256  cdfe078860b204ce8b0f255e9a3e3e4d2023d03decfa5cad37a28d62ebc3a854 \
-                    size    3152904
+checksums           rmd160  cd9746e10b035f0a8c9bbd73bc8b991742e4b5de \
+                    sha256  32d7724c913645c73a8b41f6f57d17f742e132fa3a82eb6c4c847c1629cba7b9 \
+                    size    3633406
 
 if {${name} ne ${subport}} {
-
-    depends_lib-append  port:py${python.version}-setuptools
-
-    # Fix permissions
-    post-extract {
-        fs-traverse item ${worksrcpath} {
-            if {[file isdirectory ${item}]} {
-                file attributes ${item} -permissions a+rx
-            } elseif {[file isfile ${item}]} {
-                file attributes ${item} -permissions a+r
-            }
-        }
-    }
-
-    livecheck.type      none
-}
-
-foreach {old new} {27 37 35 37 36 37} {
-    subport py${old}-${python.rootname} "
-        replaced_by py${new}-${python.rootname}
-        PortGroup obsolete 1.0
-    "
+    depends_lib-append  port:py${python.version}-ordered-set \
+                        port:py${python.version}-zstd
 }

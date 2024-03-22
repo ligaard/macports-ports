@@ -4,14 +4,15 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           java 1.0
 
-github.setup        grails grails-core 5.0.2 v
+github.setup        grails grails-core 6.1.2 v
 github.tarball_from releases
 revision            0
 name                grails
 
 categories          devel java
 license             Apache-2
-platforms           darwin
+platforms           any
+supported_archs     noarch
 maintainers         {judaew @judaew} openmaintainer
 
 description         Groovy on rails, web framework
@@ -21,9 +22,9 @@ homepage            https://grails.org/
 
 distname            ${name}-${version}
 
-checksums           rmd160  a1cd7f7494f4a8b85895c32afebda3147bb6e307 \
-                    sha256  7ab83eae780db077724fc69425d43429f1af627a2ca83ddb527b4b79bfe88dd5 \
-                    size    174996765
+checksums           rmd160  c7b078f51e3f6ba7922fbc7648394c834db1e542 \
+                    sha256  3e889766e0096cab3205155ac70b0a4838750733d89600307bfc42d2a7de0e0b \
+                    size    186132637
 
 use_zip             yes
 use_configure       no

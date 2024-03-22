@@ -1,0 +1,27 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran edzer sp 2.1-3
+revision            0
+categories-append   gis
+maintainers         nomaintainer
+license             GPL-2+
+description         Classes and methods for spatial data
+long_description    {*}${description}
+homepage            https://edzer.github.io/sp
+checksums           rmd160  9ff0695672a299a274ff659e2a2265a9c7b7d0a9 \
+                    sha256  fa939272e534811b34cfca7d1c619448b1e4f90240c092e25bb8764445c68454 \
+                    size    1244605
+
+depends_test-append port:R-deldir \
+                    port:R-gstat \
+                    port:R-knitr \
+                    port:R-raster \
+                    port:R-RColorBrewer \
+                    port:R-rmarkdown \
+                    port:R-sf \
+                    port:R-terra
+
+test.run            yes

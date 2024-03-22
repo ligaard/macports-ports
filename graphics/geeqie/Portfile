@@ -1,72 +1,103 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           active_variants 1.1
+PortGroup           app 1.0
+PortGroup           github 1.0
+PortGroup           meson 1.0
 
-name                geeqie
-version             1.4
+github.setup        BestImageViewer geeqie 2.2 v
 revision            2
-checksums           rmd160  1e3ffccba08edc2739051f1252ca653f008de35b \
-                    sha256  5c583a165573ec37874c278f9dc57e73df356b30e09a9ccac3179dd5d97e3e32 \
-                    size    35881152
+github.tarball_from releases
+checksums           rmd160  f6649522b86410edf019b8d8c4dcd6c813fddfdc \
+                    sha256  899ac33b801e0e83380f79e9094bc2615234730ccf6a02d93fd6da3e6f8cfe94 \
+                    size    2169096
 
 categories          graphics x11
-platforms           darwin
+# Check: dependencies may not build on 10.6 and earlier
 maintainers         nomaintainer
 license             GPL-2+
+# only used at build
+license_noconflict  graphviz openssl11
 
-description         Geeqie Image Viewer
+description         image viewer and organiser
 
-long_description    Geeqie is a lightweight Gtk+-based image viewer for \
-                    UNIX-like operating systems which was forked from GQView.
+long_description    Geeqie is a lightweight Gtk+-based image viewer and browser.  Provides \
+                    slideshow function and supports MANY image formats.
 
 homepage            http://www.geeqie.org/
-master_sites        ${homepage}
+
 use_xz              yes
 
-depends_build       port:pkgconfig \
-                    port:intltool \
-                    port:autoconf \
-                    port:automake \
-                    port:libtool
+depends_build       path:bin/pkg-config:pkgconfig \
+                    port:pandoc
 
-depends_lib         port:clutter-gtk \
-                    port:desktop-file-utils \
-                    path:lib/pkgconfig/gtk+-3.0.pc:gtk3 \
+depends_lib         port:desktop-file-utils \
+                    lib:libgtk-3:gtk3 \
+                    port:djvulibre \
                     port:exiv2 \
+                    port:ffmpegthumbnailer \
+                    port:gspell \
+                    port:libjxl \
                     port:lcms \
-                    port:libchamplain \
+                    port:libarchive \
+                    port:libheif \
+                    port:libraw \
                     path:include/turbojpeg.h:libjpeg-turbo \
+                    port:openjpeg \
+                    path:lib/pkgconfig/poppler.pc:poppler \
                     port:tiff
 
 depends_run         port:adwaita-icon-theme
 
-patchfiles-append   no-Werror.patch
-patchfiles-append   disable-gen_changelog.sh.patch
+# dependencies needed by plugins (not checked by configure) -
+depends_run-append  port:ImageMagick \
+                    port:exiftran \
+                    port:exiftool \
+                    port:gphoto2 \
+                    port:zenity
 
-# These patches are taken from the upstream repository and we should be able
-# to remove them when the next version is released.
-patchfiles-append   578.patch 588.patch 605.patch 654.patch 675.patch
+configure.args      -Dlua=disabled \
+                    -Devince=disabled \
+                    -Dwebp=disabled \
+                    -Dyelp-build=disabled
 
-# No configure script included
-configure.cmd       ./autogen.sh
+variant print_preview description {Print preview support with evince} {
+# appears non-functional but adds many dependencies
+     depends_run-append port:evince
+     configure.args-replace -Devince=disabled -Devince=enabled
+}
 
-configure.args      --disable-lirc \
-                    --disable-lua \
-                    --disable-debug-log \
-                    --disable-doxygen-doc \
-                    --disable-doxygen-dot \
-                    --disable-doxygen-man \
-                    --disable-doxygen-rtf \
-                    --disable-doxygen-xml \
-                    --disable-doxygen-chm \
-                    --disable-doxygen-chi \
-                    --disable-doxygen-html \
-                    --disable-doxygen-ps \
-                    --disable-doxygen-pdf \
-                    --disable-silent-rules \
-                    --enable-gtk3 \
-                    --enable-map
+variant help_files description {Enable help browswer} {
+# TODO - log window currently says "Unable to detect an installed browser."
+     depends_build-append port:yelp-tools
+     configure.args-replace -Dyelp-build=disabled -Dyelp-build=enabled
+}
+
+variant x11 conflicts quartz {
+    require_active_variants lib:libgtk-3:gtk3 x11 quartz
+    depends_lib-append      port:clutter-gtk port:libchamplain
+}
+
+variant quartz conflicts x11 {
+    require_active_variants lib:libgtk-3:gtk3 quartz x11
+
+    # meson.build looks for clutter-gtk and libchamplain unless gps-map is disabled
+    # if clutter-gtk and libchamplain are found, the quartz version of the port builds
+    # against them but crashes on launch with "unsupported backend"
+    configure.args-append   -Dgps-map=disabled
+}
+
+if {![variant_isset quartz]} {
+    default_variants-append +x11
+}
 
 post-activate {
     system "${prefix}/bin/update-desktop-database ${prefix}/share/applications"
 }
+
+app.name            Geeqie
+app.icon            src/icons/svg/geeqie.svg
+app.hide_dock_icon  yes
+# app.retina          yes
+app.privacy_photo   "Geeqie can display photos in your photo library"

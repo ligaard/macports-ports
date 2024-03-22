@@ -3,13 +3,22 @@
 PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           cmake 1.1
+PortGroup           legacysupport 1.1
 
-github.setup        Yubico yubico-piv-tool 2.2.1 yubico-piv-tool-
-revision            1
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+# see lib/internal.h
+if {(${os.platform} eq "darwin" && ${os.major} < 13) || ${os.platform} eq "linux"} {
+    PortGroup       openssl 1.0
+
+}
+
+github.setup        Yubico yubico-piv-tool 2.3.1 yubico-piv-tool-
+revision            0
 categories          security
-platforms           darwin
 license             BSD
-maintainers         {lbschenkel @lbschenkel} openmaintainer
+maintainers         nomaintainer
 
 description         Command line tool for the YubiKey PIV application
 long_description    \
@@ -19,18 +28,21 @@ long_description    \
     certificates, and create certificate requests, and other operations. \
     A shared library and a command-line tool is included.
 homepage            https://developers.yubico.com/yubico-piv-tool
+github.tarball_from archive
 
-checksums           rmd160  ddc9c1607c90d4514880d8a74682b53ca5ad1ff1 \
-                    sha256  27d98723473cb4af8d5f692e0453102201690b4337d2a7b276a102e0eb57ed08 \
-                    size    1310292
-
-patchfiles          81b063f53db8a3d74077522a6ff4f1640cc3fe70.patch
+checksums           rmd160  cdf8273fe002a3bd5b1890f060bb2e60e5ec3920 \
+                    sha256  11de1b708c6b917bec3da7d584f534a4314c51ccd461840fd16f15478ac2668f \
+                    size    1316046
 
 depends_build-append \
                     port:check \
                     port:gengetopt \
                     port:help2man \
                     port:pkgconfig
+
+patchfiles-append   patch-older-systems.diff
+
+compiler.c_standard 2011
 
 configure.pre_args-replace \
                     -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF

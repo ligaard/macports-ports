@@ -5,18 +5,17 @@ PortGroup           github 1.0
 PortGroup           compiler_blacklist_versions 1.0
 PortGroup           openssl 1.0
 
-github.setup        mgieseki dvisvgm 2.12
+github.setup        mgieseki dvisvgm 3.1.2
 name                dvisvgm
 conflicts           dvisvgm-devel
 set my_name         dvisvgm
-revision            2
+revision            1
 
-checksums           rmd160  037d06784902d1792c901459783ab9817b744ca1 \
-                    sha256  55ecd1014c2e66fae285e41da33e832ab20aa7f2fdc42388b695c1233e7d78e8 \
-                    size    2694386
+checksums           rmd160  0a6ff41bb5c3f5fe281597b0716e35ddba0405db \
+                    sha256  a9bc2015eb1a12ff14de2efec5d65c8bc2f2b28d33a2932a2f5176b25da701d6 \
+                    size    2516189
 
 categories          graphics textproc
-platforms           darwin
 license             GPL-3+
 maintainers         {michaelld @michaelld} {mascguy @mascguy} openmaintainer
 
@@ -34,16 +33,23 @@ compiler.blacklist-append {clang < 900}
 use_autoconf        yes
 autoconf.cmd        ${worksrcpath}/autogen.sh
 
+post-extract {
+    copy ${filespath}/autogen.sh ${worksrcpath}
+    system -W ${worksrcpath} "chmod +x autogen.sh"
+}
+
 # Setting autoconf.cmd to a non-default value after setting
 # 'use_autoconf yes' removes the automatic dependencies, so re-add them.
 depends_build-append \
     port:autoconf \
+    port:autoconf-archive \
     port:automake \
     port:libtool
 
 depends_build-append \
     port:asciidoc \
-    port:pkgconfig
+    port:pkgconfig \
+    port:xmlto
 
 depends_lib-append \
     port:brotli \
@@ -55,12 +61,12 @@ depends_lib-append \
     port:xxhashlib \
     port:zlib
 
-# prevent opportunistic dependency on gawk
+# prevent opportunistic dependencies
 configure.env-append \
     AWK=/usr/bin/awk
 
-# see https://trac.macports.org/ticket/57528
-use_parallel_build no
+configure.args-append \
+    --disable-silent-rules
 
 test.run    yes
 test.target check

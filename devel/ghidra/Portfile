@@ -1,50 +1,60 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           java 1.0
 PortGroup           app 1.0
 
-name                ghidra
-homepage            https://ghidra-sre.org/
-master_sites        ${homepage}
-version             9.2.2
-use_zip             yes
-distname            ${name}_${version}_PUBLIC_20201229
-checksums           rmd160  2b7a239329ba515010ff52725da08eb656f168f7 \
-                    sha256  8cf8806dd5b8b7c7826f04fad8b86fc7e07ea380eae497f3035f8c974de72cf8 \
-                    size    317805407
-revision            1
+github.setup        NationalSecurityAgency ghidra 11.0.1 Ghidra_ _build
+checksums           rmd160  64bc8d0b9178c104844406fc230fbe67235d43f9 \
+                    sha256  8d74e44036386e19d01118d41b21be71bcfbcbce7bf1e81e9bd07b718a5d0774 \
+                    size    68992558
 
 categories          devel
-maintainers         {1e0.co.uk:dev @hexagonal-sun} openmaintainer
+license             Apache
+maintainers         {1e0.co.uk:dev @hexagonal-sun} {crowell.biz:jeff @crowell} openmaintainer
 description         A software reverse engineering (SRE) suite of tools developed by NSA's \
                     Research Directorate in support of the Cybersecurity mission
 long_description    ${description}
-license             Apache
-platforms           darwin
+homepage            https://ghidra-sre.org/
 
-depends_lib-append  port:openjdk11-zulu
-use_configure       no
+java.version        17
+java.fallback       openjdk17
+
 universal_variant   no
+depends_build-append    port:gradle
 
-build {}
+set javadest        ${prefix}/share/java/${name}-${version}
+configure.env-append    GRADLE_USER_HOME=${worksrcpath}
+configure.pre_args  ""
+configure.cmd       gradle -I gradle/support/fetchDependencies.gradle init
+build.env-append    GRADLE_USER_HOME=${worksrcpath}
+build.env-append    _JAVA_OPTIONS=-Duser.home=${worksrcpath}
+build.cmd           gradle
+build.target        buildGhidra
 
-set javadest        "${prefix}/share/java/${name}-${version}"
+set ghidra_copy_list \
+[list \
+    Extensions \
+    GPL \
+    Ghidra \
+    LICENSE \
+    docs \
+    ghidraRun \
+    licenses \
+    server \
+    support \
+]
+
 destroot {
-    file mkdir "${destroot}${javadest}"
-    file copy "${worksrcpath}/Extensions" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/GPL" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/Ghidra" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/LICENSE" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/docs" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/ghidraRun" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/licenses" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/server" "${destroot}${javadest}/"
-    file copy "${worksrcpath}/support" "${destroot}${javadest}/"
+    system "unzip ${worksrcpath}/build/dist/ghidra*.zip -d ${worksrcpath}/ghbuild"
+    xinstall -d ${destroot}${javadest}
+    foreach item ${ghidra_copy_list} {
+        copy ${worksrcpath}/ghbuild/ghidra_${version}_DEV/${item} ${destroot}${javadest}/
+    }
 }
 
 # app settings
-app.create yes
-app.name GHIDRA
-app.executable "${javadest}/ghidraRun"
-app.icon "support/ghidra.ico"
-app.retina yes
+app.executable      ${javadest}/ghidraRun
+app.icon            ${worksrcpath}/Ghidra/RuntimeScripts/Windows/support/ghidra.ico
+app.retina          yes

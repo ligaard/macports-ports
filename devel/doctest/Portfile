@@ -4,24 +4,26 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           github 1.0
 
-github.setup        onqtam doctest 2.4.6
+github.setup        onqtam doctest 2.4.11 v
 github.tarball_from archive
 revision            0
 
-platforms           darwin
 categories          devel
 license             MIT
+platforms           any
+supported_archs     noarch
 maintainers         {linux.com:nickblack @dankamongmen} openmaintainer
 
 description         Fast header-only C++ unit testing
 long_description    doctest is a light and feature-rich C++98 / C++11 \
                     single-header testing framework for unit tests and TDD.
 
-checksums           rmd160  75316f7456d093e07b885bd38ff04642870f184c \
-                    sha256  39110778e6baf373ef04342d7cb3fe35da104cb40769103e8a2f0035f5a5f1cb \
-                    size    2277281
+checksums           rmd160  6ada5b26b61110851769d084d1133bc3bb19c91a \
+                    sha256  632ed2c05a7f53fa961381497bf8069093f0d6628c5f26286161fbd32a560186 \
+                    size    2183312
 
 compiler.cxx_standard   2011
+compiler.thread_local_storage yes
 
 # a few test fail becase it is looking for a .dylib in the MacPorts prefix, but it is
 # only present in the examples directory (the port install no libs)

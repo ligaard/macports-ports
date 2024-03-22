@@ -3,13 +3,20 @@
 PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           muniversal 1.0
+PortGroup           legacysupport 1.1
 
-github.setup        libsndfile libsndfile 1.0.31
-revision            1
+# strnlen
+legacysupport.newest_darwin_requires_legacy 10
+
+github.setup        libsndfile libsndfile 1.2.2
+revision            0
+
+checksums           rmd160  ee0d08d6542dd33fa7e931203ab4af513c43fe2d \
+                    sha256  3799ca9924d3125038880367bf1468e53a1b7e3686a934f098b7e1d286cdb80e \
+                    size    730760
 
 categories          audio
 maintainers         nomaintainer
-platforms           darwin
 
 description         read and write files containing sampled sound
 long_description    \
@@ -22,13 +29,8 @@ long_description    \
 license             LGPL-2.1+
 homepage            https://libsndfile.github.io/libsndfile/
 
-checksums           \
-    rmd160          ae3fc5bbcb10a034f3edc1240acacd9f1ec349a7 \
-    sha256          a8cfb1c09ea6e90eff4ca87322d4168cdbe5035cb48717b40bf77e751cc02163 \
-    size            875335
-
 github.tarball_from releases
-use_bzip2           yes
+use_xz              yes
 
 depends_build       port:pkgconfig
 depends_lib         port:flac port:libogg port:libvorbis port:libopus
@@ -40,6 +42,12 @@ configure.args \
     --disable-sqlite \
     --disable-test-coverage \
     --enable-external-libs
+
+if {${configure.build_arch} in [list i386 x86_64]} {
+    # This is an Intel-specific issue: sources use immintrin.h,
+    # and Xcode gcc does not have it.
+    compiler.blacklist-append *gcc-4.0 *gcc-4.2
+}
 
 variant no_external_libs conflicts experimental description {Disable FLAC, Ogg, Vorbis and Opus support} {
     depends_build-delete    port:pkgconfig

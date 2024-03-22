@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/aws/copilot-cli 1.11.0 v
+go.setup            github.com/aws/copilot-cli 1.27.0 v
+github.tarball_from archive
 name                copilot
 revision            0
 
@@ -25,28 +26,24 @@ installs_libs       no
 license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-platforms           darwin
 
 depends_build-append \
                     port:go-mockgen \
-                    port:npm7       \
+                    path:bin/npm:npm9 \
                     port:packr
 
 # allow Go to fetch deps at run-time
-build.env-delete    GO111MODULE=off GOPROXY=off
+go.offline_build no
 
 build.cmd           make
 build.pre_args      VERSION=${version}
 build.args          release
 
-installs_libs       no
 use_parallel_build  no
 
-checksums           rmd160  086a671bdfe6e5dc5cfc9d9853e777d366b8598d \
-                    sha256  98f22a545e016733a43b8cc3a548c0df75c443ae50edb3644e709e8df079598d \
-                    size    8022135
-
-github.tarball_from archive
+checksums           rmd160  eea4309655bf1fec3dd0c590846ebc07476711fb \
+                    sha256  6a945ee05257959a8a62f7ca421936361046880da1bd8357a9a5633f59473c22 \
+                    size    14509620
 
 patch {
     # Remove Windows and Linux builds for the release target
@@ -62,7 +59,7 @@ patch {
 }
 
 destroot {
-    xinstall -m 755 \
+    xinstall -m 0755 \
         ${worksrcpath}/bin/local/${name}-${goos}-${goarch} \
         ${destroot}${prefix}/bin/${name}
 }

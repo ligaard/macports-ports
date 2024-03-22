@@ -3,17 +3,17 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         Mac-OSVersion 1.004
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         Mac-OSVersion 1.015
+revision            0
 license             Artistic-2
 maintainers         {devans @dbevans} openmaintainer
 description         Mac::OSVersion - Get the Mac OS X system version information
-long_description    ${description}
+long_description    {*}${description}
 
-platforms           darwin
-
-checksums           rmd160  c4ffc14929638682b34009f4386ef5dc0cfb18ed \
-                    sha256  498d2fb6642d379e785b6f6f9cb987525c2c55e04fb29b4ab6ff58ff5c165574 \
-                    size    12034
-
+platforms           {darwin any}
 supported_archs     noarch
+
+checksums           rmd160  b85d9cd767ffb19e1cd94683938ad5f9d4402b6d \
+                    sha256  110914c892b9be358611f1e52f4de02b9bfcb702e40261cf6eb4d06bd622f6ea \
+                    size    14223

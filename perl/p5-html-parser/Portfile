@@ -3,19 +3,18 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.28 5.30 5.32
-perl5.setup         HTML-Parser 3.76
+perl5.branches      5.28 5.30 5.32 5.34
+perl5.setup         HTML-Parser 3.82 ../../authors/id/O/OA/OALDERS
+revision            0
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
 description         HTML parsing and extraction modules
 long_description    This is a collection of modules that parse and \
                     extract information from HTML documents.
 
-checksums           rmd160  7045c1d892e22078daa97ea71c25cb8e9abf6208 \
-                    sha256  64d9e2eb2b420f1492da01ec0e6976363245b4be9290f03f10b7d2cb63fa2f61 \
-                    size    120473
-
-platforms           darwin
+checksums           rmd160  e9da1d98c6533051add381fd34b1a9d03ea0e457 \
+                    sha256  5b1f20dd0e471a049c13a53d0fcd0442f58518889180536c6f337112c9a430d8 \
+                    size    150550
 
 if {${perl5.major} != ""} {
     depends_lib-append \

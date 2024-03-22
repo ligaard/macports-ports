@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github 1.0
+PortGroup           tree_sitter 1.0
+
+github.setup        tree-sitter tree-sitter-html 0.20.2 v
+revision            0
+
+description         A tree-sitter parser for HTML
+
+long_description    {*}${description}
+
+categories          devel
+license             MIT
+maintainers         {amake @amake} openmaintainer
+
+checksums           rmd160  1fa396b258efdedd00c83a228314738789ef9a9e \
+                    sha256  2e401edb6bca285b98907537eaa6b065748bfc47bb3c5f5c34cbdbd379a220bf \
+                    size    28881
+
+worksrcdir          ${worksrcdir}/src

@@ -1,0 +1,29 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran ys137 BayesPPDSurv 1.0.2
+revision            0
+categories-append   math
+maintainers         nomaintainer
+license             GPL-3+
+description         Bayesian Power Prior Design for Survival data
+long_description    {*}${description}
+checksums           rmd160  d2464655e6011d5830b6322c9c13b150bf3c6bed \
+                    sha256  9ee4429e9134b9b21f37d3ca4042b8009e370d315619bfcee51b98d6cafaca8a \
+                    size    26622
+
+depends_lib-append  port:R-dplyr \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-RcppDist \
+                    port:R-tidyr
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown \
+                    port:R-testthat
+
+test.run            yes

@@ -1,0 +1,21 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran russell-lenth estimability 1.5
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3+
+description         Tools for assessing estimability of linear predictions
+long_description    {*}${description}
+checksums           rmd160  3a7eba0586b21ddd4c05f4bcb8bab1a591778ef8 \
+                    sha256  b32c5f6157cbeaf96e42be3d4d33637de542debbc6dd2a9a19814980ed46dc68 \
+                    size    15781
+supported_archs     noarch
+
+depends_test-append port:R-knitr \
+                    port:R-rmarkdown
+
+test.run            yes

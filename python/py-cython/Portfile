@@ -3,16 +3,16 @@
 PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           select 1.0
+PortGroup           compiler_blacklist_versions 1.0
 
 name                py-cython
 python.rootname     Cython
-version             0.29.24
+version             3.0.9
 revision            0
 categories-append   devel
-platforms           darwin
 license             Apache-2
 
-python.versions     27 35 36 37 38 39 310
+python.versions     27 35 36 37 38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -25,27 +25,16 @@ long_description    Cython is a language that makes writing C extensions for \
 
 homepage            http://www.cython.org/
 
-checksums           rmd160  f4f0656202943c03c6933d6c19cf757dc6d1fda3 \
-                    sha256  cdf04d07c3600860e8c2ebaad4e8f52ac3feb212453c1764a49ac08c827e8443 \
-                    size    2076225
+checksums           rmd160  e98730adb5121d1347874b428d6be4fe5a3c7ded \
+                    sha256  a2d354f059d1f055d34cfaa62c5b68bc78ac2ceab6407148d47fb508cf3ba4f3 \
+                    size    2748462
 
 if {${name} ne ${subport}} {
     depends_lib-append \
                         port:py${python.version}-setuptools
 
-    if {${python.version} eq 27} {
-        version             0.29.13
-        revision            0
-        checksums           rmd160  40caf2eb2ebcc6cec9ca782fb6dad70fda0f9dfa \
-                            sha256  c29d069a4a30f472482343c866f7486731ad638ef9af92bfe5fca9c7323d638e \
-                            size    2051189
-    } elseif {${python.version} eq 35} {
-        version             0.29.17
-        revision            0
-        checksums           rmd160  130804bc375318396f2bd47073bd1d514acbdcdb \
-                            sha256  6361588cb1d82875bcfbad83d7dd66c442099759f895cf547995f00601f9caf2 \
-                            size    2060265
-    }
+    # https://github.com/macports/macports-ports/commit/760996927a0a2b5c0d9871670155d64f840dff8e#commitcomment-74373855
+    compiler.blacklist-append *gcc-3.* *gcc-4.*
 
     depends_run         port:cython_select
     test.run            no

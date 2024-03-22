@@ -1,33 +1,36 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           github 1.0
 PortGroup           python 1.0
 
-set realname        requests-file
-github.setup        dashea ${realname} 1.5.1
-name                py-${realname}
+name                py-requests-file
+version             2.0.0
 revision            0
 license             Apache-2
 maintainers         {mps @Schamschula} openmaintainer
 description         Requests-File is a transport adapter for use with the Requests \
                     Python library to allow local filesystem access via file:// URLs.
-long_description    ${description}
-platforms           darwin
+long_description    {*}${description}
+homepage            https://github.com/dashea/requests-file
 
-python.versions     27 36 37 38 39 310
+supported_archs     noarch
+platforms           {darwin any}
 
-checksums           rmd160  5a18a101969740f5e8b42ddd963c740e76699e8d \
-                    sha256  d877270b3b6f9d4847b0a19f24182bc059e2e218686c89259530ef27506ed37c \
-                    size    5998
+python.versions     38 39 310 311 312
+
+# suspect stealth update
+dist_subdir         ${name}/${version}_1
+
+checksums           rmd160  e3f9c584a6e29957191e07735e6bc74b6c440392 \
+                    sha256  20c5931629c558fda566cacc10cfe2cd502433e628f568c34c80d96a0cc95972 \
+                    size    6863
 
 if {${name} ne ${subport}} {
+    python.pep517   yes
+
     depends_build-append \
-                    port:py${python.version}-setuptools
+                    port:py${python.version}-setuptools_scm
 
     depends_lib-append  \
-                    port:py${python.version}-requests \
-                    port:py${python.version}-six
-
-    livecheck.type  none
+                    port:py${python.version}-requests
 }

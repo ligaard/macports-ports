@@ -4,12 +4,12 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        spyder-ide qtawesome 1.1.1 v
+github.setup        spyder-ide qtawesome 1.3.0 v
 revision            0
 name                py-qtawesome
 
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             MIT
 maintainers         {reneeotten @reneeotten} openmaintainer
 
@@ -17,29 +17,20 @@ description         Iconic Fonts in PyQt and PySide applications.
 long_description    QtAwesome enables iconic fonts such as Font Awesome and \
                     Elusive Icons in PyQt and PySide applications.
 
-checksums           rmd160  80901944205b1341b49e573bfdd93b39995468ea \
-                    sha256  16a29f26438be7dae65f58238d696de84140d788aee841bafb97a0448667feaa \
-                    size    2845137
+checksums           rmd160  63ef48f2127b1c0e2c9cdde32886f8010c8d3156 \
+                    sha256  1307b7e14bc1853bcd7138ff05b3ecad9e1ea23952494d859af0ab9a94a0025b \
+                    size    2737643
 
-python.versions     36 37 38 39 310
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
-    post-patch {
-        reinplace "s|python|${python.bin}|g" ${worksrcpath}/qtawesome/tests/test_qtawesome.py
-    }
-
     depends_lib-append \
-                    port:py${python.version}-qtpy \
-                    port:py${python.version}-setuptools \
+                    port:py${python.version}-qtpy
 
     depends_test-append \
-                    port:py${python.version}-pytest \
                     port:py${python.version}-pytest-qt
 
     test.run        yes
-    test.cmd        py.test-${python.branch}
-    test.target
-    test.env        PYTHONPATH=${worksrcpath}/build/lib
 
     post-destroot {
         set docdir ${prefix}/share/doc/${subport}
@@ -47,6 +38,4 @@ if {${name} ne ${subport}} {
         xinstall -m 0644 -W ${worksrcpath} LICENSE.txt CHANGELOG.md \
            README.md  ${destroot}${docdir}
     }
-
-    livecheck.type  none
 }

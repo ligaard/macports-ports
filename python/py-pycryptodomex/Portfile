@@ -5,7 +5,7 @@ PortGroup           python 1.0
 
 # also update py-pycryptodome
 name                py-pycryptodomex
-version             3.12.0
+version             3.19.0
 revision            0
 
 license             BSD
@@ -17,19 +17,19 @@ long_description    ${description}
 
 homepage            https://www.pycryptodome.org
 
-use_zip             yes
+checksums           rmd160  16f401205b6f5147810fb36050a682a08310c948 \
+                    sha256  af83a554b3f077564229865c45af0791be008ac6469ef0098152139e6bd4b5b6 \
+                    size    4779021
 
-checksums           rmd160  bf9ba66791c40b790f346baf54735a913cf77b80 \
-                    sha256  922e9dac0166e4617e5c7980d2cff6912a6eb5cb5c13e7ece222438650bd7f66 \
-                    size    3721260
-
-python.versions     38 39 310
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
     depends_build-append \
                     port:py${python.version}-setuptools
 
     test.run        yes
+    test.cmd        ${python.bin} setup.py test
+    test.args
 
     livecheck.type  none
 }

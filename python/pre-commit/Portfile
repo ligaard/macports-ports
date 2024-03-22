@@ -5,28 +5,25 @@ PortGroup           python 1.0
 
 name                pre-commit
 python.rootname     pre_commit
-version             2.16.0
+version             3.6.2
 revision            0
 
 categories-append   devel
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             MIT
 maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         A framework for managing and maintaining multi-language pre-commit hooks.
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://github.com/pre-commit/pre-commit
 
-checksums           rmd160  960c7b8895ce86fb41c094f0ffc21ab8bbd7da1e \
-                    sha256  fe9897cac830aa7164dbd02a4e7b90cae49630451ce88464bca73db486ba9f65 \
-                    size    167300
+checksums           rmd160  16b74aad9cadea702791652b64804b38ea6a740a \
+                    sha256  c3ef34f463045c88658c5b99f38c1e297abdcc0ff13f98d3370055fbbfabc67e \
+                    size    177293
 
-python.versions     39
-
-depends_build-append \
-                    port:py${python.version}-setuptools
+python.default_version 312
 
 depends_lib-append  port:py${python.version}-cfgv \
                     port:py${python.version}-identify \

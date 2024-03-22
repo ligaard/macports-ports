@@ -4,9 +4,14 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           meson 1.0
 PortGroup           compiler_blacklist_versions 1.0
+PortGroup           legacysupport 1.1
 
-github.setup        Genymobile scrcpy 1.21 v
+# needed for clock_gettime and static_assert to work on older OS X versions
+legacysupport.newest_darwin_requires_legacy 15
+
+github.setup        Genymobile scrcpy 2.3.1 v
 revision            0
+github.tarball_from archive
 
 categories          multimedia
 platforms           darwin
@@ -24,19 +29,19 @@ extract.only        ${distfiles}
 distfiles-append    ${name}-server-v${version}:bootstrap
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  01d0ca05fa78236a23a2c8a7c48138ff283be5ba \
-                    sha256  edef3d0c976e75f0e2e1a9dfa36a4b6e22247feaa19dda307df8038f527c2c25 \
-                    size    360696 \
+                    rmd160  5ff0b8a66eb77e6e914eac3c0b73cf77fd5b1450 \
+                    sha256  76f38779f00d91d0b46a399ebca32c82ff1facdbd843871b7e46c2e7cad38a42 \
+                    size    401278 \
                     ${name}-server-v${version} \
-                    rmd160  9ac3a6b4a52658466d021958a35c0129aa583f65 \
-                    sha256  dbcccab523ee26796e55ea33652649e4b7af498edae9aa75e4d4d7869c0ab848 \
-                    size    40067
-
+                    rmd160  d418586f74046a4a7c9ae7c7a9c035d4ab27139f \
+                    sha256  f6814822fc308a7a532f253485c9038183c6296a6c5df470a9e383b4f8e7605b \
+                    size    66007
 depends_build-append \
                     port:pkgconfig
 
 depends_lib-append  path:lib/libavcodec.dylib:ffmpeg \
-                    port:libsdl2
+                    port:libsdl2 \
+                    port:libusb
 
 depends_run-append  port:android-platform-tools
 
@@ -49,11 +54,4 @@ configure.args-append \
 compiler.c_standard 2011
 # Work around cfm: fatal error: 'stdatomic.h' file not found
 # https://trac.macports.org/ticket/60429
-compiler.blacklist-append {clang < 700}
-
-destroot {
-    xinstall -m 755 -d ${destroot}${prefix}/share/${name}
-
-    xinstall -m 644 ${workpath}/build/server/${name}-server ${destroot}${prefix}/share/${name}
-    xinstall -m 755 ${workpath}/build/app/${name} ${destroot}${prefix}/bin
-}
+compiler.blacklist-append {clang < 701}

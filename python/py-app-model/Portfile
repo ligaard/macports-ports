@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-app-model
+version             0.2.5
+revision            0
+categories          python
+license             BSD
+maintainers         {mps @Schamschula} openmaintainer
+description         Generic application schema implemented in python.
+long_description    {*}${description} This is a schema for declarative organization of \
+                    application data, such as menus, keybindings, actions/commands, etc...
+supported_archs     noarch
+platforms           {darwin any}
+homepage            https://pypi.org/project/app-model/
+
+distname            app_model-${version}
+
+checksums           rmd160  c46fa877a912f63c5846939208fcabf30594b3ff \
+                    sha256  7afcd8afaf2143ff9dcb49bc76a7aed7169f0f7b4f0c2bd79b55780182f7c568 \
+                    size    112052
+
+python.versions     38 39 310 311 312
+
+if {${name} ne ${subport}} {
+    python.pep517   yes
+    python.pep517_backend \
+                    hatch
+
+    depends_build-append \
+                    port:py${python.version}-hatch-vcs
+
+    depends_lib-append  \
+                    port:py${python.version}-in-n-out \
+                    port:py${python.version}-psygnal \
+                    port:py${python.version}-pydantic \
+                    port:py${python.version}-pydantic-compat \
+                    port:py${python.version}-typing_extensions
+}

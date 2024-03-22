@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup github    1.0
 PortGroup ocaml     1.1
 
-github.setup        ocaml-ppx ocaml-migrate-parsetree 2.1.0 v
+github.setup        ocaml-ppx ocaml-migrate-parsetree 2.4.0
 
 categories          ocaml devel
 maintainers         {landonf @landonf} openmaintainer
@@ -13,15 +13,13 @@ description         Convert OCaml parsetrees between different OCaml versions
 long_description    Converts OCaml parsetrees, outcometree and AST mappers \
                     between different OCaml versions.
 
-platforms           darwin
-
 github.tarball_from releases
 
-checksums           rmd160  f39a87d568d75ad791b792b0d3b7a2e486be4a55 \
-                    sha256  387b788ee4c0537f1fe02c25e05f0335af424828fc6fe940acc0db5948a5a71f \
-                    size    67824
+checksums           rmd160  3e9aabd4a3d55b191d6b069ba598e069ce344efe \
+                    sha256  ec49c452dc337a620556ab682bf0198bf50182550b502d8fb230a591260aa6a4 \
+                    size    77476
 
-distname            ${name}-${git.branch}
+distname            ${name}-${version}
 use_bzip2           yes
 extract.suffix      .tbz
 

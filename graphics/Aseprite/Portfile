@@ -5,27 +5,52 @@ PortGroup                   app 1.0
 PortGroup                   cmake 1.1
 PortGroup                   conflicts_build 1.0
 PortGroup                   github 1.0
-PortGroup                   xcodeversion 1.0
 
 name                        Aseprite
 categories                  graphics
-platforms                   darwin
+platforms                   {macosx >= 16}
 maintainers                 {ryandesign @ryandesign} openmaintainer
-# We are allowed to redistribute the source code but not binaries.
-# https://github.com/aseprite/aseprite/blob/master/EULA.txt
-# https://github.com/aseprite/aseprite/issues/2266#issuecomment-586600478
 license                     Restrictive
 
-github.setup                aseprite aseprite 1.2.30 v
-revision                    1
+# We are allowed to redistribute the source code but not binaries.
+
+# https://github.com/aseprite/aseprite/blob/master/EULA.txt
+# "The Licensor grants you the right to install and use copies of the
+# SOFTWARE PRODUCT on your computer [...]"
+# "You may not distribute copies of the SOFTWARE PRODUCT to third
+# parties."
+# "You may only compile and modify the source code of the SOFTWARE
+# PRODUCT for your own personal purpose or to propose a contribution to
+# the SOFTWARE PRODUCT."
+
+# https://aseprite.org/faq/#if-aseprite-source-code-is-available-how-is-that-you-are-selling-it
+# "Now you can still download its source code, compile it, and use it
+# for your personal purposes. You can make commercial art/assets with it
+# too. The only restriction in Aseprite EULA is that you cannot
+# redistribute Aseprite to third parties."
+
+# https://github.com/aseprite/aseprite/issues/2266#issuecomment-586600478
+# "[...] we considerer that the source code can be distributed (even
+# modified copies). And only binaries cannot be distributed. We might
+# modify the EULA soon to clarify these aspects (separation between
+# Binary vs. Source Code)."
+
+# https://community.aseprite.org/t/eula-and-faq-confusion/9377
+# "[...] the FAQ is making reference to assets/sprites, so you can
+# create art for personal or commercial products with any version of
+# Aseprite (official or compiled). About the EULA is that you cannot
+# compile Aseprite for commercial purposes (e.g. resell it)."
+
+github.setup                aseprite aseprite 1.3.5 v
+revision                    0
 
 # Aseprite doesn't specify which commit of depot_tools we should use, so I'm
-# using the latest commit at the time this version of Aseprite was released.
-set depot_tools_commit      8093a3e1d1402592cdda0377303a0c4c8d58ca8c
+# using the most recent commit before this version of Aseprite was tagged.
+set depot_tools_commit      00915b68748cc78969f6269b78ddaae0a120e993
 
-# Latest commit in skia's aseprite-m81 branch at the time this version of
+# Latest commit in skia's aseprite-m102 branch at the time this version of
 # Aseprite was released (see INSTALL.md).
-set skia_commit             3043aa83d14f2251f22c068816ceb6759ea3fb61
+set skia_commit             861e4743af6d9bf6077ae6dda7274e5a136ee4e2
 
 homepage                    https://aseprite.org
 github.tarball_from         releases
@@ -33,13 +58,13 @@ distname                    ${name}-v${version}-Source
 use_zip                     yes
 
 checksums                   ${distfiles} \
-                    rmd160  417acd8dadd3b5d585d17df3c8065a4d29865ec3 \
-                    sha256  9f4b098fe2327f2e9d73eb9f2aeebecad63e87ff2cf6fb6eeeee3c0778bb8874 \
-                    size    30057883 \
-                            skia-3043aa83d14f2251f22c068816ceb6759ea3fb61.tar.gz \
-                    rmd160  6b896f8f0fc374256a22713c9b244fbc01dc3c9f \
-                    sha256  368813ce058806a267a3bf157f4b0133fb58ae531c2c38247d6e6a191f3280ff \
-                    size    47137258
+                            rmd160  167c37fb730799b95306cf2f7349d9cb86f41559 \
+                            sha256  6acf1b7f5019733cd8a54d8e0504e78b2f74cdb2073f82230e543cfd990f6984 \
+                            size    64189695 \
+                            skia-${skia_commit}.tar.gz \
+                            rmd160  b7649f5478916cf79567f2bedd70cf1b361fd723 \
+                            sha256  6924ab75b5ea2b7390d22ad1710b8e6586d6068aec79457362350820bf10aaf3 \
+                            size    53948567
 
 set main_distfile           [lindex ${distfiles} 0]
 set skia_distfile           skia-${skia_commit}.tar.gz
@@ -49,15 +74,15 @@ distfiles                   ${main_distfile}:main \
 
 extract.only                ${main_distfile}
 
-master_sites                [lindex ${master_sites} 0]:main \
-                            https://github.com/aseprite/skia/archive/${skia_commit}:skia
+master_sites                ${github.master_sites}:main \
+                            https://github.com/${github.author}/skia/archive/${skia_commit}:skia
 
 description                 animated sprite editor & pixel art tool
 
 long_description            ${name} is an image editor for creating animated \
                             sprites and other pixel art.
 
-set python_branch           3.9
+set python_branch           3.12
 set python_version          [string map {. {}} ${python_branch}]
 configure.python            ${prefix}/bin/python${python_branch}
 
@@ -84,8 +109,10 @@ depends_lib-append          port:bzip2 \
                             port:giflib \
                             path:lib/pkgconfig/harfbuzz.pc:harfbuzz \
                             path:lib/pkgconfig/harfbuzz-icu.pc:harfbuzz-icu \
-                            port:icu \
+                            path:lib/pkgconfig/icu-uc.pc:icu \
+                            port:libarchive \
                             port:libb2 \
+                            port:libdeflate \
                             path:include/turbojpeg.h:libjpeg-turbo \
                             path:lib/pkgconfig/pixman-1.pc:libpixman \
                             port:libpng \
@@ -98,9 +125,6 @@ depends_lib-append          port:bzip2 \
                             port:xz \
                             port:zlib \
                             port:zstd
-
-# TODO: Use MacPorts libarchive
-# https://github.com/aseprite/aseprite/issues/1681
 
 # TODO: Use MacPorts lua, after updating it to 5.4
 # or figure out how to prevent this build from seeing it.
@@ -117,13 +141,6 @@ proc map {prefix list} {
     return ${result}
 }
 
-# shellescape will be in MacPorts 2.7.0.
-if {[vercmp [macports_version] 2.6.99] < 0} {
-    proc shellescape {arg} {
-        return [regsub -all -- {[^A-Za-z0-9.:@%/+=_-]} $arg {\\&}]
-    }
-}
-
 proc quoted_shellescape {arg} {
     return "\"[shellescape ${arg}]\""
 }
@@ -134,9 +151,17 @@ extract.mkdir               yes
 post-fetch {
     # depot_tools is hosted on googlesource.com which doesn't generate
     # deterministic tarballs. https://github.com/google/gitiles/issues/84
-    system -W ${workpath} "git clone --config advice.detachedHead=false --depth 300\
-        --no-checkout https://chromium.googlesource.com/chromium/tools/depot_tools"
-    system -W ${workpath}/depot_tools "git checkout ${depot_tools_commit}"
+    file mkdir ${workpath}/depot_tools
+    system -W ${workpath}/depot_tools "\
+        git -c init.defaultBranch=main init &&\
+        git remote add origin https://chromium.googlesource.com/chromium/tools/depot_tools &&\
+        git fetch --depth 1 origin ${depot_tools_commit} &&\
+        git -c advice.detachedHead=false checkout FETCH_HEAD\
+        "
+}
+
+pre-extract {
+    ui_msg "The extract, configure, and build phases may each take several minutes to complete."
 }
 
 post-extract {
@@ -148,20 +173,36 @@ post-extract {
         move {*}[glob ${workpath}/[file tail ${submodule}]-*] ${worksrcpath}/${submodule}
     }
 
+    # Various skia gn scripts run "python" but are compatible with python 3.
+    ln -s ${configure.python} ${workpath}/depot_tools/python
+
     # depot_tools runs "python3".
     ln -s ${configure.python} ${workpath}/depot_tools/python3
 
+    # Avoid fetching unnecessary dependencies.
+    system -W ${workpath} "patch -bp0 < [shellescape ${filespath}/DEPS.patch]"
+
+    # Avoid fetching unnecessary data for necessary dependencies.
+    system -W ${workpath} "patch -bp0 < [shellescape ${filespath}/git-sync-deps.patch]"
+
     # Fetch skia's dependencies.
     # TODO: Fetch these as distfiles instead, maybe using a strategy similar
-    # to the one used by the MoltenVK port. Many of them aren't even needed
-    # since we're using MacPorts deps rather than bundled versions.
+    # to the one formerly used by the MoltenVK port. Many of them aren't even
+    # needed since we're using MacPorts deps rather than bundled versions.
     system -W ${workpath}/skia "${configure.python} tools/git-sync-deps"
 }
 
 patch.dir                   ${workpath}
 patchfiles                  prefix.patch \
-                            stdlib.patch \
+                            USE_SHARED_LIBARCHIVE.patch \
                             USE_SHARED_LIBWEBP.patch
+
+# Can probably apply this unconditionally but only these older systems need it
+# and builds for newer systems have already succeeded and I don't want to risk
+# disturbing them.
+if {${os.platform} eq "darwin" && ${os.major} < 19} {
+    patchfiles-append       no-base_aligned_alloc.patch
+}
 
 post-patch {
     reinplace -W ${workpath}/skia/third_party "s|@PREFIX@|${prefix}|g" \
@@ -191,9 +232,9 @@ pre-configure {
             set skia_cpu    ${build_arch}
         }
     }
-    # Claiming to be an official build and using -frtti because it is
-    # suggested here:
+    # Using is_official_build=true and -frtti as suggested here:
     # https://github.com/aseprite/skia#skia-on-macos
+    # is_official_build=true also turns on the use of system libraries.
     lappend skia_cflags     {*}${configure.cflags} \
                             {*}${archflags}
     lappend skia_cxxflags   {*}${configure.cxxflags} \
@@ -238,7 +279,10 @@ configure.args              -DENABLE_BZip2=ON \
                             -DENABLE_LIBXML2=ON \
                             -DENABLE_LZMA=ON \
                             -DENABLE_UPDATER=OFF \
+                            -DENABLE_WEBP=ON \
+                            -DHARFBUZZ_LIBRARY=${prefix}/lib/libharfbuzz.dylib \
                             -DLAF_BACKEND=skia \
+                            -DLAF_WITH_EXAMPLES=OFF \
                             -DPNG_SHARED=ON \
                             -DSKIA_DIR=${workpath}/skia \
                             -DSKIA_LIBRARY=[join ${skia_libraries} {\;}] \
@@ -249,13 +293,13 @@ configure.args              -DENABLE_BZip2=ON \
                             -DUSE_SHARED_GIFLIB=YES \
                             -DUSE_SHARED_HARFBUZZ=YES \
                             -DUSE_SHARED_JPEGLIB=YES \
+                            -DUSE_SHARED_LIBARCHIVE=YES \
                             -DUSE_SHARED_LIBPNG=YES \
                             -DUSE_SHARED_LIBWEBP=YES \
                             -DUSE_SHARED_PIXMAN=YES \
                             -DUSE_SHARED_TINYXML=YES \
                             -DUSE_SHARED_ZLIB=YES \
-                            -DWITH_BZip2=ON \
-                            -DWITH_WEBP_SUPPORT=ON
+                            -DWITH_BZip2=ON
 
 app.executable              ${build.dir}/bin/aseprite
 app.retina                  yes
@@ -269,19 +313,12 @@ set extension_icon          data/icons/ext256.png
 destroot {
     copy ${worksrcpath}/data ${destroot}${applications_dir}/${app.name}.app/Contents/Resources
 
-    # Remove unneeded files installed by the bundled copies of libarchive
-    # and json11. https://github.com/aseprite/aseprite/issues/1602
+    # Remove unneeded files installed by the bundled json11.
+    # See https://github.com/aseprite/aseprite/issues/1602
     foreach f {
-        bin/bsdcat
-        bin/bsdcpio
-        bin/bsdtar
         include/json11.hpp
         lib/libjson11.a
         lib/pkgconfig/json11.pc
-        lib/pkgconfig/libarchive.pc
-        share/man/man1/bsdcat.1
-        share/man/man1/bsdcpio.1
-        share/man/man1/bsdtar.1
     } {
         delete ${destroot}${prefix}/${f}
     }
@@ -299,23 +336,32 @@ post-destroot {
         "${prefix}/bin/makeicns -in [shellescape ${worksrcpath}/${extension_icon}] -out Extension.icns"
 }
 
-# Might be able to improve this later using the MacOSX.sdk port.
-minimum_xcodeversions       {15 8}
-platform darwin {
-    if {${os.major} < 15} {
-        known_fail          yes
-        pre-extract {
-            ui_error "${name} @${version} requires OS X 10.11 or later"
-            return -code error "incompatible OS X version"
-        }
-    }
-}
-
 # https://aseprite.org/faq/#if-aseprite-source-code-is-available-how-is-that-you-are-selling-it
 notes "
-${name} is free for personal use. If you enjoy ${name}, or for commercial use,\
-please purchase a license at ${homepage}/#buy
+${name} is free for personal and commercial use provided you compile it\
+from source and that you do not redistribute the compiled binary. The\
+MacPorts project does not distribute binaries of ${name}; instead, it\
+compiles ${name} from source on your system, which is why it takes some\
+time.
 
-Please read and agree to the end user license agreement:\
+To support the developers and to show your appreciation, and to avoid\
+the need to compile ${name} from source and instead receive an official\
+binary from the developers, please purchase a license:
+
+${homepage}/#buy
+
+By using ${name} you agree to be bound by the terms of the end user\
+license agreement which you can read here:
+
 ${github.raw}/${github.tag_prefix}${github.version}/EULA.txt
+
+Documentation is available:
+
+${homepage}/docs/
+
+You may also find it helpful to read the frequently-asked questions:
+
+${homepage}/faq/
 "
+
+github.livecheck.regex  {([0-9.]+)}

@@ -4,11 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                bandit
-version             1.7.1
+version             1.7.7
 revision            0
-platforms           darwin
+
 license             Apache-2
 categories-append   security
+platforms           {darwin any}
+supported_archs     noarch
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
@@ -22,17 +24,18 @@ long_description    {*}${description}. Bandit is a tool designed to find \
 
 homepage            https://bandit.readthedocs.io/en/latest
 
-checksums           rmd160  b6bc4d1d227ce273422c9636db7cab2e9250778f \
-                    sha256  a81b00b5436e6880fa8ad6799bc830e02032047713cbb143a12939ac67eb756c \
-                    size    503072
+checksums           rmd160  08d8c232519b944a60a6db3529134dff36177306 \
+                    sha256  527906bec6088cb499aae31bc962864b4e77569e9d529ee51df3a93b4b8ab28a \
+                    size    1980358
 
-python.default_version  39
+python.default_version  312
 
 depends_build-append    port:py${python.version}-pbr \
                         port:py${python.version}-setuptools
 
 depends_run-append      port:py${python.version}-colorama \
                         port:py${python.version}-gitpython \
+                        port:py${python.version}-rich \
                         port:py${python.version}-six \
                         port:py${python.version}-stevedore \
-                        port:py${python.version}-yaml \
+                        port:py${python.version}-yaml

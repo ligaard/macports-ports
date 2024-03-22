@@ -4,29 +4,27 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-xyzservices
-version             2021.11.0
+version             2023.10.1
 revision            0
 categories-append   devel
-platforms           darwin
 license             BSD
 supported_archs     noarch
+platforms           {darwin any}
 
-python.versions     37 38 39 310
+python.versions     38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
 description         Source of XYZ tiles provider
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://github.com/geopandas/xyzservices
 
-checksums           rmd160  53dad966b1b190988685436e5f7cb8bdd0778f73 \
-                    sha256  c9a9720b294a40e7ccfde09bdba1864c15b970211a4440f5f3147af08139c0d4 \
-                    size    40828
+checksums           rmd160  54782ddba4b3f19c46849121ddbf871d3e0b32e3 \
+                    sha256  091229269043bc8258042edbedad4fcb44684b0473ede027b5672ad40dc9fa02 \
+                    size    1116744
 
-if {${name} ne ${subport}} {
+if {${subport} ne ${name}} {
     depends_build-append \
-                        port:py${python.version}-setuptools
-
-    livecheck.type      none
+                    port:py${python.version}-setuptools_scm
 }

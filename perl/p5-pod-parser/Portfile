@@ -5,18 +5,17 @@ PortGroup           perl5 1.0
 
 # only useful for perl 5.32+ where it has been removed from core
 # attempting to build on earlier perls conflicts with core version
-perl5.branches      5.32
-perl5.setup         Pod-Parser 1.63
+perl5.branches      5.32 5.34
+perl5.setup         Pod-Parser 1.67
 revision            0
 license             {Artistic-1 GPL}
 maintainers         {devans @dbevans} openmaintainer
 description         Pod::Parser - base class for creating POD filters and translators
-long_description    ${description}
+long_description    {*}${description}
 
-platforms           darwin
-
-checksums           rmd160  de7b6d4d2c95685b82ff5d8cb0fca1c318d986fa \
-                    sha256  dbe0b56129975b2f83a02841e8e0ed47be80f060686c66ea37e529d97aa70ccd \
-                    size    79707
-
+platforms           {darwin any}
 supported_archs     noarch
+
+checksums           rmd160  3bcf72f42f36f0fa0b2f170f385479b3271c61cb \
+                    sha256  5deccbf55d750ce65588cd211c1a03fa1ef3aaa15d1ac2b8d85383a42c1427ea \
+                    size    80961

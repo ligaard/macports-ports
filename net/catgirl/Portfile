@@ -1,14 +1,15 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           legacysupport 1.1
+PortGroup           makefile 1.0
 
 name                catgirl
-version             1.9a
-revision            0
+version             2.2
+revision            1
 categories          net
 license             GPL-3+
 license_noconflict  openssl libressl
-platforms           darwin
 maintainers         {@ryanakca debian.org:rak} \
                     {causal.agency:june @causal-agent} \
                     openmaintainer
@@ -22,19 +23,29 @@ long_description    catgirl is a TLS-only terminal IRC client. Its features \
 homepage            https://git.causal.agency/catgirl/
 master_sites        ${homepage}snapshot/
 
-checksums           rmd160  16c6ee6457a8c9c617bc58262cf7453063694f01 \
-                    sha256  3049b99abad67cda7e9811c58c648e1afbdfbc127e1e8fcafa63d4c73243915d \
-                    size    62635
-
-patchfiles          patch-0001-install-sandman.diff
+checksums           rmd160  b546d4a2aa4ce62b77f558350d26a54d4ed57e9a \
+                    sha256  fb6d04a099303af05d278c705c1542e7ee61643c030d6a0b68dec5371080a3c7 \
+                    size    69835
 
 depends_build       port:pkgconfig
 
 depends_lib         path:lib/libtls.dylib:libretls \
                     port:ncurses
 
-configure.post_args --prefix=${prefix} \
+compiler.c_standard 2011
+
+use_configure       yes
+configure.post_args --enable-sandman \
+                    --prefix=${prefix} \
                     --mandir=${prefix}/share/man
 
+# FIXME: needs an implementation of memset_s:
+# https://trac.macports.org/ticket/67214
+# See also:
+# https://trac.macports.org/ticket/66087
+
+test.run            yes
+test.target         check
+
 livecheck.type      regex
-livecheck.regex     ${name}-(\\d+\.\\d+p\\d+).tar.gz
+livecheck.regex     ${name}-(\\d+\.\\d+\[a-z\]?).tar.gz

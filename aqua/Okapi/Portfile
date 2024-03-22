@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           java 1.0
 
 name                Okapi
-version             1.42.0
+version             1.46.0
 categories          aqua textproc java
 license             Apache-2
 maintainers         {amake @amake} openmaintainer
@@ -14,20 +14,29 @@ long_description    The Okapi Framework is a cross-platform and free open-source
                     components and applications that offer extensive support for localizing \
                     and translating documentation and software.
 homepage            https://okapiframework.org/
-platforms           darwin
-supported_archs     noarch
-distname            okapi-apps_cocoa-macosx-x86_64_${version}
+platforms           {darwin any}
+supported_archs     x86_64 arm64
 master_sites        https://okapiframework.org/binaries/main/${version}
 
-checksums           rmd160  716f66c7e798e707ac5c345593c3fc8bfbb15439 \
-                    sha256  b61b0b9b91329f392afeefc1acd6c57bb0d596732bc83f7cf47b49fff50007cb \
-                    size    43822787
+if {${configure.build_arch} eq "x86_64"} {
+    distname        okapi-apps_cocoa-macosx-x86_64_${version}
+
+    checksums       rmd160  5be35b6401df6c8fcdd061e79c65d79970940f63 \
+                    sha256  398182b2c22e760b01813a248fed6aaf3ae8fbd51d6c7d250f74a99e5a5076ac \
+                    size    42583686
+} elseif {${configure.build_arch} eq "arm64"} {
+    distname        okapi-apps_cocoa-macosx-aarch64_${version}
+
+    checksums       rmd160  db5672c42b42ae923393c4f11f81fcab0b47e4b6 \
+                    sha256  b2199d5e1f6cba6cfc67a1dcb68e3de3ae2ff6a27a227a3cfb536a15e358cd72 \
+                    size    42483976
+}
 
 use_dmg             yes
 use_configure       no
 
-java.version        1.8+
-java.fallback       openjdk8
+java.version        11+
+java.fallback       openjdk11
 
 build {}
 

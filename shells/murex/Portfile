@@ -3,39 +3,42 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/lmorg/murex 2.3.4000 v
+go.setup            github.com/lmorg/murex 6.0.1000 v
 github.tarball_from archive
 revision            0
 
 homepage            https://murex.rocks
 
-description         Bash-like \$SHELL designed for greater commandline \
-                    productivity and safer shell scripts
+description         \
+    Bash-like \$SHELL designed for greater commandline productivity and safer \
+    shell scripts
 
-long_description    ${name} is a shell, like bash / zsh / fish / etc. It \
-                    follows a similar syntax to POSIX shells like Bash \
-                    however supports more advanced features than you'd \
-                    typically expect from a \$SHELL. It aims to be similar \
-                    enough to traditional shells that you can retain most of \
-                    your muscle memory, while not being afraid to make \
-                    breaking changes where "bash-isms" lead to unreadable, \
-                    hard to maintain, or unsafe code.  ${name} is designed \
-                    for DevOps productivity so it isn't suited for \
-                    high-performance workloads beyond what you'd typically \
-                    run in Bash (eg pipelines forked as concurrent processes).
+long_description    \
+    ${name} is a shell, like bash / zsh / fish / etc. It follows a similar \
+    syntax to POSIX shells like Bash however supports more advanced features \
+    than you'd typically expect from a \$SHELL. It aims to be similar enough \
+    to traditional shells that you can retain most of your muscle memory, \
+    while not being afraid to make breaking changes where "bash-isms" lead to \
+    unreadable, hard to maintain, or unsafe code.  ${name} is designed for \
+    DevOps productivity so it isn't suited for high-performance workloads \
+    beyond what you'd typically run in Bash (eg pipelines forked as \
+    concurrent processes).
 
 categories          shells
 installs_libs       no
+license             GPL-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
-license             GPL-2
 
-checksums           rmd160  0dda39cae756cbee262ddac6a1dcfe66a6225d0c \
-                    sha256  d96bad1e575556d710693ace4286c9a5ec840046b6aa2c20e3e2369b6be1711a \
-                    size    4530204
+checksums           rmd160  064cb47c4479de30376c0e97e957d8326ac6a4c9 \
+                    sha256  82c54d54a75b5a3f29d88d006a7614f61cb6464ffe78784f5f1e97cd6c6937dd \
+                    size    3271152
+
+depends_run-append  port:aspell \
+                    port:aspell-dict-en
 
 # Enable download deps at build time.
-build.env-delete    GO111MODULE=off GOPROXY=off
+go.offline_build no
 
 set mx_doc_dir      ${prefix}/share/doc/${name}
 set mx_share_dir    ${prefix}/share/${name}

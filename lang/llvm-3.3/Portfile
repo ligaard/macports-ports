@@ -13,8 +13,6 @@ revision                13
 subport                 clang-${llvm_version} { revision 14 }
 set suffix              mp-${llvm_version}
 set sub_prefix          ${prefix}/libexec/llvm-${llvm_version}
-# prefix for deps using libstdc++ on a libc++ system
-set bootstrap_prefix    ${prefix}/libexec/libcxx-bootstrap
 dist_subdir             llvm
 categories              lang
 platforms               darwin
@@ -82,7 +80,8 @@ patchfiles      install_target.patch \
                 0001-Fix-regular-expression-to-work-with-multiple-digit-v.patch \
                 tiger.patch \
                 tiger-undefined-_CS_DARWIN_USER_-macros.patch \
-                tiger-shlib.patch
+                tiger-shlib.patch \
+                patch-macports-flags.diff
 
 patch.pre_args  -p1
 
@@ -136,7 +135,7 @@ if {${os.platform} eq "darwin" && ${os.major} < 11} {
         # force to libstdc++ so we can use default bootstrap compilers
         configure.cxx_stdlib    libstdc++
         depends_build-append    port:python27-bootstrap
-        set pythonfullpath      ${bootstrap_prefix}/bin/python2.7
+        set pythonfullpath      ${prefix}/libexec/python27-bootstrap/bin/python2.7
     } else {
         depends_build-append    port:python27
         set pythonfullpath      ${prefix}/bin/python2.7

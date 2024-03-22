@@ -3,7 +3,7 @@
 PortSystem      1.0
 
 name            less
-version         590
+version         643
 revision        0
 categories      textproc
 platforms       darwin
@@ -19,17 +19,15 @@ long_description \
                 Less uses termcap (or terminfo on some systems), so it can run on \
                 a variety of terminals. There is even limited support for \
                 hardcopy terminals.
-homepage        http://www.greenwoodsoftware.com/less/
+homepage        https://www.greenwoodsoftware.com/less/
 master_sites    ${homepage}
 
-checksums       rmd160  c3b395b8beffad0d3863c113e32a9bfb94cdaeb3 \
-                sha256  6aadf54be8bf57d0e2999a3c5d67b1de63808bb90deb8f77b028eafae3a08e10 \
-                size    352574
+checksums       rmd160  d98f2761df3c9ac213e46e559f33ff19f9293677 \
+                sha256  2911b5432c836fa084c8a2e68f6cd6312372c026a58faaa98862731c8b6052e8 \
+                size    592291
 
 depends_lib     port:ncurses \
                 port:gettext
-
-patchfiles      patch-configure.diff
 
 configure.args  --with-regex=posix
 

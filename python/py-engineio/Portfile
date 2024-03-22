@@ -4,12 +4,12 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           python 1.0
 
-github.setup        miguelgrinberg python-engineio 4.3.0 v
+github.setup        miguelgrinberg python-engineio 4.9.0 v
 name                py-engineio
 revision            0
 
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             MIT
 maintainers         {judaew @judaew} openmaintainer
 
@@ -17,15 +17,14 @@ description         Python Engine.IO server and client
 long_description    \
     Python implementation of the Engine.IO realtime client and server.
 
-checksums           rmd160  3ee84f41b11ce5b6c027dfa3b8a07cab35163fa3 \
-                    sha256  b5f466c8e196702c0e3e8d18ac867cf7748d8bcb0d598b358bd66b55552ab3a2 \
-                    size    299241
+checksums           rmd160  53d84615df0379012df91164f25a481ebc04a3f5 \
+                    sha256  07ddde1ddc54ef3b02c5718cd14f0e4158035b3e99b310b2374abe5b45e934ad \
+                    size    314293
 
-python.versions     37 38 39
+python.versions     38 39 310 311
 
 if {${name} ne ${subport}} {
     depends_build-append \
-                    port:py${python.version}-setuptools \
                     port:py${python.version}-sphinx
 
     depends_run-append \
@@ -44,6 +43,4 @@ if {${name} ne ${subport}} {
         copy ${doc_build_dir}/html ${destroot}${prefix}/share/doc/${subport}
         copy ${doc_build_dir}/man ${destroot}${python.prefix}
     }
-
-    livecheck.type  none
 }

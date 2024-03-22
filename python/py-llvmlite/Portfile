@@ -2,77 +2,72 @@
 
 PortSystem          1.0
 PortGroup           python 1.0
-PortGroup           github 1.0
 
-github.setup        numba llvmlite 0.36.0 v
 name                py-llvmlite
-revision            0
+version             0.42.0
 categories-append   devel science
-platforms           darwin
 license             BSD
 
-python.versions     27 35 36 37 38 39
+python.versions     38 39 310 311 312
+python.pep517       yes
 
 maintainers         {stromnov @stromnov} openmaintainer
 
 description         A lightweight LLVM python binding for writing JIT compilers
-long_description    ${description}
+long_description    {*}${description}
 
-homepage            http://llvmlite.pydata.org/
+homepage            https://llvmlite.pydata.org/
 
-checksums           rmd160  536800f1a3eb17976c75f12aa36c5e81e6c6a93b \
-                    sha256  4456512490b24d2f614058d1e14fa947eba1c3ca2c30776f99cc22b34ae7feee \
-                    size    232080
+checksums           rmd160  6b7848cc5a1d8f25df55a724dfe6dfac00fe665d \
+                    sha256  f92b09243c0cc3f457da8b983f67bd8e1295d0f5b3746c7a1861d7a99403854a \
+                    size    156136
 
 if {${name} ne ${subport}} {
+    PortGroup           legacysupport 1.1
+    PortGroup           compiler_wrapper 1.0
+
+    legacysupport.newest_darwin_requires_legacy \
+                        17
+
     patchfiles-append   patch-ffi_Makefile.osx.diff
 
-    if {${python.version} <= 35} {
-        set llvmver "8.0"
-    } else {
-        set llvmver "10"
-    }
+    set llvmver "14"
 
     post-patch {
         reinplace "s|%%CXX%%|clang++-mp-${llvmver}|" ${worksrcpath}/ffi/Makefile.osx
 
-        if {${python.version} > 35 && ${os.major} <= 10} {
+        if {${os.major} <= 10} {
             # https://trac.macports.org/ticket/61302
-            reinplace "s|%%MP_EXTRA_LDFLAGS%%|-framework CoreFoundation|" \
-                ${worksrcpath}/ffi/Makefile.osx
-        } else {
-            reinplace "s|%%MP_EXTRA_LDFLAGS%%||" ${worksrcpath}/ffi/Makefile.osx
+            configure.ldflags-append \
+                        -framework CoreFoundation
+        } elseif {${os.major} >= 22} {
+            configure.ldflags-append \
+                        -lLLVM
         }
+
+        reinplace "s|%%MP_EXTRA_LDFLAGS%%|${configure.ldflags}|" ${worksrcpath}/ffi/Makefile.osx
     }
 
-    depends_build-append \
-                        port:py${python.version}-setuptools \
-                        port:clang-${llvmver}
+    if {${python.version} == 38} {
+        version             0.41.1
+        checksums           md5 4f58a46856bf2a82d8b661f1aa7b26ec \
+                            rmd160 7e1e0cdfd9489f9385ec3d50c3e41d3114db47a4 \
+                            sha256 f19f767a018e6ec89608e1f6b13348fa2fcde657151137cb64e56d48598a92db \
+                            size   146564
+    }
+
+    post-destroot {
+        system "/usr/bin/install_name_tool -change @rpath/libLLVM.dylib ${prefix}/libexec/llvm-${llvmver}/lib/libLLVM.dylib ${destroot}${python.pkgd}/llvmlite/binding/libllvmlite.dylib"
+    }
 
     depends_lib-append  port:llvm-${llvmver} \
+                        port:clang-${llvmver} \
                         port:zlib \
                         port:ncurses \
                         port:libxml2
-
-    if {${python.version} <= 35} {
-        github.setup        numba llvmlite 0.31.0 v
-        revision            0
-        checksums           rmd160  72cbabced6a93db7232a6a6d652e56993887f5d3 \
-                            sha256  fe4b36661f050565e73e07d0c31ee47bd2b44602e0bf17d4a19d3d7d0d2c60f4 \
-                            size    199646
-
-        if {${python.version} < 34} {
-            depends_lib-append  port:py${python.version}-enum34
-        }
-    }
 
     build.env-append    LLVM_CONFIG=llvm-config-mp-${llvmver}
     destroot.env-append LLVM_CONFIG=llvm-config-mp-${llvmver}
 
     livecheck.type      none
-} else {
-    livecheck.name      ${python.rootname}
-    livecheck.url       https://pypi.org/pypi/${livecheck.name}/json
-    livecheck.type      regex
-    livecheck.regex     {"version":"([^"]+)"[,\}]}
 }

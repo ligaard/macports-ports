@@ -13,12 +13,15 @@ description         WDSP is a full-featured signal processing library for Softwa
 long_description    ${description}
 homepage            https://github.com/TAPR/OpenHPSDR-wdsp
 
-github.setup        dl1ycf wdsp 0fe5347ede263bb27a5ca3ff9d74e061fc38ed46
-version             20210820-[string range ${github.version} 0 7]
-checksums           rmd160  b4003d92f2c4ec78c914c23fcddb33d465cee7b6 \
-                    sha256  66a5eb244037815d82e9572016e23ba7a28c40cc0416ffe5ab8df636d6e18024 \
-                    size    5660642
+github.setup        dl1ycf wdsp 4c273de2980835f32176704bb1893bd6fafad2f8
+version             20230508-[string range ${github.version} 0 7]
+checksums           rmd160  36b15e553e2d9572bde8978d19f28f5cd6217b65 \
+                    sha256  84d86d5fe31a369b308eb6147fe8996ce7aecbc7db8609544c90a4f63b1e1f9e \
+                    size    4987350
 revision            0
+
+depends_build-append \
+    path:bin/pkg-config:pkgconfig
 
 depends_lib-append \
     port:fftw-3
@@ -27,7 +30,7 @@ use_configure       no
 # remove useless includes
 build.env-append    INCLUDES=
 
-pre-configure {
+post-patch {
     reinplace "s|/usr/local|${prefix}|g" ${worksrcpath}/Makefile
 }
 

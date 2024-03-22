@@ -6,10 +6,11 @@ PortGroup           github 1.0
 PortGroup           python 1.0
 
 github.setup        dnsviz dnsviz 0.9.3 v
+revision            1
 github.tarball_from releases
 
 categories          net
-platforms           darwin
+platforms           {darwin any}
 license             GPL-2+
 supported_archs     noarch
 maintainers         {@cdeccio deccio.net:casey} openmaintainer
@@ -29,7 +30,7 @@ depends_build       path:bin/dot:graphviz
 
 depends_run         port:py${python.version}-dnspython \
                     port:py${python.version}-m2crypto \
-                    port:py${python.version}-pygraphviz \
+                    port:py${python.version}-pygraphviz
 
 destroot.destdir    --prefix=${python.prefix} \
                     --root=${destroot} \

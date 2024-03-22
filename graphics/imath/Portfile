@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                      1.0
+PortGroup                       cmake 1.1
+PortGroup                       github 1.0
+PortGroup                       legacysupport 1.1
+
+github.setup                    AcademySoftwareFoundation imath 3.1.10 v
+github.tarball_from             archive
+revision                        1
+
+categories                      graphics
+license                         BSD
+maintainers                     {mcalhoun @MarcusCalhoun-Lopez} {mascguy @mascguy} openmaintainer
+
+description                     OpenEXR Math Library
+long_description                Imath is a basic, light-weight, and efficient C++ representation of \
+                                2D and 3D vectors and matrices and other simple but useful \
+                                mathematical objects, functions, and data types common in computer \
+                                graphics applications, including the "half" 16-bit floating-point type. \
+                                Imath also includes optional python bindings for all types and functions, \
+                                including optimized implementations of vector and matrix arrays.
+
+homepage                        https://www.openexr.com
+
+checksums                       rmd160  b463e098fedccdf4b8ada445bf2db98449698d0e \
+                                sha256  f2943e86bfb694e216c60b9a169e5356f8a90f18fbd34d7b6e3450be14f60b10 \
+                                size    595059
+
+# NOTE: legacysupport needed for 'CLOCK_MONOTONIC'
+
+depends_build-append            port:pkgconfig
+
+# https://github.com/AcademySoftwareFoundation/Imath/issues/367
+patchfiles-append               patch-std-isfinite.diff
+
+compiler.cxx_standard           2014
+
+# avoid redownload after imath subport was split from openexr Portfile
+dist_subdir                     openexr
+
+# see https://trac.macports.org/ticket/67403
+if { ${os.major} < 11 && ${cxx_stdlib} eq "libstdc++" } {
+    configure.cxxflags-append   -D__STDC_FORMAT_MACROS
+}
+
+test.run                        yes
+test.target                     test
+
+# only allow numbers, to avoid pre-release versions
+github.livecheck.regex          {([0-9.]+)}

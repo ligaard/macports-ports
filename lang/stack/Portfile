@@ -6,7 +6,7 @@ PortGroup           gpg_verify 1.0
 PortGroup           haskell_stack 1.0
 PortGroup           legacysupport 1.1
 
-github.setup        commercialhaskell stack 2.7.3 v
+github.setup        commercialhaskell stack 2.15.3 v
 revision            0
 
 name                stack
@@ -26,9 +26,13 @@ long_description    Stack is a cross-platform command line interface \
 homepage            https://haskellstack.org
 
 variant prebuilt \
-	    description {Do not bootstrap stack; install the pre-built binary.} {}
+    description {Do not bootstrap stack; install the pre-built binary.} {}
 
-distname            ${name}-${github.version}-osx-x86_64
+if {${build_arch} eq "x86_64"} {
+    distname        ${name}-${github.version}-osx-x86_64
+} elseif {${build_arch} eq "arm64"} {
+    distname        ${name}-${github.version}-osx-aarch64
+}
 
 worksrcdir          ${name}-${github.version}
 
@@ -40,15 +44,41 @@ distfiles           ${distname}-bin:release \
 
 extract.only        ${github.tag_prefix}${github.version}${extract.suffix}
 
-checksums           ${distname}-bin \
-                    rmd160  fbe0175e8fb6f2c328aecb2052223871dc5ca74b \
-                    sha256  8efba112e7cb3cabbe96bad7c70b8a1c3ed63bb1f0fa50815ac7d5e60e794eb8 \
-                    size    36142208 \
-                    ${github.tag_prefix}${github.version}${extract.suffix} \
-                    rmd160  0d38bb22f8a980f67ccef926713912ded02acbad \
-                    sha256  37f4bc0177534782609ec3a67ec413548d3f2cabff7c4c0bc8a92a36e49c6877 \
-                    size    689876 \
-                    ${distname}-bin.asc \
+# set build_arch by hand on arm64/x86_64 systems to get x86_64/arm64 checksums
+# sudo port -d checksum stack +prebuilt os.arch=arm build_arch=arm64
+# sudo port -d checksum stack +prebuilt os.arch=i386 build_arch=x86_64
+# run `port clean --all stack` afterwards
+
+checksums           ${github.tag_prefix}${github.version}${extract.suffix} \
+                    rmd160  ce7f9a4ad3b438e769cee63a09a3bb9281c40314 \
+                    sha256  f81ddbcab12c7647536128ecda2acb6fcd91d18474dea908c53848314bd7c867 \
+                    size    942809
+
+switch ${build_arch} {
+    arm64 {
+        checksums-append \
+                    ${distname}-bin \
+                    rmd160  5d335e1844318404e0bb54f322f4e154d5a385cd \
+                    sha256  222921bcf3a81948fc773cf64909ef1fff88e79fb77299492eb7786facece8f5 \
+                    size    99758480
+    }
+    x86_64 {
+        checksums-append \
+                    ${distname}-bin \
+                    rmd160  651daf8e86db0aafb769cc21224cb462507b34c9 \
+                    sha256  fb0d29a80f6dc4df742f25ddd09cec63a7348861ae5019b16be7a8ca82e827b9 \
+                    size    35023600
+    }
+    default {
+        known_fail  yes
+        pre-fetch {
+            ui_error "${subport} @ ${version} only supported for architectures ${supported_archs}"  
+            return -code error "Unsupported architecture: ${build_arch}"
+        }
+    }
+}
+
+checksums-append    ${distname}-bin.asc \
                     size    488
 
 gpg_verify.use_gpg_verification \
@@ -84,11 +114,12 @@ if { ${os.platform} eq "darwin" && ${os.major} < ${max_darwin} } {
     }
 }
 
-# Darwin 16 and older fails to build from source, e.g.
+# Darwin 19 and older fails to build from source, e.g.
 # Undefined symbols for architecture x86_64:
 #  "_utimensat", referenced from:
 #      _Lc6xB_info in libHSdirectory-1.3.6.0.a(Posix.o)
-if { ${os.platform} eq "darwin" && ${os.major} <= 16 } {
+# and error: ld: unknown option: -no_fixup_chains
+if { ${os.platform} eq "darwin" && ${os.major} <= 19 } {
     default_variants-append +prebuilt
 }
 
@@ -116,6 +147,13 @@ if { [variant_isset "prebuilt"] } {
         ln -s       ${workpath}/bin/${distname}-bin \
                     ${workpath}/bin/${name}
     }
+
+    depends_build-append port:pkgconfig
+
+    # use a modified zlib.pc that forces the system paths to be used
+    # this prevents -L${prefix}/lib from being added to the library link path
+    # which causes libiconv linkage errors
+    build.env-append PKG_CONFIG_PATH=${filespath}/zlibsystempkgconfig
 
     set haskell_stack.bin ${workpath}/bin/stack
 }

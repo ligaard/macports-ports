@@ -3,11 +3,11 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        skvadrik re2c 2.2
+github.setup        skvadrik re2c 3.1
 revision            0
-checksums           rmd160  af8b587423a704caddba04fbeb3fa118aade6e9a \
-                    sha256  0fc45e4130a8a555d68e230d1795de0216dfe99096b61b28e67c86dfd7d86bda \
-                    size    1460740
+checksums           rmd160  7b7e91c25b35e18ae1a718f1093b1be9b2529d24 \
+                    sha256  0ac299ad359e3f512b06a99397d025cfff81d3be34464ded0656f8a96676c029 \
+                    size    1448624
 
 # The datetime parsers in php must be generated with this version or older.
 subport ${name}-0.15 {
@@ -22,7 +22,6 @@ subport ${name}-0.15 {
 }
 
 categories          devel
-platforms           darwin
 license             public-domain
 maintainers         {ryandesign @ryandesign} openmaintainer
 
@@ -34,13 +33,23 @@ long_description    re2c is a tool for generating C-based recognizers from \
                     re2c-based scanner is said to be typically almost twice as fast as \
                     a flex-based scanner with little or no increase in size.
 
-homepage            http://re2c.org/
+homepage            https://re2c.org
 github.tarball_from releases
 if {${subport} eq ${name}} {
     use_xz          yes
+
+    compiler.cxx_standard       2011
+
+    if {${os.platform} eq "darwin" && ${os.major} < 19} {
+        depends_build-append    port:python311
+        configure.python        ${prefix}/bin/python3.11
+    } else {
+        configure.python        /usr/bin/python3
+    }
 }
 
-depends_build       port:bison
+depends_build-append \
+                    port:bison
 
 configure.args-append \
                     --disable-silent-rules

@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+# GitHub version lags behind.
+R.setup             cran tidyverts fabletools 0.4.1
+revision            0
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3
+description         Core tools for packages in the fable framework
+long_description    {*}${description}
+homepage            https://fabletools.tidyverts.org
+checksums           rmd160  1be1c454a95d1bf3b4e65d6c8cf9ac8311968a4f \
+                    sha256  4662bd4f6258de3f01f9e5ca547e1accdd6293883b34e1088bd7bb0ade20867f \
+                    size    491641
+supported_archs     noarch
+
+depends_lib-append  port:R-distributional \
+                    port:R-dplyr \
+                    port:R-generics \
+                    port:R-ggdist \
+                    port:R-ggplot2 \
+                    port:R-lifecycle \
+                    port:R-progressr \
+                    port:R-R6 \
+                    port:R-rlang \
+                    port:R-scales \
+                    port:R-tibble \
+                    port:R-tidyr \
+                    port:R-tidyselect \
+                    port:R-tsibble \
+                    port:R-vctrs
+
+depends_test-append port:R-covr \
+                    port:R-crayon \
+                    port:R-fable \
+                    port:R-feasts \
+                    port:R-future \
+                    port:R-future.apply \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-pillar \
+                    port:R-rmarkdown \
+                    port:R-spelling \
+                    port:R-testthat \
+                    port:R-tsibbledata
+
+test.run            yes

@@ -3,21 +3,20 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/vrothberg/vgrep 2.5.5 v
+go.setup            github.com/vrothberg/vgrep 2.7.0 v
 github.tarball_from archive
 revision            0
 epoch               1
 
 description         an easy to use front-end for (git) grep
 
-long_description    vgrep is a command-line tool to search textual patterns \
-                    in directories. It serves as a front-end to grep and \
-                    git-grep and allows to open the indexed matching lines \
-                    in a user-specified editor. vgrep is inspired by the \
-                    ancient cgvg scripts but extended to perform further \
-                    operations such as listing statistics of files and \
-                    directory trees or showing the context lines before and \
-                    after the matches.
+long_description    \
+    vgrep is a command-line tool to search textual patterns in directories. \
+    It serves as a front-end to grep and git-grep and allows to open the \
+    indexed matching lines in a user-specified editor. vgrep is inspired by \
+    the ancient cgvg scripts but extended to perform further operations such \
+    as listing statistics of files and directory trees or showing the context \
+    lines before and after the matches.
 
 categories          textproc
 installs_libs       no
@@ -25,9 +24,9 @@ license             GPL-3
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  5d6808e345d14444c9796a9a864c70d0ad89b035 \
-                    sha256  6272ca460549813231bc046e6fde7e94baec03f66c4b8f88b197af7d70556013 \
-                    size    1571944
+checksums           rmd160  d9ffacdacd946db08a2f0b9b20a83e3313234126 \
+                    sha256  0fb2ca6df8cdbb57bc50589e626e456f8a62b2d8d545b93425070844fcff26ea \
+                    size    1998937
 
 depends_build-append \
                     port:go-md2man

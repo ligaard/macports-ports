@@ -3,28 +3,26 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        AbiWord enchant 2.3.1 v
+github.setup        AbiWord enchant 2.6.7 v
 github.tarball_from releases
-revision            1
-
+revision            0
 name                enchant2
 categories          textproc devel
-platforms           darwin
 license             LGPL-2.1+
 maintainers         nomaintainer
-
 description         Generic spell checking library
 long_description    Enchant aims to provide a simple but comprehensive abstraction for dealing \
                     with different spell checking libraries in a consistent way. Installs in \
                     parallel with legacy Enchant 1.x versions without conflict.
 
-checksums           rmd160  a6c8c9a6ff5eae56b8c89dcf985605a34c529d47 \
-                    sha256  7b4b1afcf2cd8bfa691deea6188404d337f23174bbc39b9c2add2bf340736e9c \
-                    size    987361
+checksums           rmd160  0075f48a5b72510bffe9f7fee847c852340c9898 \
+                    sha256  a1c2e5b59acca000bbfb24810af4a1165733d407f2154786588e076c8cd57bfc \
+                    size    4427000
 
 depends_lib         path:lib/pkgconfig/glib-2.0.pc:glib2
 
-depends_build       port:pkgconfig
+depends_build       port:pkgconfig \
+                    bin:groff:groff
 
 compiler.cxx_standard   2011
 

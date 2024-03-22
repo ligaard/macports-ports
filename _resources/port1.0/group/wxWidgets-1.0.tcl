@@ -72,8 +72,8 @@
 # * add the appropriate configure flags
 #   (depending on the project configuration/requirements)
 #
-# For adding appropirate configure flags you can you use any of the
-# following variables:
+# For adding appropriate configure flags you can use any of the following
+# variables:
 #
 # * wxWidgets.prefix
 # * wxWidgets.wxdir
@@ -115,7 +115,7 @@
 #
 #       -DwxWidgets_wxrc_EXECUTABLE=${wxWidgets.wxrc}
 #
-# Sometimes enviromental variables are required, like:
+# Sometimes environment variables are required, like:
 #
 #   configure.env[-append] \
 #       WX_CONFIG=${wxWidgets.wxconfig}
@@ -194,13 +194,13 @@ proc wxWidgets._set {option action args} {
 
         pre-fetch {
             # 10.8 (or later) -or- 10.7 with Xcode 4.4 (or later)
-            if {${os.major} >= 12 || [vercmp $xcodeversion 4.4] >= 0} {
+            if {${os.major} >= 12 || [vercmp $xcodeversion >= 4.4]} {
                 ui_error "${wxWidgets.port} cannot be built on macOS >= 10.7 with Xcode >= 4.4; please use port wxWidgets-3.0 or wxgtk-2.8 instead"
                 return -code return "wxWidgets-2.8 cannot be built on macOS >= 10.7 with Xcode >= 4.4; please use port wxWidgets-3.0 or wxgtk-2.8 instead"
             } else {
                 # 10.7
                 if {${os.major} == 11} {
-                    if {[vercmp $xcodeversion 4.3] < 0} {
+                    if {[vercmp $xcodeversion < 4.3]} {
                         set sdks_dir "${developer_dir}/SDKs"
                     } else {
                         set sdks_dir "${developer_dir}/Platforms/MacOSX.platform/Developer/SDKs"

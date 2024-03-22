@@ -1,0 +1,22 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             github Bioconductor Biostrings 8324ca476b7d28e98b03e73c5fe3bba62727b44c
+version             2.71.5
+revision            0
+maintainers         nomaintainer
+license             Artistic-2
+description         Efficient manipulation of biological strings
+long_description    {*}${description}
+checksums           rmd160  3f78f6a9f3a968d805b10cf2d188ae86acba8287 \
+                    sha256  be3565c9a04a3a681c295dd68c7e7f69ec0443fd7d828ac8513057fbb8a90fe7 \
+                    size    11734457
+
+depends_lib-append  port:R-BiocGenerics \
+                    port:R-crayon \
+                    port:R-GenomeInfoDb \
+                    port:R-IRanges \
+                    port:R-S4Vectors \
+                    port:R-XVector

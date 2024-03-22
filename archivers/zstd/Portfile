@@ -1,75 +1,92 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim: fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
-PortSystem          1.0
-PortGroup           github 1.0
-PortGroup           clang_dependency 1.0
+PortSystem                  1.0
+PortGroup                   github 1.0
 
-github.setup        facebook zstd 1.5.0 v
-revision            0
-checksums           rmd160  0edbe1beaf89e9b565daa75cf96e3a8428064af3 \
-                    sha256  5194fbfa781fcf45b98c5e849651aa7b3b0a008c6b72d4a0db760f3002291e94 \
-                    size    1851389
+name                        zstd
 
-if {${os.platform} eq "darwin" && ${os.major} >= 20} {
-    if {${version} eq "1.5.0"} {
-        incr revision
+subport ${name} {
+    PortGroup               clang_dependency 1.0
+    PortGroup               makefile 1.0
+    PortGroup               muniversal 1.1
+
+}
+
+subport zstdConfig.cmake {
+    PortGroup               cmake 1.1
+
+}
+
+github.setup                facebook zstd 1.5.5 v
+revision                    0
+
+checksums                   rmd160  afab9fe65b1c72babfc7b12ba31f2b49de14d32e \
+                            sha256  9c4396cc829cfae319a6e2615202e82aad41372073482fce286fac78646d3ee4 \
+                            size    2368543
+
+categories                  archivers devel
+license                     {BSD GPL-2}
+
+maintainers                 {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+
+subport ${name} {
+    description             Zstandard - Fast real-time compression algorithm
+    long_description        Zstd, short for Zstandard, is a fast lossless compression \
+                            algorithm, targeting real-time compression scenarios at \
+                            zlib-level and better compression ratios.
+}
+
+subport zstdConfig.cmake {
+    description             CMake files for zstd
+    long_description        Installs {*}${description}.
+}
+
+github.tarball_from         releases
+
+patchfiles                  patch-zstd-tiger-no-backtrace.diff \
+                            flags.patch
+
+# Fix upgrade from previous version because -I flags are in the wrong order.
+configure.cppflags-replace  -I${prefix}/include -isystem${prefix}/include
+
+subport ${name} {
+    depends_lib-append      port:lz4 \
+                            port:xz \
+                            port:zlib
+
+    # libzstd.dylib links to libSystem.B.dylib only. Dependencies like lz4 are
+    # linked by CLI tools in ${prefix}/bin only.
+    license_noconflict      lz4 xz zlib
+
+    platform darwin 8 {
+        depends_build-append port:gmake
+        build.cmd           ${prefix}/bin/gmake
     }
-    pre-configure {
-        if {[vercmp [macports_version] 2.7.0] < 0} {
-            ui_error "${subport} @${version} requires MacPorts 2.7.0 or greater"
-            return -code error "incompatible MacPorts version"
-        }
+
+    build.target            allmost
+    build.args              V=1
+
+    test.run                yes
+    test.args               {*}${build.args}
+
+    # Exclude pre-release candidates
+    github.livecheck.regex  {([0-9.]+)}
+}
+
+subport zstdConfig.cmake {
+    depends_lib-append      port:${name}
+
+    cmake.source_dir        ${worksrcpath}/build/cmake
+
+    supported_archs         noarch
+    platforms               any
+    installs_libs           no
+
+    post-destroot {
+        delete              ${destroot}${prefix}/bin \
+                            ${destroot}${prefix}/share \
+                            ${destroot}${prefix}/include \
+                            ${destroot}${prefix}/lib/pkgconfig \
+                            {*}[glob ${destroot}${prefix}/lib/lib*]
     }
 }
-
-categories          archivers devel
-platforms           darwin
-license             {BSD GPL-2}
-
-maintainers         nomaintainer
-
-description         Zstandard - Fast real-time compression algorithm
-long_description    Zstd, short for Zstandard, is a fast lossless compression \
-                    algorithm, targeting real-time compression scenarios at \
-                    zlib-level and better compression ratios.
-
-github.tarball_from releases
-
-depends_lib-append  port:lz4 \
-                    port:xz \
-                    port:zlib
-
-# libzstd.dylib links to libSystem.B.dylib only. Dependencies like lz4 are
-# linked by CLI tools in ${prefix}/bin only.
-license_noconflict  lz4 xz zlib
-
-patchfiles          patch-zstd-tiger-no-backtrace.diff
-
-post-patch {
-    reinplace -W ${worksrcpath} "s/-Wvla //g" lib/Makefile programs/Makefile tests/Makefile tests/fuzz/Makefile
-}
-
-use_configure       no
-
-variant universal {}
-
-platform darwin 8 {
-    depends_build-append port:gmake
-    build.cmd    gmake
-}
-
-build.target        allmost
-build.post_args     V=1
-
-build.env-append    CC=${configure.cc} \
-                    "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
-                    CXX=${configure.cxx} \
-                    "CXXFLAGS=${configure.cxxflags} [get_canonical_archflags cxx]" \
-                    "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]" \
-                    PREFIX=${prefix}
-
-test.run            yes
-test.env-append     {*}${build.env}
-
-destroot.env-append {*}${build.env}
-

@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/tfsec/tfsec 0.61.3 v
+go.setup            github.com/tfsec/tfsec 1.28.5 v
 github.tarball_from archive
 revision            0
 
@@ -18,13 +18,14 @@ license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  788867365b76230a276bd7da62bbb8c0164fc773 \
-                    sha256  fb17159dc6b0852a74ca75533269856dc176fa00ffb993d6dcd2933a0cb7a2e1 \
-                    size    10748665
+checksums           rmd160  3d88b37d9064268e8cea508a8c6e33f073d31124 \
+                    sha256  fd2eb17a3fd8144888c0146f1067f0c3f5c99aa427adf85805dbd67d73f773df \
+                    size    6544294
 
+# Allow Go to fetch dependencies at build time
+go.offline_build no
 build.env-append    TRAVIS_TAG=${version}
-build.cmd           make
-build.target        build
+build.cmd           "go mod vendor && make build"
 
 patch {
     # Delete lines building for Linux or Windows
@@ -34,7 +35,7 @@ patch {
 destroot {
     foreach tfsec_build_bin [glob ${worksrcpath}/bin/${os.platform}/*] {
         set tfsec_install_bin \
-            [file tail [strsed $tfsec_build_bin s/-${os.platform}-${goarch}//]]
+            [file tail [strsed $tfsec_build_bin s/-${os.platform}.*//]]
         xinstall -m 0755 \
             ${tfsec_build_bin} ${destroot}${prefix}/bin/${tfsec_install_bin}
     }

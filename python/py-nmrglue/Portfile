@@ -4,11 +4,11 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-nmrglue
-version             0.8
+version             0.10
 revision            0
 
 categories-append   science
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
 license             BSD
 maintainers         {reneeotten @reneeotten} openmaintainer
@@ -21,53 +21,46 @@ long_description    nmrglue is a module for working with NMR data in Python. \
 
 homepage            https://nmrglue.com
 
-checksums           rmd160  283a2f59f730affc60dde525152bcb405d8ec909 \
-                    sha256  198375ce724ab9776953a3d3ed3eb4fa0d1b859fac97360cffa5d9143f8a5bfe \
-                    size    176607
+checksums           rmd160  ea2a5fb50885f70463f2b5ae951f3e816e699212 \
+                    sha256  ec5524d612dcd28a9652b00ef66ac69badc4e69191edf477d559152afbee6972 \
+                    size    204563
 
-python.versions     27 35 36 37 38 39 310
+python.versions     38 39 310 311 312
 
-foreach pver {36 37 38 39 310} {
+conflicts           ${subport}-devel
+
+foreach pver [list {*}${python.versions} ""] {
     subport py${pver}-nmrglue-devel {
         PortGroup       github 1.0
 
-        github.setup    jjhelmus nmrglue 148a30d4855a78938537a294e76f39ec825e50db
-        version         20211209-[string range ${github.version} 0 7]
+        github.setup    jjhelmus nmrglue e5007e70844d549c642
+        version         20240207-[string range ${github.version} 0 7]
         revision        0
-        checksums       rmd160  0d36a56ae51cf0ae2e083146b8071b5afbdb96c8 \
-                        sha256  013e7d2b189958e0edde31c158d4d51270c2dfb24feb7f65fc85e8f7f96a0466 \
-                        size    14916507
+        checksums       rmd160  7713a1c5486b49348bb5df86edeb3458de3dfbf7 \
+                        sha256  2214b1c5940f6d359ea524e62a46f9cfd3ef5b4c8169e89338fd8e0785ff8791 \
+                        size    14921301
+
         conflicts       py${pver}-nmrglue
+
+        if {${pver} ne ""} {
+            livecheck.type  none
+        } else {
+            PortGroup   stub 1.0
+        }
     }
 }
 
-if {${name} ne ${subport}} {
-    depends_build-append \
-                    port:py${python.version}-setuptools
-
+if {${subport} ni [list ${name} ${name}-devel]} {
     depends_lib-append \
                     port:py${python.version}-numpy \
                     port:py${python.version}-scipy
 
-    depends_test-append  \
-                    port:py${python.version}-pytest
-
     test.run        yes
-    test.cmd        py.test-${python.branch}
-    test.target
     test.args       --pyargs nmrglue
-    test.env        PYTHONPATH=${worksrcpath}/build/lib
 
     post-destroot {
         xinstall -d ${destroot}${prefix}/share/doc/${subport}
         xinstall -m 0644 -W ${worksrcpath} TODO.txt LICENSE.txt INSTALL.txt \
             README.rst ${destroot}${prefix}/share/doc/${subport}
-    }
-
-    if {[string last devel ${subport}] == -1} {
-        livecheck.type  none
-        if {${python.version} > 35} {
-            conflicts       py${python.version}-nmrglue-devel
-        }
     }
 }

@@ -4,13 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        theskumar python-dotenv 0.17.1 v
+github.setup        theskumar python-dotenv 1.0.0 v
+github.tarball_from archive
 revision            0
 
 name                py-python-dotenv
 categories-append   devel
-platforms           darwin
 supported_archs     noarch
+platforms           {darwin any}
 license             BSD
 maintainers         {emcrisostomo @emcrisostomo} \
                     openmaintainer
@@ -21,28 +22,27 @@ long_description    $description \
                     environment variable. It is great for managing app settings \
                     during development and in production using 12-factor principles.
 
-checksums           rmd160  5a44b8efb1e85d3a55e44364df8b2894cd2c6753 \
-                    sha256  9ba2935047e06b23487dbb766f1d680173825f768793c1fb0a1a9e73aaae52da \
-                    size    22310
+checksums           rmd160  bb5dad62bb6f59198fa04b004d211e053d16bb85 \
+                    sha256  93fc54524656990bc9911ab224c991457cd8f39364c48cded2f1c4cb3846c0ac \
+                    size    24730
 
-python.versions     27 35 36 37 38 39
+python.versions     38 39 310 311 312
 
 if {${subport} ne ${name}} {
-    depends_build-append \
-                    port:py${python.version}-setuptools
-
     depends_lib-append  \
                     port:py${python.version}-click
 
-    if {${python.version} eq 27} {
-        depends_lib-append port:py${python.version}-typing
-    }
+    # a few tests fail becuase the "dotenv" console_script hasn't been created yet...
+    depends_test-append \
+                    port:py${python.version}-ipython \
+                    port:py${python.version}-mock \
+                    port:py${python.version}-sh
+
+    test.run        yes
 
     post-destroot {
         xinstall -d ${destroot}${prefix}/share/doc/${subport}
         xinstall -m 0644 -W ${worksrcpath} CONTRIBUTING.md LICENSE \
             README.md ${destroot}${prefix}/share/doc/${subport}
     }
-
-    livecheck.type  none
 }

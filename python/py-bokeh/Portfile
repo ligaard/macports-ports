@@ -4,13 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-bokeh
-version             2.3.3
+version             3.3.4
 revision            0
 categories-append   devel
-platforms           darwin
 license             BSD
+platforms           {darwin any}
+supported_archs     noarch
 
-python.versions     27 35 36 37 38 39
+python.versions     38 39 310 311 312
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -22,36 +23,33 @@ long_description    Bokeh (pronounced boh-Kay) is an implementation of \
 
 homepage            https://github.com/bokeh/bokeh
 
-checksums           rmd160  6ab0ff104537dcd0db218d04ff5d492be02403d4 \
-                    sha256  a5fdcc181835561447fcc5a371300973fce4114692d5853addec284d1cdeb677 \
-                    size    10670403
+checksums           rmd160  d4fbd3b6a3388facdc11d4e10cf347997840e570 \
+                    sha256  73b7982dc2b8df15bf660cdddc8d3825e829195c438015a5d09824f1a7028368 \
+                    size    6245504
 
 if {${name} ne ${subport}} {
-    depends_lib-append  port:py${python.version}-setuptools \
-                        port:py${python.version}-yaml \
-                        port:py${python.version}-dateutil \
-                        port:py${python.version}-jinja2 \
-                        port:py${python.version}-numpy \
-                        port:py${python.version}-Pillow \
-                        port:py${python.version}-packaging \
-                        port:py${python.version}-tornado \
-                        port:py${python.version}-typing_extensions
-
-    if {${python.version} < 36} {
-        version             1.3.4
-        revision            0
-        distname            ${python.rootname}-${version}
-        checksums           rmd160  71223b21950b2e1fdf3ad3daf671a69978558bd3 \
-                            sha256  e2d97bed5b199a10686486001fed5c854e4c04ebe28859923f27c52b93904754 \
-                            size    17847575
-
-        if {${python.version} == 27} {
-            depends_lib-append  port:py${python.version}-futures
-        }
-
-        depends_lib-append  port:py${python.version}-six
-        depends_lib-delete  port:py${python.version}-typing_extensions
+    if {${python.version} eq 38} {
+        version     3.1.1
+        revision    0
+        checksums   rmd160  cecfc65b6c84db00da4975e03d4576a22c690e87 \
+                    sha256  ba0fc6bae4352d307541293256dee930a42d0acf92e760c72dc0e7397c3a28e9 \
+                    size    7700613
     }
 
+    depends_build-append \
+                        port:py${python.version}-setuptools-git-versioning \
+                        port:py${python.version}-colorama
+
+    depends_lib-append  port:py${python.version}-jinja2 \
+                        port:py${python.version}-contourpy \
+                        port:py${python.version}-numpy \
+                        port:py${python.version}-packaging \
+                        port:py${python.version}-pandas \
+                        port:py${python.version}-Pillow \
+                        port:py${python.version}-yaml \
+                        port:py${python.version}-tornado \
+                        port:py${python.version}-xyzservices
+
+    # required if subport versions differ
     livecheck.type      none
 }

@@ -3,24 +3,24 @@
 PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           compiler_blacklist_versions 1.0
+PortGroup           legacysupport 1.1
 
-github.setup        Genivia ugrep 3.3.11 v
+github.setup        Genivia ugrep 5.1.1 v
 github.tarball_from archive
 revision            0
 
 categories          textproc sysutils
-platforms           darwin
 license             BSD
 maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         ultra fast grep with interactive query UI and fuzzy search
-long_description    ${description}: search file systems, source code, text, \
+long_description    {*}${description}: search file systems, source code, text, \
                     binary files, archives (cpio/tar/pax/zip), compressed files \
                     (gz/Z/bz2/lzma/xz/lz4/zstd), documents and more.
 
-checksums           rmd160  c137e89051010ead263d8b3f1e024eb339718e08 \
-                    sha256  4a1c9cb0d2937d0dad5572c91af30e91829359289058dbd34315017638a3719e \
-                    size    4311101
+checksums           rmd160  a3b958fc3c4658e4307dea40fcb2be6d9e0f6bf4 \
+                    sha256  687fc43a02287bac18f973822036bb3c470a81825b8eb3d98a335603b249b13b \
+                    size    6238147
 
 compiler.cxx_standard 2011
 
@@ -28,6 +28,9 @@ compiler.cxx_standard 2011
 # /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1/list:227:9: error: field has incomplete type 'GrepWorker'
 # see: https://github.com/Genivia/ugrep/issues/130
 compiler.blacklist-append {clang < 700}
+
+legacysupport.newest_darwin_requires_legacy 10
+# needed for strnlen
 
 depends_lib-append  port:pcre2 \
                     port:zlib \

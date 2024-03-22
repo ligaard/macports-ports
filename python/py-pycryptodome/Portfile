@@ -5,29 +5,25 @@ PortGroup           python 1.0
 
 # also update py-pycryptodomex
 name                py-pycryptodome
-version             3.12.0
+version             3.19.0
 revision            0
 
 homepage            https://www.pycryptodome.org
 
 license             BSD
 platforms           darwin
-maintainers         {@xeron gmail.com:xeron.oskom} \
-                    {@catap korins.ky:kirill} \
-                    openmaintainer
+maintainers         {@catap korins.ky:kirill} openmaintainer
 
 description         Cryptographic library for Python
 long_description    PyCryptodome is a self-contained Python package of \
                     low-level cryptographic primitives. \
                     PyCryptodome is a fork of PyCrypto.
 
-python.versions     27 35 36 37 38 39 310
+python.versions     27 37 38 39 310 311 312
 
-use_zip             yes
-
-checksums           rmd160  07ce4029f23972ad6713436caed4a27a3a1a7e8b \
-                    sha256  12c7343aec5a3b3df5c47265281b12b611f26ec9367b6129199d67da54b768c1 \
-                    size    3717073
+checksums           rmd160  d239640f0a70dd89e14d5f01fa939183bdb6927c \
+                    sha256  bc35d463222cdb4dbebd35e0784155c81e161b9284e567e7e933d722e533331e \
+                    size    4778190
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -36,19 +32,6 @@ if {${name} ne ${subport}} {
     livecheck.type      none
 
     test.run            yes
-
-    set pycrypto_name   py${python.version}-crypto
-} else {
-    set pycrypto_name   py-crypto
-}
-
-#------------------------------------------------------------------------------
-# NOTE: Remove this logic - along with declaration of 'pycrypto_name', above,
-#   when obsolete port 'py-crypto' is ultimately deleted.
-#------------------------------------------------------------------------------
-pre-activate {
-    # Deactivate obsolete port 'py-crypto', if installed
-    if {![catch {set installed [lindex [registry_active ${pycrypto_name}] 0]}]} {
-        registry_deactivate_composite ${pycrypto_name} "" [list ports_nodepcheck 1]
-    }
+    test.cmd            ${python.bin} setup.py test
+    test.args
 }

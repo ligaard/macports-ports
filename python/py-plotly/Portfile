@@ -4,11 +4,11 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-plotly
-version             5.3.1
-revision            0
+version             5.19.0
+revision            1
 
 categories          python graphics
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
 license             MIT
 maintainers         {nist.gov:joe.fowler @joefowler} openmaintainer
@@ -21,11 +21,11 @@ long_description \
 
 homepage            https://plotly.com/python/
 
-checksums           rmd160  679e2ce0095eb3b9e250ed2d6b100120a4613bc1 \
-                    sha256  6598393e898a9c5ae78397f76f07002ec41fd92e5f746d3b9806248d53885643 \
-                    size    7296601
+checksums           rmd160  af64a6338e31e44b1fd9fa9ed9b943505c412012 \
+                    sha256  5ea91a56571292ade3e3bc9bf712eba0b95a1fb0a941375d978cc79432e055f4 \
+                    size    7849193
 
-python.versions     37 38 39
+python.versions     38 39 310 311 312
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -33,8 +33,12 @@ if {${name} ne ${subport}} {
     
     depends_lib-append \
         port:py${python.version}-matplotlib \
-        port:py${python.version}-six \
+        port:py${python.version}-jupyterlab \
         port:py${python.version}-tenacity
+
+    # skip dependency check in version 5.19.0 that limits jupyterlab~=3.0;
+    # evaluate removing in future versions of plotly
+    build.args-append --skip-dependency-check
     
     livecheck.type  none
 }

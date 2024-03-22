@@ -4,13 +4,16 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-argon2-cffi
-version             21.1.0
+version             23.1.0
 revision            0
+
 categories-append   devel
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 license             MIT
 
-python.versions     35 36 37 38 39 310
+python.versions     38 39 310 311 312
+python.pep517_backend   hatch
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -19,14 +22,16 @@ long_description    {*}${description}
 
 homepage            https://argon2-cffi.readthedocs.io/
 
-checksums           rmd160  58f74b8d74a77689de248a4fc658e57f69e215de \
-                    sha256  f710b61103d1a1f692ca3ecbd1373e28aa5e545ac625ba067ff2feca1b2bb870 \
-                    size    1807800
+checksums           rmd160  78560caba6aaa8844ab5e12a405e268262d3d1fe \
+                    sha256  879c3e79a2729ce768ebb7d36d4609e3a78a4ca2ec3a9f12286ca057e3d0db08 \
+                    size    42798
+
+distname            argon2_cffi-${version}
 
 if {${name} ne ${subport}} {
     depends_build-append \
-                        port:py${python.version}-setuptools
-    depends_lib-append  port:py${python.version}-cffi
+                        port:py${python.version}-hatch-vcs \
+                        port:py${python.version}-hatch-fancy-pypi-readme
 
-    livecheck.type      none
+    depends_run-append  port:py${python.version}-argon2-cffi-bindings
 }

@@ -4,12 +4,12 @@ PortSystem          1.0
 PortGroup           conflicts_build 1.0
 PortGroup           github 1.0
 
-github.setup        radareorg radare2 5.5.2
-revision            0
+github.setup        radareorg radare2 5.8.8
+revision            1
 categories          devel
 platforms           darwin
 license             LGPL-3+
-maintainers         {g5pw @g5pw} {i0ntempest @i0ntempest} openmaintainer
+maintainers         {i0ntempest @i0ntempest} openmaintainer
 description         Opensource tools to disasm, debug, analyze and manipulate binary files.
 long_description    ${name} provides {*}${description}.
 homepage            https://www.radare.org/
@@ -21,14 +21,19 @@ depends_lib         port:capstone \
                     port:libzip
 conflicts_build     ${name}
 
-checksums           rmd160  35d108029b6b321d9407520f5f989e2ed9954d22 \
-                    sha256  d8927237f9ff17ab65d439f21eaad8d423bf96ef049cd3060086499aea95bd04 \
-                    size    9604357
+checksums           rmd160  2f061dd251521ddac5363dad5597b933e247b75b \
+                    sha256  5010f5d971bc8b175a79e6728d6f449ef9bb54764df4e7ebacd8d1dd40138444 \
+                    size    11168695
 
 configure.args-append \
                     --with-syscapstone \
                     --with-syszip \
                     --with-compiler=clang
+
+post-patch {
+    # 5.7.8: r_fs library fails to build without -lzip. Check again in the next version.
+    reinplace "s|LDFLAGS+=\$(SHLR)/grub/libgrubfs.a|LDFLAGS+=\$(SHLR)/grub/libgrubfs.a -lzip|g" ${worksrcpath}/libr/fs/Makefile
+}
 
 build.env-append    HOST_CC=${configure.cc}
 

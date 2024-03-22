@@ -3,11 +3,10 @@
 PortSystem          1.0
 
 name                xld
-version             20211018
+version             20240310
 revision            0
 
 categories          audio
-platforms           darwin
 supported_archs     x86_64 arm64 i386 ppc
 license             GPL-2
 maintainers         {judaew @judaew} openmaintainer
@@ -24,9 +23,9 @@ master_sites        sourceforge:xld
 distname            xld-${version}
 use_dmg             yes
 
-checksums           rmd160  ff488c700ce45116cd9c92910d7162955b036b92 \
-                    sha256  5234e17218624e6bb341a2bb23c8994310b7d4962d3f878c3ed27b265d2791d6 \
-                    size    10967402
+checksums           rmd160  6571cfa4a7054e996c84b0440b341d2423201be3 \
+                    sha256  29939315c5c7983cad307aa1921b5191f72f90e5ea39d01576bb0b336b5d16db \
+                    size    11349268
 
 variant universal {}
 default_variants +universal

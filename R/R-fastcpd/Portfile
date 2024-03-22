@@ -1,0 +1,61 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             cran doccstat fastcpd 0.12.2
+revision            0
+categories-append   math
+maintainers         {@barracuda156 gmail.com:vital.had} openmaintainer
+license             GPL-3+
+description         Fast change point detection via sequential gradient descent
+long_description    {*}${description}
+homepage            https://fastcpd.xingchi.li
+checksums           rmd160  e0407616393d76c8bfa3a5764f91481acddd7764 \
+                    sha256  a1ca2f25c16e6d05b56e1294e363d6c11d3c85216ec84d2a9734fc1d56cecff1 \
+                    size    4242442
+
+depends_lib-append  port:R-fastglm \
+                    port:R-forecast \
+                    port:R-glmnet \
+                    port:R-progress \
+                    port:R-Rcpp \
+                    port:R-RcppArmadillo \
+                    port:R-testthat \
+                    port:R-tseries
+
+patchfiles          patch-drop-missing-deps.diff
+
+compilers.setup     require_fortran
+
+depends_test-append port:R-abind \
+                    port:R-breakfast \
+                    port:R-changepoint \
+                    port:R-cpm \
+                    port:R-CptNonPar \
+                    port:R-ecp \
+                    port:R-fpop \
+                    port:R-gfpop \
+                    port:R-ggplot2 \
+                    port:R-gridExtra \
+                    port:R-InspectChangepoint \
+                    port:R-knitr \
+                    port:R-lubridate \
+                    port:R-mcp \
+                    port:R-mockthat \
+                    port:R-mosum \
+                    port:R-mvtnorm \
+                    port:R-not \
+                    port:R-numDeriv \
+                    port:R-rmarkdown \
+                    port:R-segmented \
+                    port:R-stepR \
+                    port:R-strucchange \
+                    port:R-testthat \
+                    port:R-wbs \
+                    port:R-xml2 \
+                    port:R-zoo
+
+# FIXME: there is an error when running tests:
+# https://github.com/doccstat/fastcpd/issues/8
+test.run            no

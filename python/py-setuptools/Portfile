@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-setuptools
-version             59.4.0
+version             69.2.0
 categories-append   devel
 # License status is murky. The current maintainer decided to relicense as
 # MIT, but he doesn't appear to have obtained the permission of previous
@@ -20,14 +20,15 @@ long_description \
     especially ones that have dependencies on other packages.
 
 supported_archs     noarch
+platforms           {darwin any}
 
 homepage            https://pypi.org/project/setuptools/
 
-checksums           md5 1cfee8bed453d447851114c0deca6ba1 \
-                    rmd160 ac6335e79e8757619394b05728907b190947eaec \
-                    sha256 b4c634615a0cf5b02cf83c7bedffc8da0ca439f00e79452699454da6fbd4153d
+checksums           md5 940ffdb3a2ce4f6a5ee80032aa115fc7 \
+                    rmd160 a1988a55467cbc453f3a09ce94d142260ddc983d \
+                    sha256 0ff4183f8f42cd8fa3acea16c45205521a4ef28f73c6391d8a25e92893134f2e
 
-python.versions     26 27 33 34 35 36 37 38 39 310
+python.versions     26 27 32 33 34 35 36 37 38 39 310 311 312
 python.link_binaries no
 
 if {$subport ne $name} {
@@ -39,51 +40,86 @@ if {$subport ne $name} {
         depends_lib     port:python${python.version}
         build.env-append    PYTHONPATH=${prefix}/share/py-bootstrap-modules
         build.args      --skip-dependency-check
-        destroot.env-append PYTHONPATH=${prefix}/share/py-bootstrap-modules
+        if {${python.version} >= 37} {
+            depends_build-append    port:py${python.version}-installer
+        }
     } else {
         use_zip     yes
         post-destroot {
             ln -s ${python.prefix}/bin/easy_install-${python.branch} ${destroot}${prefix}/bin
         }
     }
-
-    if {${python.version} == 35} {
-        version     50.3.1
-        revision    0
-        checksums   md5 6a323319a1d3b7d1939ddc0f6bc7dbe9 \
-                    rmd160 7f42ab7c6305d5c01180fe8d3946bc0d57b6c718 \
-                    sha256 0e9772768fa6e9d3cf818a3e6e24dd2236f319d2c478312995edcb30ddeb8343
-    } elseif {${python.version} == 27} {
-        version     44.1.1
-        revision    0
-        checksums   md5 2c41f19cfd1f16a7d7bb23689921ac1b \
-                    rmd160 f8af333dabae2df9fba6f02dc2d22249b15d83e8 \
-                    sha256 c67aa55db532a0dadc4d2e20ba9961cbd3ccc84d544e9029699822542b5a476b
-    } elseif {${python.version} == 34} {
-        version     43.0.0
-        revision    0
-        checksums   md5 792983f474cd2bd314fa3af28813cdb6 \
-                    rmd160 b0c380d5789a76b43c409d35f3250efd8577fd91 \
-                    sha256 db45ebb4a4b3b95ff0aca3ce5fe1e820ce17be393caf8902c78aa36240e8c378
-    } elseif {${python.version} == 33} {
-        version     39.2.0
-        revision    0
-        checksums   md5 dd4e3fa83a21bf7bf9c51026dc8a4e59 \
-                    rmd160 6070de164cf74412fe7c9a9d04031112b06cfc2a \
-                    sha256 f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2
-    } elseif {${python.version} == 26} {
-        version     36.8.0
-        revision    0
-        checksums   md5    3ecaa938a4c95a74dfbcd6340a47c7c5 \
-                    rmd160 457c838b9fb09cf0bf9ba519a098e1c009710aa3 \
-                    sha256 b2aa5a00e9e4fd20f3c3dd412d490921746efe14bda34d53973c4a59ab05b35d
+    switch ${python.version} {
+        37 {
+            version     67.7.2
+            revision    0
+            checksums   md5 aa8e2bc19324d0127e6726d7ee8ed0ed \
+                        rmd160 6afb68cca7cbec82406e6156bc7d98d803c97db0 \
+                        sha256 f104fa03692a2602fa0fec6c6a9e63b6c8a968de13e17c026957dd1f53d80990
+        }
+        36 {
+            version     59.6.0
+            revision    0
+            checksums   md5 7d9cdfb85e905390a1d820fa5e9b01a2 \
+                        rmd160 0604aed7827ac8631a07cf5ed8b12d7c7a4b5f3d \
+                        sha256 22c7348c6d2976a52632c67f7ab0cdf40147db7789f9aed18734643fe9cf3373
+            destroot.env-append PYTHONPATH=${prefix}/share/py-bootstrap-modules
+        }
+        35 {
+            version     50.3.1
+            revision    0
+            checksums   md5 6a323319a1d3b7d1939ddc0f6bc7dbe9 \
+                        rmd160 7f42ab7c6305d5c01180fe8d3946bc0d57b6c718 \
+                        sha256 0e9772768fa6e9d3cf818a3e6e24dd2236f319d2c478312995edcb30ddeb8343
+        }
+        34 {
+            version     43.0.0
+            revision    0
+            checksums   md5 792983f474cd2bd314fa3af28813cdb6 \
+                        rmd160 b0c380d5789a76b43c409d35f3250efd8577fd91 \
+                        sha256 db45ebb4a4b3b95ff0aca3ce5fe1e820ce17be393caf8902c78aa36240e8c378
+        }
+        33 {
+            version     39.2.0
+            revision    0
+            checksums   md5 dd4e3fa83a21bf7bf9c51026dc8a4e59 \
+                        rmd160 6070de164cf74412fe7c9a9d04031112b06cfc2a \
+                        sha256 f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2
+        }
+        32 {
+            version     29.0.1
+            revision    0
+            checksums   md5 ab145ab25ebb85ffed5dc1db9d03a099 \
+                        rmd160 ac5afca835f4caed809a1166826783c64ab90923 \
+                        sha256 c9c24ebdfe7b83fe90c4fe503b4152d721ef17e13714200c8e9ddfeed27fefd8
+        }
+        27 {
+            version     44.1.1
+            revision    0
+            checksums   md5 2c41f19cfd1f16a7d7bb23689921ac1b \
+                        rmd160 f8af333dabae2df9fba6f02dc2d22249b15d83e8 \
+                        sha256 c67aa55db532a0dadc4d2e20ba9961cbd3ccc84d544e9029699822542b5a476b
+        }
+        26 {
+            version     36.8.0
+            revision    0
+            checksums   md5    3ecaa938a4c95a74dfbcd6340a47c7c5 \
+                        rmd160 457c838b9fb09cf0bf9ba519a098e1c009710aa3 \
+                        sha256 b2aa5a00e9e4fd20f3c3dd412d490921746efe14bda34d53973c4a59ab05b35d
+        }
     }
 
     build.env-append    SETUPTOOLS_INSTALL_WINDOWS_SPECIFIC_FILES=0
     destroot.env-append SETUPTOOLS_INSTALL_WINDOWS_SPECIFIC_FILES=0
+    set docfiles [list README.rst]
+    if {${python.version} >= 38} {
+        lappend docfiles NEWS.rst
+    } else {
+        lappend docfiles CHANGES.rst
+    }
     post-destroot {
        xinstall -m 755 -d ${destroot}${prefix}/share/doc/${subport}
-       xinstall -m 644 -W ${worksrcpath} CHANGES.rst README.rst \
+       xinstall -m 644 -W ${worksrcpath} {*}${docfiles} \
           ${destroot}${prefix}/share/doc/${subport}
     }
     livecheck.type      none

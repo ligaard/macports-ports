@@ -2,15 +2,23 @@
 
 PortSystem          1.0
 PortGroup           cmake 1.1
+PortGroup           conflicts_build 1.0
 PortGroup           github 1.0
+PortGroup           legacysupport 1.1
 PortGroup           boost 1.0
+PortGroup           active_variants 1.1
 
-github.setup        apache arrow 3.0.0 apache-arrow-
-revision            15
+# clock_gettime needed for abseil
+# https://github.com/macports/macports-ports/pull/19905#issuecomment-1680281240
+legacysupport.newest_darwin_requires_legacy 15
+
+boost.version       1.81
+
+github.setup        apache arrow 13.0.0 apache-arrow-
+revision            7
 name                ${github.author}-${github.project}
 
 categories          devel
-platforms           darwin
 license             Apache-2
 maintainers         nomaintainer
 
@@ -18,12 +26,15 @@ description         Powering In-Memory Analytics
 
 long_description    Apache Arrow is a development platform for in-memory \
                     analytics. It contains a set of technologies that \
-                    enable big data systems to process and move data \
-                    fast.
+                    enable big data systems to process and move data fast.
 
-checksums           rmd160  e2dbd95f5c9b5739a7351dd920b40509c4e968ca \
-                    sha256  94cca341bc595881e828bde5a9e08ee58287ade9e5bcd070cd6d2a0cd8f0bb4a \
-                    size    7518019
+checksums           rmd160  7a811ff28eadc2c20da253814d02f07b74a9e05f \
+                    sha256  99c27e6a517c750f29c3e6b264836e31251bb8e978dbbf11316680ca3eb8ebda \
+                    size    20216422
+github.tarball_from archive
+
+# Drop with the next update. See: https://trac.macports.org/ticket/68025
+dist_subdir         ${name}/${version}_1
 
 compiler.cxx_standard \
                     2017
@@ -37,12 +48,24 @@ cmake.build_type    Release
 set cmake_build_type \
                     [string tolower ${cmake.build_type}]
 
-set llvm_version    11
-set llvm_prefix     ${prefix}/libexec/llvm-${llvm_version}
-set llvm_bin        ${llvm_prefix}/bin
+# LLVM only needed for Gandiva: https://github.com/apache/arrow/issues/34999
+# I.e. it is here for no reason: Gandiva is not built by default and not asked to be built in configure.args.
+# At least remove a dependency on LLVM for PPC, where it is broken.
+# If Gandiva is added to the build, please add it inside the clause below.
+if {${build_arch} ni [list ppc ppc64]} {
+    set llvm_version    16
+    set llvm_prefix ${prefix}/libexec/llvm-${llvm_version}
+    set llvm_bin    ${llvm_prefix}/bin
+
+    cmake.module_path-append \
+                    ${llvm_prefix}/lib/cmake/llvm
+    depends_lib-append \
+                    port:llvm-${llvm_version}
+    configure.args-append \
+                    -DLLVM_ROOT:PATH=${llvm_prefix}
+}
 
 cmake.module_path-append \
-                    ${llvm_prefix}/lib/cmake/llvm \
                     ${prefix}/lib/cmake/grpc/modules
 
 depends_build-append \
@@ -56,15 +79,12 @@ depends_lib-append \
                     port:c-ares \
                     port:gmake \
                     port:grpc \
-                    port:google-glog \
-                    port:jemalloc \
+                    path:lib/libglog.dylib:google-glog \
                     port:libutf8proc \
-                    port:libunwind \
-                    port:llvm-${llvm_version} \
                     port:lz4 \
                     port:ninja \
                     port:protobuf3-cpp \
-                    port:rapidjson \
+                    path:lib/pkgconfig/RapidJSON.pc:rapidjson \
                     port:re2 \
                     port:snappy \
                     port:thrift \
@@ -72,13 +92,13 @@ depends_lib-append \
                     port:zlib \
                     port:zstd
 
-if { ${os.platform} eq "darwin" && ${os.major} < 17 } {
-    known_fail      yes
-    pre-fetch {
-        ui_error "${name} @${version} requires macOS 10.13 or later."
-        return -code error "incompatible macOS version"
-    }
-}
+# https://trac.macports.org/ticket/67951
+conflicts_build     boost
+
+# https://trac.macports.org/ticket/67952
+# Backport of: https://github.com/apache/arrow/commit/4b70fd4b1eac29cd8ac20083ad644b60fe6483ab
+# See: https://github.com/apache/arrow/issues/37138
+patchfiles-append   0001-GH-36856-C-Remove-needless-braces-from-BasicDecimal2.patch
 
 # Remove incorrect make dependency on SDK that cmake adds on some systems
 # See https://github.com/grpc/grpc/issues/24902
@@ -105,25 +125,39 @@ post-configure {
 # used for both apache-arrow and py*-pyarrow
 
 # macOS wheel:
-# https://github.com/apache/arrow/blob/master/ci/scripts/python_wheel_macos_build.sh
+# https://github.com/apache/arrow/blob/main/ci/scripts/python_wheel_macos_build.sh
+# Re rpath see: https://arrow.apache.org/docs/r/articles/developers/setup.html#rpath-issues
+# Also: https://github.com/apache/arrow/issues/35045,
+# https://github.com/apache/arrow/issues/37010
+
 configure.args-append \
+                    -DARROW_ACERO:BOOL=OFF \
                     -DARROW_BUILD_SHARED:BOOL=ON \
                     -DARROW_BUILD_STATIC:BOOL=OFF \
+                    -DARROW_COMPUTE:BOOL=ON \
+                    -DARROW_CSV:BOOL=ON \
                     -DARROW_DATASET:BOOL=ON \
                     -DARROW_DEPENDENCY_USE_SHARED:BOOL=ON \
+                    -DARROW_EXTRA_ERROR_CONTEXT:BOOL=ON \
+                    -DARROW_FILESYSTEM:BOOL=ON \
                     -DARROW_FLIGHT:BOOL=ON \
+                    -DARROW_GCS:BOOL=ON \
                     -DARROW_HDFS:BOOL=ON \
+                    -DARROW_INSTALL_NAME_RPATH:BOOL=OFF \
+                    -DARROW_JEMALLOC:BOOL=OFF \
                     -DARROW_JSON:BOOL=ON \
-                    -DARROW_JEMALLOC:BOOL=ON \
+                    -DARROW_MIMALLOC:BOOL=ON \
                     -DARROW_ORC:BOOL=ON \
+                    -DARROW_PACKAGE_KIND="python-wheel-macos" \
                     -DARROW_PARQUET:BOOL=ON \
                     -DARROW_PLASMA:BOOL=ON \
                     -DARROW_PROTOBUF_USE_SHARED:BOOL=ON \
                     -DARROW_PYTHON:BOOL=OFF \
-                    -DARROW_RPATH_ORIGIN:BOOL=OFF \
+                    -DARROW_RPATH_ORIGIN:BOOL=ON \
                     -DARROW_S3:BOOL=OFF \
+                    -DARROW_SUBSTRAIT:BOOL=ON \
                     -DARROW_USE_CCACHE:BOOL=ON \
-                    -DARROW_TENSORFLOW:BOOL=ON \
+                    -DARROW_TENSORFLOW:BOOL=OFF \
                     -DARROW_UTF8PROC_USE_SHARED:BOOL=ON \
                     -DARROW_WITH_BROTLI:BOOL=ON \
                     -DARROW_WITH_BZ2:BOOL=ON \
@@ -133,8 +167,18 @@ configure.args-append \
                     -DARROW_WITH_ZSTD:BOOL=ON \
                     -Dc-ares_INCLUDE_DIR:PATH=${prefix}/include \
                     -DgRPC_ROOT:PATH=${prefix} \
-                    -DLLVM_ROOT:PATH=${llvm_prefix} \
                     -DRE2_SOURCE:STRING=SYSTEM
+
+if {${os.arch} eq "arm" && ${os.platform} eq "darwin"} {
+    configure.args-append \
+                    -DCMAKE_APPLE_SILICON_PROCESSOR=arm64
+}
+
+if {${os.platform} eq "darwin" && ${os.major} < 12} {
+    # arrow downloads mimalloc version which is broken for < 10.8 due to missing MACH_TASK_BASIC_INFO_COUNT etc.
+    configure.args-replace \
+                    -DARROW_MIMALLOC:BOOL=ON -DARROW_MIMALLOC:BOOL=OFF
+}
 
 # Build auto-detects cache if it is installed and a part of it attempts
 # to write to CCACHE_DIR which is not allow if configure.ccache=off.
@@ -149,9 +193,15 @@ if {![option configure.ccache]} {
 
 destroot.target     install
 
-if {${name} eq ${subport}} { 
+if {${name} eq ${subport}} {
     configure.args-append \
                     -DARROW_BUILD_UTILITIES:BOOL=ON
+
+    variant tensorflow description {Build with tensorflow support enabled} {
+        configure.args-replace \
+                    -DARROW_TENSORFLOW:BOOL=OFF \
+                    -DARROW_TENSORFLOW:BOOL=ON
+    }
 }
 
 # lib[^[:space:]]+
@@ -169,19 +219,20 @@ proc change_arrow_rpath { binname libname_re } {
 }
 
 # create Python subports
-set python_versions {37 38 39}
+set python_versions [list 39 310 311 312]
 foreach v ${python_versions} {
     subport py${v}-py${github.project} {
-        PortGroup   python 1.0
-
-        categories-append   python
-
-        python.default_version  ${v}
+        set python.version  ${v}
     }
 }
 
 # Python bindings for supported Python versions
 if {[string match "py*" ${subport}]} {
+    PortGroup   python 1.0
+
+    categories-prepend      devel
+    python.versions {*}${python_versions}
+
     github.setup    ${github.author} ${github.project} ${github.version} ${github.tag_prefix}
     fetch.type      git
 
@@ -194,11 +245,11 @@ if {[string match "py*" ${subport}]} {
                     port:py${python.version}-wheel
 
     depends_lib-append \
+                    port:apache-arrow \
                     port:py${python.version}-brotli \
                     port:py${python.version}-cython \
                     port:py${python.version}-pycares \
-                    port:py${python.version}-numpy \
-                    path:${python.pkgd}/tensorflow:py${python.version}-tensorflow
+                    port:py${python.version}-numpy
 
     depends_test-append \
                     port:py${python.version}-cffi \
@@ -207,6 +258,12 @@ if {[string match "py*" ${subport}]} {
                     port:py${python.version}-pytest \
                     port:py${python.version}-pytest-lazy-fixture \
                     port:py${python.version}-tz
+
+    # Current port version not compatible with Cython 3
+    depends_build-append \
+                    port:py${python.version}-cython-compat
+    set compat_path [string replace ${python.pkgd} 0 [string length ${python.prefix}]-1 ${prefix}/lib/py${python.version}-cython-compat]
+    build.env-append    PYTHONPATH=${compat_path}
 
     post-fetch {
         system -W ${worksrcpath} "git submodule update --init --recursive"
@@ -240,7 +297,7 @@ if {[string match "py*" ${subport}]} {
     }
 
     cmake.module_path-prepend \
-                    ${configure_destdir}${prefix}/lib/cmake/arrow
+                    ${configure_destdir}${prefix}/lib/cmake
 
     compiler.library_path \
                     "${configure_destdir}${prefix}/lib:${prefix}/lib"
@@ -255,6 +312,8 @@ if {[string match "py*" ${subport}]} {
     configure.pre_args-replace \
                     {-DCMAKE_CXX_COMPILER="$CXX"} \
                     -DCMAKE_CXX_COMPILER:FILEPATH=${configure.cxx}
+    configure.pre_args-append \
+                    {-DARROW_SIMD_LEVEL="SSE4_2"}
     if {${cmake.generator} ne {Ninja}} {
         configure.pre_args-replace \
                     "-DCMAKE_MAKE_PROGRAM=${python.bin} setup.py --no-user-cfg" \
@@ -262,7 +321,7 @@ if {[string match "py*" ${subport}]} {
     }
 
     # macOS wheel:
-    # https://github.com/apache/arrow/blob/master/ci/scripts/python_wheel_macos_build.sh
+    # https://github.com/apache/arrow/blob/main/ci/scripts/python_wheel_macos_build.sh
     configure.args-replace \
                     -DARROW_PYTHON:BOOL=OFF \
                     -DARROW_PYTHON:BOOL=ON
@@ -273,12 +332,8 @@ if {[string match "py*" ${subport}]} {
                     -DPython3_EXECUTABLE:FILEPATH=${python.bin} \
                     -Dre2_DIR:PATH=${prefix}/lib/cmake/grpc/modules
 
-    pre-build {
-        reinplace -E -q "s|^(set\\(PLASMA_STORE_SERVER\[\[:space:]]+\")(${prefix}/bin/plasma-store-server\"\\))|\\1${configure_destdir}\\2|" \
-            ${configure_destdir}${prefix}/lib/cmake/arrow/PlasmaConfig.cmake
-    }
-
     build.env-append \
+                    "_PYTHON_HOST_PLATFORM=macosx-${macosx_deployment_target}-${build_arch}" \
                     "PKG_CONFIG_PATH=/usr/lib/pkgconfig:${build.dir}/install/lib/pkgconfig" \
                     PYARROW_BOOST_USE_SHARED=1 \
                     PYARROW_BUILD_TYPE=${cmake_build_type} \
@@ -293,15 +348,43 @@ if {[string match "py*" ${subport}]} {
                     PYARROW_WITH_PARQUET=1 \
                     PYARROW_WITH_PLASMA=1 \
                     PYARROW_WITH_S3=0 \
+                    PYARROW_WITH_TENSORFLOW=0
+
+    variant tensorflow description {Build with tensorflow support enabled} {
+        require_active_variants apache-arrow tensorflow
+
+        build.env-replace \
+                    PYARROW_WITH_TENSORFLOW=0 \
                     PYARROW_WITH_TENSORFLOW=1
+
+        # py-tensorflow-macos requires minimum macOS 12.0 and Python 3.8
+        if {${os.major} >= 21 && ${python.version} >= 38} {
+            depends_lib-append \
+                    path:${python.pkgd}/tensorflow:py${python.version}-tensorflow-macos
+        } else {
+            depends_lib-append \
+                    path:${python.pkgd}/tensorflow:py${python.version}-tensorflow
+        }
+    }
 
     build.dir       ${worksrcpath}/python
     build.cmd       ${python.bin} setup.py --no-user-cfg
     build.target    bdist_wheel
     build.post_args
 
-    destroot.dir    ${build.dir}
-    destroot.destdir    [python_get_defaults destroot_destdir]
+    pre-destroot {
+        foreach f [glob ${build.dir}/dist/py${github.project}-${version}*.whl] {
+            destroot.args-append \
+                    ${f}
+        }
+    }
+
+    destroot.cmd    pip-${python.branch}
+    destroot.args   --ignore-installed \
+                    --no-cache-dir \
+                    --no-dependencies \
+                    --root ${destroot}
+    destroot.post_args
 
     post-destroot {
         fs-traverse f ${destroot}${python.pkgd}/pyarrow {
@@ -316,24 +399,25 @@ if {[string match "py*" ${subport}]} {
         set docdir ${prefix}/share/doc/${subport}
         xinstall -d ${destroot}${docdir}
         xinstall -m 0644 -W ${worksrcpath} LICENSE.txt README.md ${destroot}${docdir}
-        foreach f [glob ${destroot}${prefix}/bin/*] {
+        foreach f [glob -nocomplain ${destroot}${prefix}/bin/*] {
             move ${f} ${f}-${python.branch}
         }
-    }
-
-    pre-test {
-        test.env-append \
-                    PYTHONPATH=[glob -nocomplain ${build.dir}/build/lib*]
     }
 
     test.run        yes
     test.env-append \
                     ARROW_TEST_DATA=${worksrcpath}/testing/data \
                     PARQUET_TEST_DATA=${worksrcpath}/cpp/submodules/parquet-testing/data
-    test.cmd        py.test-${python.branch}
     test.target
 
     livecheck.type      none
 } else {
     github.livecheck.regex {([0-9.]+)}
+}
+
+if { ![variant_isset tensorflow] } {
+    notes-append "\
+- ${subport} is now built with tensorflow support disabled by default.\
+To enable it, install the port with '+tensorflow'.\
+"
 }

@@ -3,20 +3,18 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        ibara oksh 6.9 oksh-
+github.setup        ibara oksh 7.4 oksh-
 revision            0
-checksums           rmd160  2b0c83545529c3a447c4fccfe8389dce1302371f \
-                    sha256  c08d97b2ac9ee5d88e9e508d27c75502b2d06c20d4c5ab87b496cb3b9951bd35 \
-                    size    307338
+checksums           rmd160  e13de0edc5a44df038f7f531df315b84a29d94c0 \
+                    sha256  be9a8d457bf373bd04618074c41b46f4edec2ba1c57a58be881d60eaa6628596 \
+                    size    308825
 
-homepage            https://devio.us/~bcallah/oksh/
 github.tarball_from releases
 
 description         A portable OpenBSD Korn Shell
 long_description    A portable OpenBSD Korn Shell based on the Public Domain Korn Shell (pdksh)
 
 categories          shells
-platforms           darwin
 maintainers         {ogsite.net:sirn @sirn} openmaintainer
 license             BSD ISC public-domain
 

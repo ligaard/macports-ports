@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        pythongssapi python-gssapi 1.7.2 v
+github.setup        pythongssapi python-gssapi 1.8.3 v
 github.tarball_from releases
 
 name                py-gssapi
@@ -17,11 +17,11 @@ long_description    Python-GSSAPI provides both low-level and high level wrapper
                     around the GSSAPI C libraries. While it focuses on the Kerberos \
                     mechanism, it should also be useable with other GSSAPI mechanisms.
 
-checksums           rmd160  18145ff7f924e12e71324208a4e3d3934d672539 \
-                    sha256  06e835bb7d7cac4416efb2bf64dadae45ccacae87b44c163cf19e3be5fb07261 \
-                    size    3634675
+checksums           rmd160  797a49767ccea7aa0e0799395df7ca8b2208ac1d \
+                    sha256  3f250cbc636c7d934e7ae5127af4681fbe4b5daba05568ff109c38c443a76476 \
+                    size    113958
 
-python.versions     38 39 310
+python.versions     38 39 310 311 312
 
 patchfiles          patch-setup.py.diff
 

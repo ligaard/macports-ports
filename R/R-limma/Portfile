@@ -1,0 +1,17 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           R 1.0
+
+R.setup             bioconductor Bioconductor limma 3.58.1
+revision            0
+maintainers         nomaintainer
+license             GPL-2+
+description         Linear models for microarray data
+long_description    {*}${description}
+homepage            https://bioinf.wehi.edu.au/limma
+checksums           rmd160  a56879909b38b6a67c28f24e889297793ae303fb \
+                    sha256  3539e1645808dd7fe16d0b53df8c0a775283f15b68e670504fb37b09a1957e05 \
+                    size    2804950
+
+depends_lib-append  port:R-statmod

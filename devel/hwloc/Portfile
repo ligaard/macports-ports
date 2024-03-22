@@ -2,13 +2,17 @@
 
 PortSystem          1.0
 PortGroup           active_variants 1.1
+PortGroup           legacysupport 1.1
+
+# Availability.h
+legacysupport.newest_darwin_requires_legacy 8
 
 name                hwloc
-set branch          2.4
-version             ${branch}.1
+version             2.10.0
+set branch          [join [lrange [split ${version} .] 0 [llength [split ${version} .] ]-2 ] .]
+revision            0
 epoch               1
 categories          devel
-platforms           darwin
 maintainers         {i0ntempest @i0ntempest} openmaintainer
 description         Portable Hardware Locality
 license             BSD
@@ -23,9 +27,9 @@ long_description \
 homepage            https://www.open-mpi.org/projects/hwloc/
 master_sites        https://www.open-mpi.org/software/hwloc/v${branch}/downloads/
 
-checksums           rmd160  246a33becaaf623aec8d6fcdd6efd5864c248d72 \
-                    sha256  4267fe1193a8989f3ab7563a7499e047e77e33fed8f4dec16822a7aebcf78459 \
-                    size    6956102
+checksums           rmd160  6ebaf4fed98bba66929117c970dd9e9bd08a90bd \
+                    sha256  c7fd8a1404a9719c76aadc642864b9f77aed1dc1fc8882d6af861a9260ba240d \
+                    size    6065893
 
 depends_build       port:pkgconfig
 depends_lib-append  port:libxml2
@@ -34,8 +38,13 @@ configure.args      --without-x \
                     --disable-cuda \
                     --disable-opencl
 
+configure.checks.implicit_function_declaration.whitelist-append strchr
+
+test.run            yes
+test.target         check
+
 livecheck.type      regex
-livecheck.regex     "${name} v(\[0-9.\]+) "
+livecheck.regex     "${name} (\[0-9.\]+)"
 
 variant cuda description {Enable CUDA support} {
     configure.args-replace  --disable-cuda --enable-cuda
